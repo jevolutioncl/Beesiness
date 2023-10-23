@@ -6,11 +6,81 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Beesiness.Migrations
 {
     /// <inheritdoc />
-    public partial class Beesiness1 : Migration
+    public partial class jevo : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "tblColmenas",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FechaIngreso = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TipoColmena = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Descripcion = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_tblColmenas", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "tblEnfermedades",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nombre = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Descripcion = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_tblEnfermedades", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "tblRoles",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nombre = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Descripcion = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_tblRoles", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "tblTareas",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nombre = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Descripcion = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_tblTareas", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "tblTipoFlor",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nombre = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_tblTipoFlor", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "tblAlertas",
                 columns: table => new
@@ -76,63 +146,29 @@ namespace Beesiness.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "tblRoles",
+                name: "tblEnfermedadColmena",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombre = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Descripcion = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false)
+                    FechaDeteccion = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    FechaRecuperacion = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IdColmena = table.Column<int>(type: "int", nullable: false),
+                    IdEnfermedad = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_tblRoles", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "tblTareas",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombre = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Descripcion = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_tblTareas", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "tblTipoFlor",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombre = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_tblTipoFlor", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "tblTratamientos",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Fecha = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Detalle = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
-                    idEnfermedadColmena = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_tblTratamientos", x => x.Id);
+                    table.PrimaryKey("PK_tblEnfermedadColmena", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_tblTratamientos_tblEnfermedadColmena_idEnfermedadColmena",
-                        column: x => x.idEnfermedadColmena,
-                        principalTable: "tblEnfermedadColmena",
+                        name: "FK_tblEnfermedadColmena_tblColmenas_IdColmena",
+                        column: x => x.IdColmena,
+                        principalTable: "tblColmenas",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_tblEnfermedadColmena_tblEnfermedades_IdEnfermedad",
+                        column: x => x.IdEnfermedad,
+                        principalTable: "tblEnfermedades",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -145,7 +181,8 @@ namespace Beesiness.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Nombre = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Correo = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Contraseña = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    PasswordHash = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
+                    PasswordSalt = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
                     IdRol = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -204,6 +241,27 @@ namespace Beesiness.Migrations
                         name: "FK_tblPolinizaciones_tblTipoFlor_IdTipoFlor",
                         column: x => x.IdTipoFlor,
                         principalTable: "tblTipoFlor",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "tblTratamientos",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Fecha = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Detalle = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
+                    idEnfermedadColmena = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_tblTratamientos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_tblTratamientos_tblEnfermedadColmena_idEnfermedadColmena",
+                        column: x => x.idEnfermedadColmena,
+                        principalTable: "tblEnfermedadColmena",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -307,6 +365,16 @@ namespace Beesiness.Migrations
                 column: "PolinizacionId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_tblEnfermedadColmena_IdColmena",
+                table: "tblEnfermedadColmena",
+                column: "IdColmena");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_tblEnfermedadColmena_IdEnfermedad",
+                table: "tblEnfermedadColmena",
+                column: "IdEnfermedad");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_tblInfoSensores_IdColmena",
                 table: "tblInfoSensores",
                 column: "IdColmena");
@@ -399,10 +467,19 @@ namespace Beesiness.Migrations
                 name: "tblTareas");
 
             migrationBuilder.DropTable(
+                name: "tblEnfermedadColmena");
+
+            migrationBuilder.DropTable(
                 name: "tblTipoFlor");
 
             migrationBuilder.DropTable(
                 name: "tblRoles");
+
+            migrationBuilder.DropTable(
+                name: "tblColmenas");
+
+            migrationBuilder.DropTable(
+                name: "tblEnfermedades");
         }
     }
 }
