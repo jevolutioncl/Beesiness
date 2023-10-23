@@ -4,9 +4,13 @@ namespace Beesiness.Models
 {
     public class AppDbContext : DbContext
     {
+        public AppDbContext(DbContextOptions<AppDbContext> options)
+    :   base(options)
+        {
+        }
         public DbSet<Colmena> tblColmenas { get; set; }
         public DbSet<Enfermedad> tblEnfermedades { get; set; }
-        public DbSet<EnfermedadColmena> tblEnfermedadColmena {  get; set; }
+        public DbSet<EnfermedadColmena> tblEnfermedadColmena { get; set; }
         public DbSet<Tratamiento> tblTratamientos { get; set; }
         public DbSet<Tarea> tblTareas { get; set; }
         public DbSet<TareaColmena> tblTareaColmena { get; set; }

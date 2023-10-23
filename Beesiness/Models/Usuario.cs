@@ -17,8 +17,8 @@ namespace Beesiness.Models
         public string Correo { get; set; }
 
         [Required]
-        [StringLength(100)]  // Store a hashed version!
-        public string Contraseña { get; set; }
+        public byte[] PasswordHash {  get; set; }
+        public byte[] PasswordSalt { get; set; }
 
         [Required]
         [ForeignKey("Rol")]
