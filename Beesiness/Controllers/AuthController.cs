@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Claims;
 using System.Security.Cryptography;
 
@@ -12,7 +13,33 @@ namespace Beesiness.Controllers
         private readonly AppDbContext _context;
 
         public AuthController(AppDbContext context)
-        { _context = context; }
+        {
+            _context = context;
+        }
+
+        public IActionResult RequestRegistration()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RequestRegistration(RegistrationRequestViewModel model)
+        {
+            // Mapear el ViewModel a la entidad UsuarioTemporal
+            var usuarioTemporal = new UsuarioTemporal
+            {
+                Nombre = model.NombreCompleto,
+                Correo = model.Correo,
+                Rol = model.RolSeleccionado
+            };
+
+            // Guardar en la base de datos
+            _context.tblUsuariosTemporales.Add(usuarioTemporal);
+            await _context.SaveChangesAsync();
+
+            // Redirigir a una página de confirmación o donde quieras después de registrar al usuario
+            return RedirectToAction("Confirmacion");
+        }
 
         [HttpGet]
         public IActionResult LoginIn(Usuario U)

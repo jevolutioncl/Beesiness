@@ -24,6 +24,8 @@ namespace Beesiness.Models
         public DbSet<Usuario> tblUsuarios { get; set; }
         public DbSet<Rol> tblRoles { get; set; }
         public DbSet<Inspeccion> tblInspecciones { get; set; }
+        public DbSet<UsuarioTemporal> tblUsuariosTemporales { get; set; }
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
