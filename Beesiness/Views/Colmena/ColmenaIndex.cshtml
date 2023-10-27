@@ -1,0 +1,55 @@
+﻿@model List<Colmena>
+@{
+    ViewData["Title"] = "Administrar Colmenas";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Administrar Colmenas</h1>
+
+<div>
+    <a class="button" asp-action="ColmenaCrear">Nueva Colmena</a>
+</div>
+<div>
+    <h6>Listado de Colmenas</h6>
+</div>
+<div class="row justify-content-evenly mt-3" >
+    <div style="overflow:auto;">
+        <table class="table" >
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Fecha ingreso</th>
+                    <th>Tipo Colmena</th>
+                    <th>Descripcion</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @item.Id
+                        </td>
+                        <td>
+                            @item.FechaIngreso
+                        </td>
+                        <td>
+                            @item.TipoColmena
+                        </td>
+                        <td>
+                            @item.Descripcion
+                        </td>
+                        <td>
+                            <a asp-action="ColmenaEditar" asp-route-colmenaId="@item.Id">Editar</a>
+                            <a onclick="return confirm('¿Eliminar Colmena?')" asp-action="ColmenaBorrar" asp-route-colmenaId="@item.Id">Borrar</a>
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    
+</div>
+
