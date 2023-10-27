@@ -23,14 +23,14 @@ namespace Beesiness.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> RequestRegistration(RegistrationRequestViewModel model)
+        public async Task<IActionResult> RequestRegistration(LoginRegistrationViewModel model)
         {
             // Mapear el ViewModel a la entidad UsuarioTemporal
             var usuarioTemporal = new UsuarioTemporal
             {
-                Nombre = model.NombreCompleto,
-                Correo = model.Correo,
-                Rol = model.RolSeleccionado
+                Nombre = model.Registration.NombreCompleto,
+                Correo = model.Registration.Correo,
+                Rol = model.Registration.RolSeleccionado
             };
 
             // Guardar en la base de datos
@@ -47,7 +47,7 @@ namespace Beesiness.Controllers
             return View();
         }
         [HttpPost]
-        public async Task <IActionResult> LoginIn(LoginViewModel Lvm)
+        public async Task <IActionResult> LoginIn(LoginRegistrationViewModel Lvm)
         {            
             var usuarios = _context.tblUsuarios.ToList();
             if (usuarios.Count == 0)
@@ -81,16 +81,16 @@ namespace Beesiness.Controllers
             }
 
 
-            var us = _context.tblUsuarios.Where(u => u.Correo.Equals(Lvm.Correo)).FirstOrDefault();
+            var us = _context.tblUsuarios.Where(u => u.Correo.Equals(Lvm.Login.Correo)).FirstOrDefault();
             if (us != null)
             {
                 //Usuario Encontrado
-                if (VerificarPass(Lvm.Password, us.PasswordHash, us.PasswordSalt))
+                if (VerificarPass(Lvm.Login.Password, us.PasswordHash, us.PasswordSalt))
                 {
                     //Usuario y contraseña correctos!
                     var Claims = new List<Claim>
                     {
-                        new Claim(ClaimTypes.Email, Lvm.Correo),
+                        new Claim(ClaimTypes.Email, Lvm.Login.Correo),
                         new Claim(ClaimTypes.Name, us.Nombre)
                     };
 
