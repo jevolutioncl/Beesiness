@@ -48,10 +48,25 @@ namespace Beesiness.Controllers
         }
         [HttpPost]
         public async Task <IActionResult> LoginIn(LoginViewModel Lvm)
-        {
+        {            
             var usuarios = _context.tblUsuarios.ToList();
             if (usuarios.Count == 0)
             { 
+                //primero qye todo revisaremos si existen roles creados
+                //en la practica esto sera innecesario si es que la app ya esta asociada a una BD nuestra
+                var roles = _context.tblRoles.ToList();
+                if (roles.Count == 0) //tambien habria que poner una condicion por si hay roles pero no hay Root
+                {
+                    //creamos primero un rol para asignar al superUsuario
+                    Rol rol = new Rol();
+                    //rol.Id = 1; // tendremos que confiar que nadie "jugara" con la base de datos de antemano
+                    rol.Nombre = "Root";
+                    rol.Descripcion = "Super Usuario administrador de los otros usuarios y del funcionamiento del sistema";
+                    _context.tblRoles.Add(rol);
+                    _context.SaveChanges();
+                }
+               
+                //Ahora creamos el usuario que sera Root o Super Usuario
                 Usuario U = new Usuario();
                 U.Correo = "yonathanherreracl@gmail.com";
                 U.Nombre = "Yonathan Herrera";
@@ -90,7 +105,7 @@ namespace Beesiness.Controllers
                 }
                 else
                 {
-                    //Usuario no encontrado
+                    //Contraseña incorrecta
                     ModelState.AddModelError("", "Contraseña incorrecta");
                     return View(Lvm);
                 }
