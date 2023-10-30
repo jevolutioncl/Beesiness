@@ -1,10 +1,12 @@
 ﻿using Beesiness.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Cryptography;
 
 namespace Beesiness.Controllers
 {
+    [Authorize]
     public class UsuariosController : Controller
     {
         private readonly AppDbContext _context;
@@ -61,6 +63,31 @@ namespace Beesiness.Controllers
                 }
                 return View(Uvm);
             }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> RegisterFromRequest(int id)
+        {
+            var usuarioTemporal = await _context.tblUsuariosTemporales.FindAsync(id);
+            if (usuarioTemporal == null)
+            {
+                return NotFound();
+            }
+
+            var model = new CreateUserViewModel
+            {
+                Nombre = usuarioTemporal.Nombre,
+                Email = usuarioTemporal.Correo,
+                // Pre-rellena el Rol basado en el texto, esto supone que tienes una correspondencia entre el texto del rol y el IdRol.
+                IdRolSeleccionado = _context.tblRoles.Where(r => r.Nombre == usuarioTemporal.Rol).Select(r => r.Id).FirstOrDefault(),
+                RolesDisponibles = _context.tblRoles.Select(r => new SelectListItem
+                {
+                    Value = r.Id.ToString(),
+                    Text = r.Nombre
+                }).ToList()
+            };
+
+            return View("CreateUser", model); // reutiliza la vista CreateUser
         }
 
         private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
