@@ -1,8 +1,10 @@
 ﻿using Beesiness.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using System.Security.Cryptography;
 
@@ -16,7 +18,16 @@ namespace Beesiness.Controllers
         {
             _context = context;
         }
-
+        [Authorize(Roles = "Root")]
+        public async Task<IActionResult> RequestRegistrationIndex()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                var requestUsers = await _context.tblUsuariosTemporales.ToListAsync();
+                return View(requestUsers);
+            }
+            return RedirectToAction("LoginIn", "Auth");
+        }
         public IActionResult RequestRegistration()
         {
             return View();
@@ -38,7 +49,7 @@ namespace Beesiness.Controllers
             await _context.SaveChangesAsync();
 
             // Redirigir a una página de confirmación o donde quieras después de registrar al usuario
-            return RedirectToAction("Confirmacion");
+            return RedirectToAction("LoginIn", "Auth");
         }
 
         [HttpGet]
@@ -81,7 +92,9 @@ namespace Beesiness.Controllers
             }
 
 
-            var us = _context.tblUsuarios.Where(u => u.Correo.Equals(Lvm.Login.Correo)).FirstOrDefault();
+            var us = _context.tblUsuarios.Include(u => u.Rol) // Asegurémonos de incluir el rol asociado
+                            .Where(u => u.Correo.Equals(Lvm.Login.Correo)).FirstOrDefault();
+
             if (us != null)
             {
                 //Usuario Encontrado
@@ -89,17 +102,18 @@ namespace Beesiness.Controllers
                 {
                     //Usuario y contraseña correctos!
                     var Claims = new List<Claim>
-                    {
-                        new Claim(ClaimTypes.Email, Lvm.Login.Correo),
-                        new Claim(ClaimTypes.Name, us.Nombre)
-                    };
+        {
+            new Claim(ClaimTypes.Email, Lvm.Login.Correo),
+            new Claim(ClaimTypes.Name, us.Nombre),
+            new Claim(ClaimTypes.Role, us.Rol.Nombre)  // Añade el nombre del rol como un Claim
+        };
 
                     var identity = new ClaimsIdentity(Claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
                     var principal = new ClaimsPrincipal(identity);
 
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal,
-                        new AuthenticationProperties { IsPersistent = true});
+                        new AuthenticationProperties { IsPersistent = true });
 
                     return RedirectToAction("Index", "Home");
                 }
@@ -119,7 +133,11 @@ namespace Beesiness.Controllers
 
             return View();    
         }
-
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("LoginIn", "Auth"); // Redirige al usuario a la página principal o de inicio de sesión.
+        }
 
         private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {

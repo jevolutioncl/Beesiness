@@ -1,9 +1,12 @@
 ﻿using Beesiness.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Beesiness.Controllers
 {
+
+    [Authorize]
     public class ColmenaController : Controller
     {
         private readonly AppDbContext _context;

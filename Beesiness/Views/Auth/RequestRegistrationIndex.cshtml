@@ -1,0 +1,63 @@
+﻿@model List<UsuarioTemporal>
+
+<div class="card text-center">
+    <div class="card-header">
+        Listado de Usuarios
+    </div>
+</div>
+
+<div class="row justify-content-evenly mt-3">
+    <div style="overflow:auto;">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Nombre</th>
+                    <th>Correo</th>
+                    <th>Rol</th>
+                    <th>Fecha solicitud</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if(Model != null && Model.Any())
+                {
+                    @foreach (var usuario in Model)
+                    {
+                        <tr>
+                            <td>
+                                @usuario.Id
+                            </td>
+                            <td>
+                                @usuario.Nombre
+                            </td>
+                            <td>
+                                @usuario.Correo
+                            </td>
+                            <td>
+                                @usuario.Rol
+                            </td>
+                            <td>
+                                @usuario.FechaSolicitud
+                            </td>
+                            <td>
+                                <a href="@Url.Action("RegisterFromRequest", "Usuarios", new { id = usuario.Id })" class="btn btn-primary">
+                                    Registrar Usuario
+                                    </a>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <p>No hay usuarios disponibles</p>
+                }
+
+            </tbody>
+        </table>
+    </div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
