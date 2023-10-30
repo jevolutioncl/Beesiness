@@ -1,0 +1,130 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row mt-2">
+    <div class="col-sm-6">
+        <div class="card">
+            <div class="card-header">               
+                Grafico 1
+            </div>            
+            <div class="card-body">
+                <canvas id="canvas1" style="max-height:250px"></canvas>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                Grafico 2: Cantidad de Colmenas creadas por año
+            </div>
+            <div class="card-body">
+                <canvas id="canvas2" style="max-height:250px"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="card-header">
+            Grafico 3:
+        </div>
+        <div class="card-body">
+            <canvas id="canvas3" style="max-height:250px"></canvas>
+        </div>
+    </div>    
+</div>
+
+
+@section Scripts{
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        async function GraficoColmenasFecha()
+        {   
+            //primero recibo los datos y los conbierto a Json
+            const res = await fetch("DatosColmenasFecha");
+            const datos = await res.json();
+            
+            //ahora comienzo a filtrarlo para obtener un array de arrays
+            let valores = Object.entries(datos);
+            
+            //segundo filtro
+            let valores2 = datos.map((item)=>Object.entries(item));            
+
+            //creo el array years y el array cantidad para volcar los datos
+            let years = [];
+            let cantidad = [];
+                        
+            //creo la variable size porque no me funciona el array.lenght
+            let size = CalcularSize(datos);     
+                    
+            //ahora vuelco los datos en years y cantidad
+            for (let i=0; i < size; i++)
+            {                
+                years[i] = valores2[i][0][1];
+                cantidad[i] = valores2[i][1][1];
+            }                       
+
+            //ahora graficamos los datos
+            const canvas2 = document.getElementById('canvas2');
+
+            new Chart(canvas2, {
+                type: 'bar',
+                data: {
+                    labels: years,
+                    datasets: [{
+                        label: 'Cantidad de colmenas',
+                        data: cantidad,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });            
+                       
+        }
+
+        async function GraficoBarras()
+        {
+            //grafico estandar solo para probar
+            const ctx = document.getElementById('canvas1');
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                    datasets: [{
+                        label: '# of Votes',
+                        data: [12, 19, 3, 5, 2, 3],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+        }
+        
+        //definimos esta funcion por problemas con el arreglo.lenght
+        function CalcularSize(arreglo)
+        {
+            let i=0;
+            arreglo.map((item) => i=i+1);
+            return i;
+        }
+
+        //cargamos todos los graficos cuando esta lista la pagina
+        $(document).ready(() => {
+            GraficoBarras();
+            GraficoColmenasFecha();            
+        })        
+    </script>
+
+}
