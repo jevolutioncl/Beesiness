@@ -1,6 +1,7 @@
 ﻿using Beesiness.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace Beesiness.Controllers
 {
@@ -16,7 +17,7 @@ namespace Beesiness.Controllers
         public async Task<IActionResult> ColmenaIndex(string filtro)
         {
             if (User.Identity.IsAuthenticated)
-            {
+            {                
                 var colmenas = await _context.tblColmenas.ToListAsync();
                 if (filtro != null)
                 {
@@ -118,6 +119,32 @@ namespace Beesiness.Controllers
             return RedirectToAction("LoginIn", "Auth");
 
         }
+
+        public IActionResult ColmenaResumen()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                return View();
+            }
+            return RedirectToAction("LoginIn", "Auth");            
+        }        
+
+        public async Task<IActionResult> DatosColmenasFecha()
+        {
+            var colmenas = await _context.tblColmenas.ToListAsync();
+            
+            //uso la palabra year en vez de año para no tener problemas con la ñ
+            var query = colmenas.GroupBy(
+                x => x.FechaIngreso.Year,
+                (year, cantidad) => new
+                {
+                    Year = year,
+                    Cantidad = cantidad.Count()
+                }
+                ).OrderBy(x => x.Year);
+            
+            return Json(query);
+        }              
 
     }
 }
