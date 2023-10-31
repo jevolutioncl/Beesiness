@@ -21,8 +21,11 @@
             <form asp-action="RequestRegistration" method="Post">
                 <h1>Solicitar cuenta</h1>
                 <span>Ingresa los siguientes datos</span>
+                <span asp-validation-for="Registration.NombreCompleto" class="text-danger"></span>
                 <input asp-for="Registration.NombreCompleto" type="text" placeholder="Nombre y apellido">
+                <span asp-validation-for="Registration.Correo" class="text-danger"></span>
                 <input asp-for="Registration.Correo" type="email" placeholder="Correo electrónico">
+                <span asp-validation-for="Registration.RolSeleccionado" class="text-danger"></span>
                 <input asp-for="Registration.RolSeleccionado" type="text" placeholder="Rol">
                 <button>Solicitar registro</button>
             </form>
@@ -31,12 +34,22 @@
             <form asp-action="LoginIn" method="Post">
                 <h1>Ingresar a su cuenta</h1>
                 <span>Ingresa tus datos</span>
-                <input asp-for="Login.Correo" type="email" type="email" placeholder="Correo electrónico">
-                <input asp-for="Login.Password" type="password" type="password" placeholder="Password">
-                <a href="#">¿Olvidaste tu contraseña?</a>
+
+                <!-- Mostrar errores generales -->
+                @if (ViewData.ModelState.TryGetValue("", out var entry) && entry.Errors.Count > 0)
+                {
+                    <div class="text-danger">@entry.Errors.First().ErrorMessage</div>
+                }
+                <span asp-validation-for="Login.Correo" class="text-danger"></span>
+                <input asp-for="Login.Correo" type="email" placeholder="Correo electrónico">
+                <span asp-validation-for="Login.Password" class="text-danger"></span>
+                <input asp-for="Login.Password" type="password" placeholder="Password">
+
+                <a asp-controller="Auth" asp-action="ContraseñaOlvidada">¿Olvidaste tu contraseña?</a>
                 <button>Ingresar</button>
             </form>
         </div>
+
         <div class="toggle-container">
             <div class="toggle">
                 <div class="toggle-panel toggle-left">
@@ -52,8 +65,9 @@
             </div>
         </div>
     </div>
-
     <script src="/js/scripts.js"></script>
 </body>
+
+
 
 </html>
