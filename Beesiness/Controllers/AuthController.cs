@@ -131,11 +131,11 @@ namespace Beesiness.Controllers
             return View();
         }
         [HttpPost]
-        public async Task <IActionResult> LoginIn(LoginRegistrationViewModel Lvm)
-        {            
+        public async Task<IActionResult> LoginIn(LoginRegistrationViewModel Lvm)
+        {
             var usuarios = _context.tblUsuarios.ToList();
             if (usuarios.Count == 0)
-            { 
+            {
                 //primero qye todo revisaremos si existen roles creados
                 //en la practica esto sera innecesario si es que la app ya esta asociada a una BD nuestra
                 var roles = _context.tblRoles.ToList();
@@ -149,7 +149,7 @@ namespace Beesiness.Controllers
                     _context.tblRoles.Add(rol);
                     _context.SaveChanges();
                 }
-               
+
                 //Ahora creamos el usuario que sera Root o Super Usuario
                 Usuario U = new Usuario();
                 U.Correo = "yonathanherreracl@gmail.com";
@@ -203,8 +203,6 @@ namespace Beesiness.Controllers
                 ModelState.AddModelError("", "Usuario no encontrado");
                 return View(Lvm);
             }
-
-            return View();    
         }
         public async Task<IActionResult> Logout()
         {

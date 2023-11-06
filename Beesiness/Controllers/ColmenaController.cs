@@ -17,6 +17,14 @@ namespace Beesiness.Controllers
             _context = context;
         }
 
+        public async Task<IActionResult> ColmenaGeneral()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                return View();
+            }
+            return RedirectToAction("LoginIn", "Auth");
+        }
         public async Task<IActionResult> ColmenaIndex(string filtro)
         {
             if (User.Identity.IsAuthenticated)

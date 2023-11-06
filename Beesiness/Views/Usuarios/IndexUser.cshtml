@@ -1,0 +1,35 @@
+﻿@model CreateUserViewModel
+
+@{
+    ViewData["Title"] = "IndexUser";
+}
+<head>
+    <link rel="stylesheet" href="~/css/index.css" />
+</head>
+<h1 class="text-center">Administrar Usuarios</h1>
+<div class="row">
+    <div class="card card-personalizada mx-auto image-fade-in-expand" style="width: 15rem;">
+        <img src="/css/apicultorver.svg" class="card-img-top img-fluid mx-auto d-block" alt="...">
+        <div class="card-body">
+            <h5 class="card-title">Ver usuarios registrados</h5>
+            <p class="card-text">Apartado para ver los usuarios que se encuentran registrados dentro de Beesiness</p>
+            <a asp-controller="C" class="btn btn-primary">Ver usuarios</a>
+        </div>
+    </div>
+    <div class="card mx-auto image-fade-in-expand" style="width: 15rem;">
+        <img src="/css/apicultorver2.svg" class="card-img-top img-fluid mx-auto d-block" alt="...">
+        <div class="card-body">
+            <h5 class="card-title">Ver usuarios que están pendientes de registro</h5>
+            <p class="card-text">Apartado para revisar y poder registrar a los usuarios que están pendiente de registro</p>
+            <a asp-controller="Auth" asp-action="RequestRegistrationIndex" class="btn btn-primary">Ver usuarios pendientes de registro</a>
+        </div>
+    </div>
+    <div class="card mx-auto image-fade-in-expand" style="width: 15rem;">
+        <img src="/css/infocolmena.svg" class="card-img-top img-fluid mx-auto d-block" alt="...">
+        <div class="card-body">
+            <h5 class="card-title">Info colmenas</h5>
+            <p class="card-text">¿Necesitas revisar detalles de tus colmenas?, ¡has llegado al apartado correcto!</p>
+            <a asp-action="ColmenaResumen" class="btn btn-primary">Informacion colmenas</a>
+        </div>
+    </div>
+</div>

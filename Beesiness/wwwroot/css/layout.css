@@ -1,9 +1,10 @@
 ﻿body {
     padding-top: 120px; /* Ajusta este valor según la altura de tu navbar */
+    background-color: #ece9d4;
 }
 
 .navbar {
-    background-color: #fdda8a;
+    background-color: #dbd4ad;
     height: 80px;
     margin: 20px;
     margin-top: 20px;
