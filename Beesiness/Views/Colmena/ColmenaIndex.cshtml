@@ -3,19 +3,13 @@
     ViewData["Title"] = "Administrar Colmenas";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<h1>Administrar Colmenas</h1>
-
-<div>
-    <a class="button" asp-action="ColmenaCrear">Nueva Colmena</a>
-</div>
-<div>
-    <a class="button" asp-action="ColmenaResumen">Informacion Colmenas</a>
-</div>
+<head>
+    <link rel="stylesheet" href="~/css/index.css" />
+</head>
 <div>
     <h6>Listado de Colmenas</h6>
 </div>
-<div class="row justify-content-evenly mt-3" >
+<div class="row justify-content-evenly mt-3">
     <div style="overflow:auto;">
         <table class="table" >
             <thead>

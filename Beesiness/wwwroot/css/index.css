@@ -1,0 +1,104 @@
+/** HEADER */
+
+.card-personalizada {
+    background-color: #dbd4ad;
+    text-align: center;
+    align-content: center;
+}
+
+.btn-primary {
+    background-color: #614932;
+    border-color: #614932;
+    color: #ffffff;
+}
+.btn-primary:hover {
+    background-color: #715c42;  /* Un tono más claro que #614932 */
+    border-color: #715c42;
+}
+
+.btn-primary:hover {
+    background-color: #715c42;  /* Un tono más claro que #614932 */
+    border-color: #715c42;
+}
+.btn-primary:focus {
+    box-shadow: 0 0 0 0.2rem rgba(97, 73, 50, 0.5); /* Utiliza el color #614932 con cierta transparencia */
+}
+
+header {
+    width: 100%;
+    height: calc(100vh - 95px);
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding-left: 50px;
+}
+
+    header .imagen-header {
+        width: 60%;
+        height: 100%;
+        background: url('/css/abeja.png');
+        background-size: cover;
+        background-position: center;
+        clip-path: circle(90% at 92% 50%);
+        z-index: 2;
+        transition: all .5s;
+    }
+
+    header .content-header {
+        width: 50%;
+    }
+
+        header .content-header * {
+            margin: 10px 0;
+        }
+
+        header .content-header h3 {
+            font-size: 65px;
+            font-weight: 300;
+        }
+
+        header .content-header p {
+            font-size: 19px;
+        }
+
+/* Definición del keyframe */
+@keyframes imageFadeInExpand {
+    0% {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+
+    40% {
+        opacity: .6;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+/* Definición del keyframe */
+@keyframes tracking-in-expand {
+    0% {
+        letter-spacing: -.5em;
+        opacity: 0;
+    }
+
+    40% {
+        opacity: .6;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Clase que utiliza el keyframe */
+.tracking-in-expand {
+    animation: tracking-in-expand .7s cubic-bezier(.215, .61, .355, 1.000) both;
+}
+
+/* Definición de la clase para el div con la imagen */
+.image-fade-in-expand {
+    animation: imageFadeInExpand .7s cubic-bezier(.215, .61, .355, 1.000) both;
+}

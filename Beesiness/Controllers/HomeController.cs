@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Security.Claims;
 
 namespace Beesiness.Controllers
 {
@@ -17,6 +18,11 @@ namespace Beesiness.Controllers
 
         public IActionResult Index()
         {
+            // Si el usuario está autenticado, obtenemos su nombre. De lo contrario, el nombre será null.
+            var userName = User?.FindFirst(ClaimTypes.Name)?.Value;
+
+            ViewData["UserName"] = userName;
+
             return View();
         }
 

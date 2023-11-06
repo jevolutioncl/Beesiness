@@ -16,6 +16,11 @@ namespace Beesiness.Controllers
             _context = context;
         }
 
+        public IActionResult IndexUser()
+        {
+            return View();
+        }
+
         [HttpGet]
         public IActionResult CreateUser()
         {
