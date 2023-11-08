@@ -3,9 +3,21 @@
     ViewData["Title"] = "Administrar Colmenas";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<head>
-    <link rel="stylesheet" href="~/css/index.css" />
-</head>
+
+<h1>Administrar Colmenas</h1>
+
+<div>
+    <a class="button" asp-controller="Home" asp-action="Index">Volver al Home</a>
+</div>
+<div>
+    <a class="button" asp-action="ColmenaCrear">Nueva Colmena</a>
+</div>
+<div>
+    <a class="button" asp-action="ColmenaResumen">Graficos Colmenas</a>
+</div>
+<div>
+    <a class="button" asp-action="DescargarPdf">Descargar Pdf</a>
+</div>
 <div>
     <h6>Listado de Colmenas</h6>
 </div>
@@ -40,6 +52,7 @@
                         <td>
                             <a asp-action="ColmenaEditar" asp-route-colmenaId="@item.Id">Editar</a>
                             <a onclick="return confirm('¿Eliminar Colmena?')" asp-action="ColmenaBorrar" asp-route-colmenaId="@item.Id">Borrar</a>
+                            <a asp-controller="InformacionColmena" asp-action="InformacionColmenaIndex" asp-route-colmenaId="@item.Id">Detalle</a>
                         </td>
 
                     </tr>
