@@ -1,0 +1,92 @@
+﻿@model InfoColmenaViewModel
+@{
+}
+
+<div>
+    <h3>Información correspondiente a la ultima inspección de la Colmena</h3>
+</div>
+
+<div>
+    <a class="button" asp-controller="Colmena" asp-action="ColmenaIndex">Menu Colmenas</a>
+</div>
+<div>
+    <a class="button" asp-controller="Inspeccion" asp-action="InspeccionIndex">Menu Inspecciones</a>
+</div>
+<div>
+    <a class="button" asp-controller="Inspeccion" asp-action="InspeccionCrear">Nueva Inspeccion</a>
+</div>
+
+<div>
+    <form class="row justify-content-evenly" asp-action="GenerarPdf" method="post">
+        <div class="col-md-6">
+            <div class="form-group mt-3">
+                <label asp-for="Id">Id Colmena:</label>
+                <input asp-for="Id" class="form-control" placeholder=@Model.Id readonly />
+            </div>
+            <div class="form-group mt-3">
+                <label asp-for="FechaInforme">Fecha ultimo Informe Colmena:</label>
+                <input asp-for="FechaInforme" class="form-control" placeholder=@Model.FechaInforme readonly />
+            </div>
+            <div class="form-group mt-3">
+                <label asp-for="Inspector">Inspector:</label>
+                <input asp-for="Inspector" class="form-control" placeholder=@Model.Inspector readonly />
+            </div>
+            <div class="form-group mt-3">
+                <label asp-for="Descripcion">Descripcion Colmena:</label>
+                <input asp-for="Descripcion" class="form-control" placeholder=@Model.Descripcion readonly />
+            </div> 
+            <div class="form-group mt-3">
+                <label asp-for="Ubicacion">Ubicacion Colmena:</label>
+                <input asp-for="Ubicacion" class="form-control" placeholder=@Model.Ubicacion readonly />
+            </div>
+            <div class="form-group mt-3">
+                <label asp-for="TiempoVida">Tiempo de vida Colmena:</label>
+                <input asp-for="TiempoVida" class="form-control" placeholder=@Model.TiempoVida readonly />
+            </div>
+            <div class="form-group mt-3">
+                <label asp-for="EstadoSalud">Estado salud actual:</label>
+                <input asp-for="EstadoSalud" class="form-control" placeholder=@Model.EstadoSalud readonly />
+            </div>
+
+            <div class="card">
+                <p>Ultimas enfermedades en la colmena:</p>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Enfermedad:</th>
+                            <th>Fecha Deteccion</th>
+                            <th>Fecha Recuperacion</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <p>En construccion</p>
+                            </td>
+                            <td>
+                                <p>En construccion</p>
+                            </td>
+                            <td>
+                                <p>En construccion</p>
+                            </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="form-group mt-3">
+                <input type="submit" value="Descargar PDF" class="btn btn-outline-success col-12" />
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<div>
+    <a class="button" asp-action="InformacionColmenaCrear" asp-route-id=@Model.Id>Crear nuevo informe para la Colmena</a>
+</div>
+
+
+
+
