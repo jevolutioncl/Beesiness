@@ -1,0 +1,58 @@
+﻿@model List<Inspeccion>
+@{
+    ViewData["Title"] = "Administrar Inspecciones a Colmenas";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Administrar Inspecciones a Colmenas</h1>
+
+<div>
+    <a class="button" asp-controller="Home" asp-action="Index">Volver al Home</a>
+</div>
+<div>
+    <a class="button" asp-action="InspeccionCrear">Nueva Inspeccion</a>
+</div>
+<div>
+    <h6>Listado de Inspecciones</h6>
+</div>
+<div class="row justify-content-evenly mt-3">
+    <div style="overflow:auto;">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Fecha</th>
+                    <th>Observaciones</th>
+                    <th>Id Inspector</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @item.Id
+                        </td>
+                        <td>
+                            @item.Fecha
+                        </td>
+                        <td>
+                            @item.Observaciones
+                        </td>
+                        <td>
+                            @item.IdUsuario
+                        </td>
+                        <td>
+                            <a asp-action="InspeccionEditar" asp-route-id="@item.Id">Editar</a>
+                            <a onclick="return confirm('¿Eliminar Inspeccion?')" asp-action="InspeccionBorrar" asp-route-id="@item.Id">Borrar</a>
+                            <a asp-action="InspeccionInfo" asp-route-id="@item.Id">Detalle</a>
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>
