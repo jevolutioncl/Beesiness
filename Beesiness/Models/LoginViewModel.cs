@@ -5,7 +5,7 @@ namespace Beesiness.Models
     public class LoginViewModel
     {
         [Required(ErrorMessage = "El correo es requerido")]
-        [EmailAddress(ErrorMessage ="El correo no existe")]
+        [EmailAddress(ErrorMessage = "El correo no existe")]
         public string Correo { get; set; }
         [Required(ErrorMessage = "La contraseña es requerida")]
         public string Password { get; set; }
