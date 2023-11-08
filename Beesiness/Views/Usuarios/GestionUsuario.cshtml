@@ -1,0 +1,36 @@
+﻿@model UserListViewModel
+
+<h2>Usuarios Registrados</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Rol</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var usuario in Model.Usuarios)
+        {
+            <tr>
+                <td>@usuario.Nombre</td>
+                <td>@usuario.Correo</td>
+                <td>@usuario.Rol?.Nombre</td>
+                <td>
+                    <!-- Formulario de edición con método GET (usual en la edición) -->
+                    <form asp-controller="Usuarios" asp-action="EditUser" method="get">
+                        <input type="hidden" name="id" value="@usuario.Id" />
+                        <button type="submit" class="btn btn-success">Editar</button>
+                    </form>
+                    <!-- Formulario de eliminación con método POST -->
+                    <form asp-controller="Usuarios" asp-action="DeleteUser" method="post" onsubmit="return confirm('¿Está seguro de querer eliminar este usuario?');">
+                        <input type="hidden" name="id" value="@usuario.Id" />
+                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -7,7 +7,7 @@ namespace Beesiness.Models
         [Key]
         public int Id { get; set; }
         [Required]
-        public DateTime FechaIngreso {  get; set; }
+        public DateTime FechaIngreso { get; set; }
         [Required, MaxLength(50)]
         public string TipoColmena { get; set; }
         [MaxLength(250)]
