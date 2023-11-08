@@ -1,5 +1,57 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model InfoColmenaViewModel
 @{
 }
+
+<div>
+    <h1>Información correspondiente a la ultima inspección de la Colmena</h1>
+</div>
+<div>
+    <h1>Informacion Colmena Id: @Model.Id</h1>
+</div>
+<div>
+    <h1>FEcha ultimo Informe Colmena: @Model.FechaInforme</h1>
+</div>
+<div>
+    <h1>Inspector: @Model.Inspector</h1>
+</div>
+<div>
+    <h1>Descripcion Colmena: @Model.Descripcion</h1>
+</div>
+<div>
+    <h1>Ubicacion Colmena: @Model.Ubicacion</h1>
+</div>
+<div>
+    <h1>Tiempo de vida Colmena: @Model.TiempoVida</h1>
+</div>
+<div>
+    <h1>Estado salud actual Colmena: @Model.EstadoSalud</h1>
+</div>
+<div>
+    <h1>Ultimas Enfermedades colmena:</h1>
+</div>
+<div class="row justify-content-evenly mt-3">
+    <div class="col-md-4">
+        @foreach (var item in Model.NombreEnfermedad)
+        {
+            <div>
+                <h6>Nombre enfermedad: @Model.NombreEnfermedad</h6>
+            </div>           
+        }
+    </div>
+    <div class="col-md-4">
+        @foreach (var item in Model.FechaDeteccionEnfermedad)
+        {
+            <div>
+                <h6>Nombre enfermedad: @Model.FechaRecuperacionEnfermedad</h6>
+            </div>
+        }
+    </div>
+    <div class="col-md-4">
+        @foreach (var item in Model.FechaRecuperacionEnfermedad)
+        {
+            <div>
+                <h6>Nombre enfermedad: @Model.FechaRecuperacionEnfermedad</h6>
+            </div>
+        }
+    </div>
+</div>

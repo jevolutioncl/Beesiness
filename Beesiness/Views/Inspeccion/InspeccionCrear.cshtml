@@ -1,0 +1,31 @@
+﻿@model InspeccionCrearViewModel
+@{
+}
+
+<div>
+    <h2>Ingresar nueva Inspeccion</h2>
+</div>
+<div>
+    <form class="row justify-content-evenly" asp-action="InspeccionCrear" method="post">
+        <div class="col-md-6">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group mt-3">
+                <input asp-for="Fecha" class="form-control" placeholder="Fecha de Inspeccion" />
+                <span asp-validation-for="Fecha" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-3">
+                <input asp-for="Observaciones" class="form-control" placeholder="Observaciones" />
+                <span asp-validation-for="Observaciones" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-3">
+                <label asp-for="IdUsuario">Inspector</label>
+                <select asp-for="IdUsuario" asp-items="Model.UsuariosDisponibles" class="form-control">
+                    <option value="">Seleccione un Inspector</option>
+                </select>
+            </div>
+            <div class="form-group mt-3">
+                <input type="submit" value="Crear Inspeccion" class="btn btn-outline-success col-12" />
+            </div>
+        </div>
+    </form>
+</div>

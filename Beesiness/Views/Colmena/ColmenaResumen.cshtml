@@ -38,9 +38,9 @@
     <script>
         async function GraficoColmenasFecha()
         {   
-            //primero recibo los datos y los conbierto a Json
+            //primero recibo los datos y los convierto a Json
             const res = await fetch("DatosColmenasFecha");
-            const datos = await res.json();
+            const datos = await res.json();          
             
             //ahora comienzo a filtrarlo para obtener un array de arrays
             let valores = Object.entries(datos);
