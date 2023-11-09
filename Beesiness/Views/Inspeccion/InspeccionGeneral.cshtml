@@ -1,0 +1,35 @@
+﻿@model List<Inspeccion>
+@{
+    ViewData["Title"] = "Administrar Inspecciones a Colmenas";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<head>
+    <link rel="stylesheet" href="~/css/index.css" />
+</head>
+<h1 class="text-center">Administrar Inspecciones a Colmenas</h1>
+<div class="row">
+    <div class="card mx-auto image-fade-in-expand card-personalizada" style="width: 15rem;">
+        <img src="/css/createinspeccion.svg" class="card-img-top img-fluid mx-auto d-block" alt="...">
+        <div class="card-body">
+            <h5 class="card-title">Crear nuevas inspecciones</h5>
+            <p class="card-text">¿Necesitas crear una nuevas inspecciones?, ¡has llegado al apartatdo correcto!</p>
+            <a asp-controller="Inspeccion" asp-action="InspeccionCrear" class="btn btn-primary">Crear inspecciones</a>
+        </div>
+    </div>
+    <div class="card mx-auto image-fade-in-expand card-personalizada" style="width: 15rem;">
+        <img src="/css/verinspeccion.svg" class="card-img-top img-fluid mx-auto d-block" alt="...">
+        <div class="card-body">
+            <h5 class="card-title">Ver inspecciones</h5>
+            <p class="card-text">¿Necesitas ver, editar o eliminar alguna inspección?, ¡has llegado al apartado correcto!</p>
+            <a asp-controller="Inspeccion" asp-action="InspeccionIndex" class="btn btn-primary">Ver inspecciones</a>
+        </div>
+    </div>
+    <div class="card mx-auto image-fade-in-expand card-personalizada" style="width: 15rem;">
+        <img src="/css/infoinspeccion.svg" class="card-img-top img-fluid mx-auto d-block" alt="...">
+        <div class="card-body">
+            <h5 class="card-title">Info inpecciones</h5>
+            <p class="card-text">¿Necesitas revisar detalles de tus inspecciones?, ¡has llegado al apartado correcto!</p>
+            <a asp-controller="Inspeccion" asp-action="InspeccionInfo" class="btn btn-primary">Informacion inspecciones</a>
+        </div>
+    </div>
+</div>

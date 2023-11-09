@@ -15,6 +15,11 @@ namespace Beesiness.Controllers
             _context = context;
         }
 
+        public IActionResult InspeccionGeneral()
+        {
+            return View();
+        }
+
         public async Task<IActionResult> InspeccionIndex(DateTime filtro)
         {
             if (User.Identity.IsAuthenticated)

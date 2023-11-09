@@ -1,11 +1,12 @@
 ﻿@model InfoColmenaViewModel
 @{
+    ViewData["Title"] = "Administrar Colmenas";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<div>
-    <h3>Información correspondiente a la ultima inspección de la Colmena</h3>
-</div>
-
+<head>
+    <link rel="stylesheet" href="~/css/index.css" />
+</head>
+<h1 class="text-center">Administrar Inspecciones</h1>
 <div>
     <a class="button" asp-controller="Colmena" asp-action="ColmenaIndex">Menu Colmenas</a>
 </div>

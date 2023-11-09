@@ -16,20 +16,20 @@
             <a asp-controller="Usuarios" asp-action="GestionUsuario" class="btn btn-primary">Ver usuarios</a>
         </div>
     </div>
-    <div class="card mx-auto image-fade-in-expand" style="width: 15rem;">
-        <img src="/css/infocolmena.svg" class="card-img-top img-fluid mx-auto d-block" alt="...">
-        <div class="card-body">
-            <h5 class="card-title">Editar usuarios registrados</h5>
-            <p class="card-text">Apartado para editar usuarios que se encuentren registrados en el sistema</p>
-            <a asp-controller="Usuarios" asp-action="EditUser" class="btn btn-primary">Editar usuarios</a>
-        </div>
-    </div>
-    <div class="card mx-auto image-fade-in-expand" style="width: 15rem;">
-        <img src="/css/apicultorver2.svg" class="card-img-top img-fluid mx-auto d-block" alt="...">
+    <div class="card mx-auto image-fade-in-expand card-personalizada" style="width: 15rem;">
+        <img src="/css/apicultorver.svg" class="card-img-top img-fluid mx-auto d-block" alt="...">
         <div class="card-body">
             <h5 class="card-title">Ver usuarios que están pendientes de registro</h5>
             <p class="card-text">Apartado para revisar y poder registrar a los usuarios que están pendiente de registro</p>
             <a asp-controller="Auth" asp-action="RequestRegistrationIndex" class="btn btn-primary">Ver usuarios pendientes de registro</a>
+        </div>
+    </div>
+    <div class="card mx-auto image-fade-in-expand card-personalizada" style="width: 15rem;">
+        <img src="/css/roles.svg" class="card-img-top img-fluid mx-auto d-block" alt="...">
+        <div class="card-body">
+            <h5 class="card-title">Roles</h5>
+            <p class="card-text">Apartado dedicado a los roles, donde puedes crear, editar y eliminar roles de los usuarios del sistema</p>
+            <a asp-controller="Usuarios" asp-action="EditUser" class="btn btn-primary">Ver roles</a>
         </div>
     </div>
 </div>
