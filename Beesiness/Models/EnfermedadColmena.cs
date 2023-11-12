@@ -22,7 +22,7 @@ namespace Beesiness.Models
         [ForeignKey("Enfermedad")]
         public int IdEnfermedad { get; set; }
 
-        // Navigation properties (will be used when setting up relationships)
+        // Navigation properties
         public Colmena Colmena { get; set; }
         public Enfermedad Enfermedad { get; set; }
     }

@@ -15,6 +15,9 @@ namespace Beesiness.Models
         public List<string> NombreEnfermedad { get; set; }
         public List<DateTime> FechaDeteccionEnfermedad { get; set; }
         public List<DateTime?> FechaRecuperacionEnfermedad { get; set; }
+        //voy a crear una  sola variable para los 3 campos anteriores
+        public List<EnfermedadColmena> Enfermedades { get; set; } 
+
 
         //agregado nuevo, probar si genera errores
         public int IdInspeccion { get; set; }

@@ -154,38 +154,7 @@ namespace Beesiness.Controllers
             }
             return RedirectToAction("LoginIn", "Auth");
 
-        }
-
-        /*
-        [HttpPost]
-        public async Task<IActionResult> InformacionColmenaCrear(InfoColmenaViewModel ivm)
-        {
-            if (User.Identity.IsAuthenticated)
-            {
-                ModelState.Remove("InspeccionesDisponibles");
-                ModelState.Remove("ColmenasDisponibles");
-                if (ModelState.IsValid)
-                {
-                    InformacionColmena infoColmena = new InformacionColmena();
-                    infoColmena.UbicacionColmena = ivm.Ubicacion;
-                    infoColmena.TiempoVida = ivm.TiempoVida;
-                    infoColmena.EstadoSalud = ivm.EstadoSalud;
-                    infoColmena.IdColmena = ivm.Id;
-                    infoColmena.IdInspeccion = ivm.IdInspeccion;
-
-                    _context.Add(infoColmena);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction("InformacionColmenaIndex", new { colmenaId = ivm.Id });
-                }
-                else
-                {
-                    ModelState.AddModelError("", "Error al Guardar");
-                    return View(ivm);
-                }
-            }
-            return RedirectToAction("LoginIn", "Auth");
-
-        }*/
+        }        
 
         [HttpPost]
         public async Task<IActionResult> InformacionColmenaEditar(InformacionColmena infoColmena)
