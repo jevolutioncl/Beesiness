@@ -1,21 +1,65 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Beesiness</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Beesiness.styles.css" asp-append-version="true" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beesiness</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="~/css/layout.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet"> <!-- Framework de icons -->
 </head>
+
 <body>
-    <header>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand me-auto" asp-controller="Home" asp-action="Index"><img src="/css/logo proyecto.svg" width="60" height="40" /></a>
+            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar"
+                 aria-labelledby="offcanvasNavbarLabel">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="offcanvasNavbarLabel"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <ul class="navbar-nav justify-content-center flex-grow-1 pe-3">
+                        <li class="nav-item">
+                            <a class="nav-link mx-lg-2 active" aria-current="page" asp-controller="Home" asp-action="Index">Inicio</a>
+                        </li>
+                        @if (User.IsInRole("Root"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link mx-lg-2" asp-controller="Usuarios" asp-action="IndexUser">Usuarios</a>
+                            </li>
+                        }
+                        <li class="nav-item">
+                            <a class="nav-link mx-lg-2" asp-controller="Colmena" asp-action="ColmenaGeneral">Colmenas</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link mx-lg-2" asp-controller="Inspeccion" asp-action="InspeccionGeneral">Inspección</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link mx-lg-2" asp-controller="Enfermedad" asp-action="EnfermedadIndex">Enfermedades</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link mx-lg-2" href="#">Contacto</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <a asp-controller="Auth" asp-action="Logout" class="login-button">Cerrar Sesión</a>
+            <button class="navbar-toggler pe-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
+                    aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+    </nav>
+    @RenderBody()
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+            crossorigin="anonymous"></script>
 
     <footer class="border-top footer text-muted">
     </footer>
@@ -27,4 +71,5 @@
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>
+
 </html>

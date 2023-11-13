@@ -1,8 +1,9 @@
 ﻿using Beesiness.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using System.Security.Cryptography;
 
@@ -17,6 +18,76 @@ namespace Beesiness.Controllers
             _context = context;
         }
 
+        [Authorize(Roles = "Root")]
+        public async Task<IActionResult> RequestRegistrationIndex(string sortOrder)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                // Criterios de ordenamiento
+                ViewBag.CurrentSort = sortOrder;
+                ViewBag.IdSort = String.IsNullOrEmpty(sortOrder) ? "id_desc" : "";
+                ViewBag.NombreSort = sortOrder == "nombre" ? "nombre_desc" : "nombre";
+                ViewBag.CorreoSort = sortOrder == "correo" ? "correo_desc" : "correo";
+                ViewBag.RolSort = sortOrder == "rol" ? "rol_desc" : "rol";
+                ViewBag.FechaSort = sortOrder == "fecha" ? "fecha_desc" : "fecha";
+
+                var usuarios = from u in _context.tblUsuariosTemporales
+                               select u;
+
+                switch (sortOrder)
+                {
+                    case "id_desc":
+                        usuarios = usuarios.OrderByDescending(u => u.Id);
+                        break;
+                    case "nombre":
+                        usuarios = usuarios.OrderBy(u => u.Nombre);
+                        break;
+                    case "nombre_desc":
+                        usuarios = usuarios.OrderByDescending(u => u.Nombre);
+                        break;
+                    case "correo":
+                        usuarios = usuarios.OrderBy(u => u.Correo);
+                        break;
+                    case "correo_desc":
+                        usuarios = usuarios.OrderByDescending(u => u.Correo);
+                        break;
+                    case "rol":
+                        usuarios = usuarios.OrderBy(u => u.Rol);
+                        break;
+                    case "rol_desc":
+                        usuarios = usuarios.OrderByDescending(u => u.Rol);
+                        break;
+                    case "fecha":
+                        usuarios = usuarios.OrderBy(u => u.FechaSolicitud);
+                        break;
+                    case "fecha_desc":
+                        usuarios = usuarios.OrderByDescending(u => u.FechaSolicitud);
+                        break;
+                    default:
+                        usuarios = usuarios.OrderBy(u => u.Id);
+                        break;
+                }
+
+                var viewModel = new RequestRegistrationIndexViewModel
+                {
+                    Usuarios = await usuarios.ToListAsync(),
+                    CurrentSort = sortOrder,
+                    IdSort = ViewBag.IdSort,
+                    NombreSort = ViewBag.NombreSort,
+                    CorreoSort = ViewBag.CorreoSort,
+                    RolSort = ViewBag.RolSort,
+                    FechaSort = ViewBag.FechaSort
+                };
+
+                return View(viewModel);
+            }
+            return RedirectToAction("LoginIn", "Auth");
+        }
+
+        public IActionResult ContraseñaOlvidada()
+        {
+            return View();
+        }
         public IActionResult RequestRegistration()
         {
             return View();
@@ -25,21 +96,33 @@ namespace Beesiness.Controllers
         [HttpPost]
         public async Task<IActionResult> RequestRegistration(LoginRegistrationViewModel model)
         {
-            // Mapear el ViewModel a la entidad UsuarioTemporal
-            var usuarioTemporal = new UsuarioTemporal
+            if (!ModelState.IsValid)
             {
-                Nombre = model.Registration.NombreCompleto,
-                Correo = model.Registration.Correo,
-                Rol = model.Registration.RolSeleccionado
-            };
+                var errors = ModelState.SelectMany(x => x.Value.Errors.Select(p => p.ErrorMessage)).ToList();
+                var existingTempUser = await _context.tblUsuariosTemporales.FirstOrDefaultAsync(u => u.Correo == model.Registration.Correo);
+                var existingUser = await _context.tblUsuarios.FirstOrDefaultAsync(u => u.Correo == model.Registration.Correo);
 
-            // Guardar en la base de datos
-            _context.tblUsuariosTemporales.Add(usuarioTemporal);
-            await _context.SaveChangesAsync();
+                if (existingTempUser != null || existingUser != null)
+                {
+                    ModelState.AddModelError("Registration.Correo", "Este correo ya está registrado.");
+                    return View("LoginIn", model);
+                }
 
-            // Redirigir a una página de confirmación o donde quieras después de registrar al usuario
-            return RedirectToAction("Confirmacion");
+                var usuarioTemporal = new UsuarioTemporal
+                {
+                    Nombre = model.Registration.NombreCompleto,
+                    Correo = model.Registration.Correo,
+                    Rol = model.Registration.RolSeleccionado
+                };
+
+                _context.tblUsuariosTemporales.Add(usuarioTemporal);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("LoginIn", "Auth");
+            }
+
+            return View("LoginIn", model); // Si no es válido o hay un error, regresamos el modelo a la vista.
         }
+
 
         [HttpGet]
         public IActionResult LoginIn(Usuario U)
@@ -47,11 +130,11 @@ namespace Beesiness.Controllers
             return View();
         }
         [HttpPost]
-        public async Task <IActionResult> LoginIn(LoginRegistrationViewModel Lvm)
-        {            
+        public async Task<IActionResult> LoginIn(LoginRegistrationViewModel Lvm)
+        {
             var usuarios = _context.tblUsuarios.ToList();
             if (usuarios.Count == 0)
-            { 
+            {
                 //primero qye todo revisaremos si existen roles creados
                 //en la practica esto sera innecesario si es que la app ya esta asociada a una BD nuestra
                 var roles = _context.tblRoles.ToList();
@@ -65,7 +148,7 @@ namespace Beesiness.Controllers
                     _context.tblRoles.Add(rol);
                     _context.SaveChanges();
                 }
-               
+
                 //Ahora creamos el usuario que sera Root o Super Usuario
                 Usuario U = new Usuario();
                 U.Correo = "yonathanherreracl@gmail.com";
@@ -81,7 +164,9 @@ namespace Beesiness.Controllers
             }
 
 
-            var us = _context.tblUsuarios.Where(u => u.Correo.Equals(Lvm.Login.Correo)).FirstOrDefault();
+            var us = _context.tblUsuarios.Include(u => u.Rol) // Asegurémonos de incluir el rol asociado
+                            .Where(u => u.Correo.Equals(Lvm.Login.Correo)).FirstOrDefault();
+
             if (us != null)
             {
                 //Usuario Encontrado
@@ -89,17 +174,18 @@ namespace Beesiness.Controllers
                 {
                     //Usuario y contraseña correctos!
                     var Claims = new List<Claim>
-                    {
-                        new Claim(ClaimTypes.Email, Lvm.Login.Correo),
-                        new Claim(ClaimTypes.Name, us.Nombre)
-                    };
+        {
+            new Claim(ClaimTypes.Email, Lvm.Login.Correo),
+            new Claim(ClaimTypes.Name, us.Nombre),
+            new Claim(ClaimTypes.Role, us.Rol.Nombre)  // Añade el nombre del rol como un Claim
+        };
 
                     var identity = new ClaimsIdentity(Claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
                     var principal = new ClaimsPrincipal(identity);
 
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal,
-                        new AuthenticationProperties { IsPersistent = true});
+                        new AuthenticationProperties { IsPersistent = true });
 
                     return RedirectToAction("Index", "Home");
                 }
@@ -116,10 +202,12 @@ namespace Beesiness.Controllers
                 ModelState.AddModelError("", "Usuario no encontrado");
                 return View(Lvm);
             }
-
-            return View();    
         }
-
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("LoginIn", "Auth"); // Redirige al usuario a la página principal o de inicio de sesión.
+        }
 
         private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {

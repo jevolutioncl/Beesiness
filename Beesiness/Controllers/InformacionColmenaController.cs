@@ -26,8 +26,8 @@ namespace Beesiness.Controllers
             
             //falta crear la vista cuando no hay info de la colmena
             if (infoColmena == null)
-            { 
-                return NotFound();
+            {
+                return RedirectToAction("ColmenaGeneral", "Colmena");
             }
 
             var inspeccion = await _context.tblInspecciones.FirstOrDefaultAsync(x => x.Id == infoColmena.IdInspeccion);

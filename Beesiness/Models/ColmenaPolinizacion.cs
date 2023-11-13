@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Beesiness.Models
+﻿namespace Beesiness.Models
 {
     public class ColmenaPolinizacion
     {

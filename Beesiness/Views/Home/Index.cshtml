@@ -1,5 +1,6 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+    string userName = ViewData["UserName"] as string;
 }
 
 <!doctype html>
@@ -11,19 +12,17 @@
     <title>Modernize Free</title>
     <link rel="shortcut icon" type="image/png" href="../assets/images/logos/favicon.png" />
     <link rel="stylesheet" href="../assets/css/styles.min.css" />
+    <link rel="stylesheet" href="~/css/index.css" />
 </head>
 
 <body>
-    <!--estamos testeando los controlers-->
-    <div class="card">
-        <a asp-controller="Colmena" asp-action="ColmenaIndex">Colmenas</a>
-    </div>
-    <div class="card">
-        <a asp-controller="Inspeccion" asp-action="InspeccionIndex">Inspecciones a Colmenas</a>
-    </div>
-    <div class="card">
-        <a asp-controller="Enfermedad" asp-action="EnfermedadIndex">Enfermedades</a>
-    </div>
+    <header>
+        <div class="content-header">
+            <h2 class="tracking-in-expand">¡Bienvenido a Beesiness@(string.IsNullOrEmpty(userName) ? "" : ", " + userName)!</h2>
+            <p>Bienvenido al panel de Usuario de Beesiness, desde aquí podrás gestionar tus colmenas, estadística de la cosecha de miel como de polinización, entre otras cosas más.</p>
+        </div>
+        <div class="imagen-header image-fade-in-expand"></div>
+    </header>
 </body>
 
 </html>

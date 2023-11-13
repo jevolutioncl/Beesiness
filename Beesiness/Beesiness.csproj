@@ -19,6 +19,10 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Caching.SqlServer" Version="7.0.13" />
+    <PackageReference Include="Microsoft.SqlServer.Server" Version="1.0.0" />
+    <PackageReference Include="Microsoft.SqlServer.SqlManagementObjects" Version="170.18.0" />
+    <PackageReference Include="Microsoft.SqlServer.SqlManagementObjects.SSMS" Version="161.47027.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.16" />
     <PackageReference Include="QuestPDF" Version="2022.12.1" />
   </ItemGroup>

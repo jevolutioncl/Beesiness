@@ -17,7 +17,7 @@ namespace Beesiness.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.12")
+                .HasAnnotation("ProductVersion", "7.0.13")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -690,12 +690,17 @@ namespace Beesiness.Migrations
             modelBuilder.Entity("Beesiness.Models.Usuario", b =>
                 {
                     b.HasOne("Beesiness.Models.Rol", "Rol")
-                        .WithMany()
+                        .WithMany("Usuarios")
                         .HasForeignKey("IdRol")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Rol");
+                });
+
+            modelBuilder.Entity("Beesiness.Models.Rol", b =>
+                {
+                    b.Navigation("Usuarios");
                 });
 #pragma warning restore 612, 618
         }

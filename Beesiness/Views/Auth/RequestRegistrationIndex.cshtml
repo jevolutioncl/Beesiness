@@ -1,0 +1,122 @@
+﻿@model RequestRegistrationIndexViewModel
+<div class="card text-center">
+    <div class="card-header">
+        Listado de Usuarios
+    </div>
+</div>
+
+<div class="row justify-content-evenly mt-3">
+    <div style="overflow:auto;">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        <a href="@Url.Action("RequestRegistrationIndex", "Auth", new { sortOrder = Model.IdSort })">
+                            Id
+                            @if (Model.CurrentSort == "id_desc")
+                            {
+                                <i class="fas fa-arrow-down"></i>
+                            }
+                            else
+                            {
+                                <i class="fas fa-arrow-up"></i>
+                            }
+                        </a>
+                    </th>
+                    <th>
+                        <a href="@Url.Action("RequestRegistrationIndex", "Auth", new { sortOrder = Model.NombreSort })">
+                            Nombre
+                            @if (Model.CurrentSort == "nombre_desc")
+                            {
+                                <i class="fas fa-arrow-down"></i>
+                            }
+                            else
+                            {
+                                <i class="fas fa-arrow-up"></i>
+                            }
+                        </a>
+                    </th>
+                    <th>
+                        <a href="@Url.Action("RequestRegistrationIndex", "Auth", new { sortOrder = Model.CorreoSort })">
+                            Correo
+                            @if (Model.CurrentSort == "correo_desc")
+                            {
+                                <i class="fas fa-arrow-down"></i>
+                            }
+                            else
+                            {
+                                <i class="fas fa-arrow-up"></i>
+                            }
+                        </a>
+                    </th>
+                    <th>
+                        <a href="@Url.Action("RequestRegistrationIndex", "Auth", new { sortOrder = Model.RolSort })">
+                            Rol
+                            @if (Model.CurrentSort == "rol_desc")
+                            {
+                                <i class="fas fa-arrow-down"></i>
+                            }
+                            else
+                            {
+                                <i class="fas fa-arrow-up"></i>
+                            }
+                        </a>
+                    </th>
+                    <th>
+                        <a href="@Url.Action("RequestRegistrationIndex", "Auth", new { sortOrder = Model.FechaSort })">
+                            Fecha solicitud
+                            @if (Model.CurrentSort == "fecha_desc")
+                            {
+                                <i class="fas fa-arrow-down"></i>
+                            }
+                            else
+                            {
+                                <i class="fas fa-arrow-up"></i>
+                            }
+                        </a>
+                    </th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if(Model != null && Model.Usuarios.Any())
+                {
+                    @foreach (var usuario in Model.Usuarios)
+                    {
+                        <tr>
+                            <td>
+                                @usuario.Id
+                            </td>
+                            <td>
+                                @usuario.Nombre
+                            </td>
+                            <td>
+                                @usuario.Correo
+                            </td>
+                            <td>
+                                @usuario.Rol
+                            </td>
+                            <td>
+                                @usuario.FechaSolicitud
+                            </td>
+                            <td>
+                                <a href="@Url.Action("RegisterFromRequest", "Usuarios", new { id = usuario.Id })" class="btn btn-primary">
+                                    Registrar Usuario
+                                    </a>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <p>No hay usuarios disponibles</p>
+                }
+
+            </tbody>
+        </table>
+    </div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,7 +1,7 @@
 ﻿using Beesiness.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
@@ -9,6 +9,8 @@ using QuestPDF.Infrastructure;
 
 namespace Beesiness.Controllers
 {
+
+    [Authorize]
     public class ColmenaController : Controller
     {
         private readonly AppDbContext _context;
@@ -18,10 +20,18 @@ namespace Beesiness.Controllers
             _context = context;
         }
 
+        public async Task<IActionResult> ColmenaGeneral()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                return View();
+            }
+            return RedirectToAction("LoginIn", "Auth");
+        }
         public async Task<IActionResult> ColmenaIndex(string filtro)
         {
             if (User.Identity.IsAuthenticated)
-            {                
+            {
                 var colmenas = await _context.tblColmenas.ToListAsync();
                 if (filtro != null)
                 {
@@ -86,9 +96,9 @@ namespace Beesiness.Controllers
         public async Task<IActionResult> ColmenaCrear(Colmena colmena)
         {
             if (User.Identity.IsAuthenticated)
-            {                
+            {
                 if (ModelState.IsValid)
-                {                    
+                {
                     _context.Add(colmena);
                     await _context.SaveChangesAsync();
                     return RedirectToAction("ColmenaIndex");
@@ -162,14 +172,14 @@ namespace Beesiness.Controllers
             {
                 return View();
             }
-            return RedirectToAction("LoginIn", "Auth");            
-        }        
+            return RedirectToAction("LoginIn", "Auth");
+        }
 
         //Los siguientes métodos no redireccionan a una vista, sino que otorgan funcionalidades
         public async Task<IActionResult> DatosColmenasFecha()
         {
             var colmenas = await _context.tblColmenas.ToListAsync();
-            
+
             //uso la palabra year en vez de año para no tener problemas con la ñ
             var query = colmenas.GroupBy(
                 x => x.FechaIngreso.Year,
@@ -179,7 +189,7 @@ namespace Beesiness.Controllers
                     Cantidad = cantidad.Count()
                 }
                 ).OrderBy(x => x.Year);
-            
+
             return Json(query);
         }
         

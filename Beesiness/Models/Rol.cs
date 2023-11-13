@@ -13,5 +13,7 @@ namespace Beesiness.Models
 
         [StringLength(200)]
         public string Descripcion { get; set; }
+
+        public virtual ICollection<Usuario> Usuarios { get; set; }
     }
 }

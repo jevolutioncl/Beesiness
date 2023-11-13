@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Beesiness.Models
 {
@@ -17,7 +17,7 @@ namespace Beesiness.Models
         public string Correo { get; set; }
 
         [Required]
-        public byte[] PasswordHash {  get; set; }
+        public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
 
         [Required]
