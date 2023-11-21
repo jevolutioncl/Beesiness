@@ -20,7 +20,7 @@ function loadMapScenario() {
             console.error('Error al obtener los datos de la colmena: ', error);
         });
     Microsoft.Maps.Events.addHandler(map, 'rightclick', function (e) {
-        var point = new Microsoft.Maps.Point(e.pageX, e.pageY);
+        var point = new Microsoft.Maps.Point(e.getX(), e.getY());
         var loc = map.tryPixelToLocation(point);
 
         if (!contextMenuInfobox) {
@@ -34,14 +34,14 @@ function loadMapScenario() {
         contextMenuInfobox.setLocation(loc);
         contextMenuInfobox.setOptions({ visible: true });
 
-        // Guardar los valores de latitud, longitud y nivel de zoom en los inputs ocultos
         document.getElementById('Latitude').value = loc.latitude;
         document.getElementById('Longitude').value = loc.longitude;
         document.getElementById('ZoomLevel').value = map.getZoom();
     });
+
 }
 function redirectToCreateLocation() {
-    window.location.href = `/ubicacion/ubicacioncrear?lat=${document.getElementById('Latitude').value}&lng=${document.getElementById('Longitude').value}&zoom=${document.getElementById('ZoomLevel').value}`;
+    window.location.href = `/Ubicacion/UbicacionCrear?lat=${document.getElementById('Latitude').value}&lng=${document.getElementById('Longitude').value}&zoom=${document.getElementById('ZoomLevel').value}`;
 }
 
 function displayColmenas(map, colmenas) {

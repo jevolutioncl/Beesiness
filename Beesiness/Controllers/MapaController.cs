@@ -14,7 +14,7 @@ namespace Beesiness.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AgregarUbicacion(UbicacionMapa ubicacion)
+        public async Task<IActionResult> UbicacionCrear(UbicacionMapa ubicacion)
         {
             if (ModelState.IsValid)
             {
