@@ -18,6 +18,15 @@ function loadMapScenario() {
         .catch(error => {
             console.error('Error al obtener los datos de la colmena: ', error);
         });
+    Microsoft.Maps.Events, addHandler(map, 'rightclick', function (e) {
+        e.preventDefault();
+        var point = new Microsoft.Maps.Point(e.clientX, e.clientY);
+        var loc = map.tryPixelToLocation(point);
+
+        document.getElementById('Latitude').value = loc.latitude;
+        document.getElementById('Longitude').value = loc.longitude;
+        document.getElementById('ZoomLevel').value = map.getZoom();
+    });
 }
 
 function displayColmenas(map, colmenas) {
@@ -70,12 +79,3 @@ function closeInfobox() {
     customInfobox.style.display = 'none';
 }
 
-map.addEventListener('contextmenu', function(e) {
-    e.preventDefault();
-    var point = new Microsoft.Maps.Point(e.clientX, e.clientY);
-    var loc = map.tryPixelToLocation(point);
-
-    document.getElementById('Latitude').value = loc.latitude;
-    document.getElementById('Longitude').value = loc.longitude;
-    document.getElementById('ZoomLevel').value = map.getZoom();
-});
