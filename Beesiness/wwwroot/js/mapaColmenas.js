@@ -1,7 +1,8 @@
 ﻿let colmenasData = [];
 let pins = [];
+let map;
 function loadMapScenario() {
-    var map = new Microsoft.Maps.Map('#myMap', {
+    map = new Microsoft.Maps.Map('#myMap', {
         center: new Microsoft.Maps.Location(-35.31917337366901, -71.36038685586249),
         zoom: 250,
         mapTypeId: Microsoft.Maps.MapTypeId.aerial
