@@ -7,12 +7,19 @@
     <option value="Dadant">Dadant</option>
     <option value="Langstroth">Langstroth</option>
 </select>
+
+<!-- Asegúrate de que estos inputs estén definidos y sean accesibles -->
+<input type="hidden" id="Latitude" name="Latitude" />
+<input type="hidden" id="Longitude" name="Longitude" />
+<input type="hidden" id="ZoomLevel" name="ZoomLevel" />
+
 <div id="myMap" style="position:relative;width:100%;height:600px;"></div>
 
 <!-- Contenedor para Infobox personalizado -->
 <div id="customInfobox" class="custom-infobox">
     <!-- El contenido del Infobox se llenará dinámicamente -->
 </div>
+
 @section Scripts {
     <script type='text/javascript' src='https://www.bing.com/api/maps/mapcontrol?key=AmrnF-1-dvaNYDUkUuogYW8SOvy2cut1Xdxs4EzsahlVv8HrT_MvGx0HPKP8dOlZ&callback=loadMapScenario' async defer></script>
     <script src="/js/mapaColmenas.js"></script>
