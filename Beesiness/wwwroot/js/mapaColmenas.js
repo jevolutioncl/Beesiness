@@ -69,3 +69,13 @@ function closeInfobox() {
     var customInfobox = document.getElementById('customInfobox');
     customInfobox.style.display = 'none';
 }
+
+map.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    var point = new Microsoft.Maps.Point(e.clientX, e.clientY);
+    var loc = map.tryPixelToLocation(point);
+
+    document.getElementById('Latitude').value = loc.latitude;
+    document.getElementById('Longitude').value = loc.longitude;
+    document.getElementById('ZoomLevel').value = map.getZoom();
+});
