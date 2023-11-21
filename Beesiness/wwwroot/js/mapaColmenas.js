@@ -1,6 +1,7 @@
 ﻿let colmenasData = [];
 let pins = [];
 let map;
+let contextMenuInfobox;
 function loadMapScenario() {
     map = new Microsoft.Maps.Map('#myMap', {
         center: new Microsoft.Maps.Location(-35.31917337366901, -71.36038685586249),
@@ -19,25 +20,29 @@ function loadMapScenario() {
             console.error('Error al obtener los datos de la colmena: ', error);
         });
     Microsoft.Maps.Events.addHandler(map, 'rightclick', function (e) {
-        var latInput = document.getElementById('Latitude');
-        var lngInput = document.getElementById('Longitude');
-        var zoomInput = document.getElementById('ZoomLevel');
-        var menu = document.getElementById('contextMenu');
+        var point = new Microsoft.Maps.Point(e.pageX, e.pageY);
+        var loc = map.tryPixelToLocation(point);
 
-        if (latInput && lngInput && zoomInput && menu) {
-            var point = new Microsoft.Maps.Point(e.pageX, e.pageY);
-            var loc = map.tryPixelToLocation(point);
-            latInput.value = loc.latitude;
-            lngInput.value = loc.longitude;
-            zoomInput.value = map.getZoom();
-
-            menu.style.display = 'block';
-            menu.style.left = e.pageX + 'px';
-            menu.style.top = e.pageY + 'px';
+        if (!contextMenuInfobox) {
+            contextMenuInfobox = new Microsoft.Maps.Infobox(loc, {
+                htmlContent: '<div class="context-menu"><ul><li onclick="redirectToCreateLocation()">Guardar Ubicación</li></ul></div>',
+                visible: false
+            });
+            contextMenuInfobox.setMap(map);
         }
+
+        contextMenuInfobox.setLocation(loc);
+        contextMenuInfobox.setOptions({ visible: true });
+
+        // Guardar los valores de latitud, longitud y nivel de zoom en los inputs ocultos
+        document.getElementById('Latitude').value = loc.latitude;
+        document.getElementById('Longitude').value = loc.longitude;
+        document.getElementById('ZoomLevel').value = map.getZoom();
     });
 }
-
+function redirectToCreateLocation() {
+    window.location.href = `/ubicacion/ubicacioncrear?lat=${document.getElementById('Latitude').value}&lng=${document.getElementById('Longitude').value}&zoom=${document.getElementById('ZoomLevel').value}`;
+}
 
 function displayColmenas(map, colmenas) {
     map.entities.clear();
@@ -88,14 +93,3 @@ function closeInfobox() {
     var customInfobox = document.getElementById('customInfobox');
     customInfobox.style.display = 'none';
 }
-function showContextMenu(e) {
-    e.preventDefault();
-    var menu = document.getElementById('contextMenu');
-    menu.style.display = 'block';
-    menu.style.left = e.pageX + 'px';
-    menu.style.top = e.pageY + 'px';
-}
-document.getElementById('contextMenuOptions').addEventListener('click', function () {
-    window.location.href = `/ubicacion/ubicacioncrear?lat=${document.getElementById('Latitude').value}&lng=${document.getElementById('Longitude').value}&zoom=${document.getElementById('ZoomLevel').value}`;
-});
-

@@ -22,3 +22,9 @@
     // O cualquier color que combine con tu diseño border: none;
     cursor: pointer;
 }
+
+#contextMenu {
+    background-color: black;
+    border: 1px solid black;
+    z-index: 1000;
+}
