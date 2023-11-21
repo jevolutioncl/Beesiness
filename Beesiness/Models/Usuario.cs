@@ -24,7 +24,7 @@ namespace Beesiness.Models
         [ForeignKey("Rol")]
         public int IdRol { get; set; }
 
-        // Navigation property
+        // Propiedad de navegación
         public Rol Rol { get; set; }
     }
 }

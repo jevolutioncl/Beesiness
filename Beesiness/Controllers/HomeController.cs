@@ -26,6 +26,10 @@ namespace Beesiness.Controllers
             return View();
         }
 
+        public IActionResult Sensor()
+        {
+            return View();
+        }
         public IActionResult Privacy()
         {
             return View();

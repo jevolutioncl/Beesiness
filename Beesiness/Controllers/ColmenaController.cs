@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
-using QuestPDF.Infrastructure;
 
 namespace Beesiness.Controllers
 {
@@ -28,6 +27,22 @@ namespace Beesiness.Controllers
             }
             return RedirectToAction("LoginIn", "Auth");
         }
+
+        // Apartado del mapa de Colmenas
+        public async Task<JsonResult> ObtenerDatosColmenas()
+        {
+            var colmenas = await _context.tblColmenas.ToListAsync();
+            return Json(colmenas);
+        }
+        public IActionResult MapaColmena()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                return View();
+            }
+            return RedirectToAction("LoginIn", "Auth");
+        }
+
         public async Task<IActionResult> ColmenaIndex(string filtro)
         {
             if (User.Identity.IsAuthenticated)
@@ -134,7 +149,7 @@ namespace Beesiness.Controllers
 
         }
 
-        public async Task<IActionResult> ColmenaInfo(int colmenaId) 
+        public async Task<IActionResult> ColmenaInfo(int colmenaId)
         {
             var colmena = await _context.tblColmenas.FirstOrDefaultAsync(x => x.Id == colmenaId);
             var infoColmena = await _context.tblInformacionColmenas.LastOrDefaultAsync(x => x.IdColmena == colmenaId);
@@ -146,7 +161,7 @@ namespace Beesiness.Controllers
                 .Join(_context.tblEnfermedades,
                 tabla1 => tabla1.IdEnfermedad,
                 tabla2 => tabla2.Id,
-                (tabla1,tabla2) => new { tabla2.Nombre, tabla1.FechaDeteccion, tabla1.FechaRecuperacion }
+                (tabla1, tabla2) => new { tabla2.Nombre, tabla1.FechaDeteccion, tabla1.FechaRecuperacion }
                 ).ToListAsync();
 
             InfoColmenaViewModel model = new InfoColmenaViewModel();
@@ -192,20 +207,20 @@ namespace Beesiness.Controllers
 
             return Json(query);
         }
-        
+
         public IActionResult DescargarPdf()
         {
-            var hola = Document.Create(holapdf => 
+            var hola = Document.Create(holapdf =>
             {
-                holapdf.Page(pagina1 => 
+                holapdf.Page(pagina1 =>
                 {
                     pagina1.Header().Text("El PDF mas basico que hay!").SemiBold().FontSize(36).FontColor(Colors.Blue.Medium);
-                    
+
                 });
             }).GeneratePdf();
 
             Stream stream = new MemoryStream(hola);
-            return File(stream,"application/pdf","nombreDelPdf.pdf");
+            return File(stream, "application/pdf", "nombreDelPdf.pdf");
         }
 
     }

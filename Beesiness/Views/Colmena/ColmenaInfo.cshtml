@@ -1,6 +1,29 @@
 ﻿@model InfoColmenaViewModel
 @{
 }
+@section Scripts {
+    <script type='text/javascript' src='https://www.bing.com/api/maps/mapcontrol?key=TuAPIKeyAqui&callback=loadMapScenario' async defer></script>
+}
+<script type='text/javascript'>
+    function loadMapScenario() {
+        var map = new Microsoft.Maps.Map('#bingMap', {
+            // Configuración inicial del mapa. Puedes ajustar a tus necesidades
+            center: new Microsoft.Maps.Location(0, 0), // Reemplaza con una ubicación predeterminada si es necesario
+            zoom: 10
+        });
+
+        // Asumiendo que tienes latitud y longitud en tu modelo
+        var location = new Microsoft.Maps.Location(@Model.Latitude, @Model.Longitude);
+
+        // Agrega un marcador en la ubicación de la colmena
+        var pin = new Microsoft.Maps.Pushpin(location);
+        map.entities.push(pin);
+
+        // Centra el mapa en la ubicación de la colmena
+        map.setView({ center: location });
+    }
+</script>
+
 
 <div>
     <h1>Información correspondiente a la ultima inspección de la Colmena</h1>
@@ -20,6 +43,7 @@
 <div>
     <h1>Ubicacion Colmena: @Model.Ubicacion</h1>
 </div>
+<div id="bingMap" style="position:relative;width:600px;height:400px;"></div>
 <div>
     <h1>Tiempo de vida Colmena: @Model.TiempoVida</h1>
 </div>

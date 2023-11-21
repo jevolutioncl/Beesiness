@@ -18,12 +18,12 @@ namespace Beesiness.Controllers
         }
 
         public async Task<IActionResult> InformacionColmenaIndex(int colmenaId)
-        {            
+        {
             var colmena = await _context.tblColmenas.FirstOrDefaultAsync(x => x.Id == colmenaId);
             //despues tiene que cambiarse a LastOrDefaultAsync
             //var infoColmena = await _context.tblInformacionColmenas.OrderBy(x => x.IdInspeccion).LastOrDefaultAsync(x => x.IdColmena == colmenaId);
             var infoColmena = await _context.tblInformacionColmenas.FirstOrDefaultAsync(x => x.IdColmena == colmenaId);
-            
+
             //falta crear la vista cuando no hay info de la colmena
             if (infoColmena == null)
             {
@@ -80,7 +80,7 @@ namespace Beesiness.Controllers
             }
             return RedirectToAction("LoginIn", "Auth");
         }
-        
+
         public async Task<IActionResult> InformacionColmenaEditar(int id)
         {
             if (User.Identity.IsAuthenticated)
@@ -209,7 +209,7 @@ namespace Beesiness.Controllers
         }
 
         public IActionResult GenerarPdf(InfoColmenaViewModel ivm)
-        {            
+        {
 
             var informe = Document.Create(document =>
             {
@@ -252,7 +252,7 @@ namespace Beesiness.Controllers
                             x.Item().Text(ivm.EstadoSalud).FontSize(15);
 
                             x.Item().Text("Enfermedades encontradas:").Bold().FontSize(20);
-                            x.Item().Text("En construccion").FontSize(15);                            
+                            x.Item().Text("En construccion").FontSize(15);
 
                             x.Item().Text("Conclusiones y acciones a realizar:").Bold().FontSize(20);
                             x.Item().Text(Placeholders.LoremIpsum()).FontSize(15);

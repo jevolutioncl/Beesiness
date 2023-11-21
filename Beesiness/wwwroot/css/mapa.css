@@ -1,0 +1,24 @@
+﻿.custom-infobox {
+    display: none; /* Ocultar por defecto */
+    position: absolute;
+    background: #feedc6; /* Fondo claro */
+    border: 1px solid #ccc; /* Bordes sutiles */
+    padding: 10px;
+    border-radius: 4px; /* Bordes redondeados */
+    box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Sombra suave */
+    z-index: 1000;
+    /* Más estilos según la identidad visual de tu página */
+}
+.infobox-content {
+    padding: 10px;
+    // ... (cualquier otro estilo que desees aplicar al contenido)
+}
+
+.infobox-close-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: #fff;
+    // O cualquier color que combine con tu diseño border: none;
+    cursor: pointer;
+}

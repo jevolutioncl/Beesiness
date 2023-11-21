@@ -1,7 +1,6 @@
 ﻿@model Colmena
 @{
 }
-
 <div>
     <h2>Crear Colmena</h2>
 </div>
@@ -22,8 +21,24 @@
                 <span asp-validation-for="Descripcion" class="text-danger"></span>
             </div>
             <div class="form-group mt-3">
+                <p>Usa el mapa interactivo para registrar la ubicación de la Colmena</p>
+            </div>
+            <div class="form-group mt-3" id="myMap" style="position:relative;width:600px;height:400px;">
+            </div>
+            <div class="form-group mt-3" id="locationDetails">
+                <p id="locationName">Ubicación escogida: Ninguna</p>
+            </div>
+            <input type="hidden" id="UbicacionColmena" name="UbicacionColmena" />
+            <input asp-for="Latitude" type="hidden" />
+            <input asp-for="Longitude" type="hidden" />
+            <div class="form-group mt-3">
                 <input type="submit" value="Crear Colmena" class="btn btn-outline-success col-12" />
             </div>
         </div>
     </form>
 </div>
+
+@section Scripts {
+    <script type='text/javascript' src='https://www.bing.com/api/maps/mapcontrol?key=AmrnF-1-dvaNYDUkUuogYW8SOvy2cut1Xdxs4EzsahlVv8HrT_MvGx0HPKP8dOlZ&callback=loadMapScenario' async defer></script>
+    <script src="/js/ubicacion.js"></script>
+}

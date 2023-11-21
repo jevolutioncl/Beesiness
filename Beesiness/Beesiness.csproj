@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <Content Remove="Views\Inspeccion\InspeccionDetalle.cshtml" />
+    <Content Remove="wwwroot\js\sensor.js" />
   </ItemGroup>
 
   <ItemGroup>
@@ -36,11 +37,19 @@
   </ItemGroup>
 
   <ItemGroup>
+    <_ContentIncludedByDefault Remove="Views\Enfermedad\EnfermedadGeneral.cshtml" />
     <_ContentIncludedByDefault Remove="Views\Inspeccion\InspeccionDetalle.cshtml" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\mapa.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\sensor.js" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="Views\Inspeccion\InspeccionDetalle.cshtml" />
+    <None Include="wwwroot\js\sensor.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Views\Enfermedad\EnfermedadGeneral.cshtml" />
   </ItemGroup>
 
 </Project>
