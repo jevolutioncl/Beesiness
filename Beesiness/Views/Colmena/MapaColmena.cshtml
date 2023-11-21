@@ -7,9 +7,11 @@
     <option value="Dadant">Dadant</option>
     <option value="Langstroth">Langstroth</option>
 </select>
-<input type="hidden" id="Latitude" name="Latitude" />
-<input type="hidden" id="Longitude" name="Longitude" />
-<input type="hidden" id="ZoomLevel" name="ZoomLevel" />
+<div id="contextMenu" class="context-menu" style="display:none">
+    <ul>
+        <li id="contextMenuOption">Guardar Ubicación</li>
+    </ul>
+</div>
 <div id="myMap" style="position:relative;width:100%;height:600px;"></div>
 
 <!-- Contenedor para Infobox personalizado -->
