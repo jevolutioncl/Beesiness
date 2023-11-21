@@ -26,6 +26,7 @@ namespace Beesiness.Models
         public DbSet<Inspeccion> tblInspecciones { get; set; }
         public DbSet<InformacionColmena> tblInformacionColmenas { get; set; }
         public DbSet<UsuarioTemporal> tblUsuariosTemporales { get; set; }
+        public DbSet<UbicacionMapa> tblUbicacionMapas { get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
