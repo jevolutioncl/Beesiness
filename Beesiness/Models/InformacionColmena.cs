@@ -16,6 +16,8 @@ namespace Beesiness.Models
 
         [StringLength(100)]
         public string EstadoSalud { get; set; }
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
 
         [Required]
         [ForeignKey("Inspeccion")]

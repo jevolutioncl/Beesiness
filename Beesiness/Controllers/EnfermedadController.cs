@@ -12,7 +12,6 @@ namespace Beesiness.Controllers
         {
             _context = context;
         }
-
         public async Task<IActionResult> EnfermedadIndex(string filtro)
         {
             if (User.Identity.IsAuthenticated)
@@ -37,6 +36,11 @@ namespace Beesiness.Controllers
                 return View();
             }
             return RedirectToAction("LoginIn", "Auth");
+        }
+
+        public IActionResult EnfermedadGeneral()
+        {
+            return View("EnfermedadGeneral");
         }
 
         public async Task<IActionResult> EnfermedadEditar(int id)

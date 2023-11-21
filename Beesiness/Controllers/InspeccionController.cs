@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using QuestPDF.Helpers;
 
 namespace Beesiness.Controllers
 {
@@ -59,7 +58,7 @@ namespace Beesiness.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                if (id == 0) { return View(); } 
+                if (id == 0) { return View(); }
                 else
                 {
                     var variable1 = await _context.tblInspecciones.FirstOrDefaultAsync(x => x.Id == id);
@@ -74,8 +73,8 @@ namespace Beesiness.Controllers
                             Value = r.Id.ToString(),
                             Text = r.Nombre
                         }).ToList()
-                    };                 
-                    
+                    };
+
                     return View(model);
                 }
             }
@@ -175,7 +174,7 @@ namespace Beesiness.Controllers
             return RedirectToAction("LoginIn", "Auth");
 
         }
-        
+
         /*
         public async Task<IActionResult> InspeccionDetalle(int id)
         {
@@ -192,6 +191,6 @@ namespace Beesiness.Controllers
             }
             return RedirectToAction("LoginIn", "Auth");
         }*/
-        
+
     }
 }

@@ -1,0 +1,13 @@
+﻿@* Ejemplo de vista en Razor *@
+@{
+    ViewBag.Title = "Temperatura en Tiempo Real";
+}
+
+<h2>Temperatura de la Colmena</h2>
+<div id="temperatura">Cargando...</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="/js/sensor.js"></script>
+
+}

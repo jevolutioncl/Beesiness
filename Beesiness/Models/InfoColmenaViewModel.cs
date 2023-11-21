@@ -16,6 +16,9 @@ namespace Beesiness.Models
         public List<DateTime> FechaDeteccionEnfermedad { get; set; }
         public List<DateTime?> FechaRecuperacionEnfermedad { get; set; }
 
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
+
         //agregado nuevo, probar si genera errores
         public int IdInspeccion { get; set; }
         [BindNever]

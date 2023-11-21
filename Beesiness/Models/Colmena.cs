@@ -12,5 +12,7 @@ namespace Beesiness.Models
         public string TipoColmena { get; set; }
         [MaxLength(250)]
         public string Descripcion { get; set; }
+        public float Latitude { get; set; }
+        public float Longitude { get; set; }
     }
 }

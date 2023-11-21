@@ -3,22 +3,18 @@
     ViewData["Title"] = "Administrar Colmenas";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<head>
+    <link rel="stylesheet" href="~/css/index.css" />
+</head>
 
 <h1>Administrar Colmenas</h1>
 
-<div>
-    <a class="button" asp-controller="Home" asp-action="Index">Volver al Home</a>
+<div class="cards-container">
+    <a class="card card-personalizada card-link button" asp-controller="Home" asp-action="Index">Volver al Home</a>
+    <a class="card card-personalizada card-link button" asp-action="ColmenaCrear">Nueva Colmena</a>
+    <a class="card card-personalizada card-link button" asp-action="ColmenaResumen">Graficos Colmenas</a>
 </div>
-<div>
-    <a class="button" asp-action="ColmenaCrear">Nueva Colmena</a>
-</div>
-<div>
-    <a class="button" asp-action="ColmenaResumen">Graficos Colmenas</a>
-</div>
-<div>
-    <a class="button" asp-action="DescargarPdf">Descargar Pdf</a>
-</div>
-<div>
+<div class="center">
     <h6>Listado de Colmenas</h6>
 </div>
 <div class="row justify-content-evenly mt-3">
@@ -30,6 +26,7 @@
                     <th>Fecha ingreso</th>
                     <th>Tipo Colmena</th>
                     <th>Descripcion</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>

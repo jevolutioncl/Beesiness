@@ -1,0 +1,35 @@
+﻿@model Enfermedad
+@{
+    ViewData["Title"] = "Administrar Enfermedades";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<head>
+    <link rel="stylesheet" href="~/css/index.css" />
+</head>
+<h1 class="text-center">Administrar Enfermedades</h1>
+<div class="row">
+    <div class="card mx-auto image-fade-in-expand card-personalizada" style="width: 15rem;">
+        <img src="/css/createenfermedad.svg" class="card-img-top img-fluid mx-auto d-block" alt="...">
+        <div class="card-body">
+            <h5 class="card-title">Ingresar nuevas enfermedades</h5>
+            <p class="card-text">¿Necesitas ingresar una nueva enfermedad?, ¡has llegado al apartatdo correcto!</p>
+            <a asp-action="EnfermedadCrear" class="btn btn-primary">Ingresar enfermedad</a>
+        </div>
+    </div>
+    <div class="card mx-auto image-fade-in-expand card-personalizada" style="width: 15rem;">
+        <img src="/css/verenfermedad.svg" class="card-img-top img-fluid mx-auto d-block" alt="...">
+        <div class="card-body">
+            <h5 class="card-title">Ver enfermedades</h5>
+            <p class="card-text">¿Necesitas ver, editar o eliminar alguna enfermedad?, ¡has llegado al apartado correcto!</p>
+            <a asp-action="EnfermedadCrear" class="btn btn-primary">Ver enfermedades</a>
+        </div>
+    </div>
+    <div class="card mx-auto image-fade-in-expand card-personalizada" style="width: 15rem;">
+        <img src="/css/infoenfermedad.svg" class="card-img-top img-fluid mx-auto d-block" alt="...">
+        <div class="card-body">
+            <h5 class="card-title">Info enfermedades</h5>
+            <p class="card-text">¿Necesitas revisar detalles de las enfermedades?, ¡has llegado al apartado correcto!</p>
+            <a asp-action="EnfermedadIndex" class="btn btn-primary">Informacion enfermedades</a>
+        </div>
+    </div>
+</div>
