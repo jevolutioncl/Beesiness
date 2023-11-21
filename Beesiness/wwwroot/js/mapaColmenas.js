@@ -18,9 +18,8 @@ function loadMapScenario() {
         .catch(error => {
             console.error('Error al obtener los datos de la colmena: ', error);
         });
-    Microsoft.Maps.Events, addHandler(map, 'rightclick', function (e) {
-        e.preventDefault();
-        var point = new Microsoft.Maps.Point(e.clientX, e.clientY);
+    Microsoft.Maps.Events.addHandler(map, 'rightclick', function (e) {
+        var point = new Microsoft.Maps.Point(e.pageX, e.pageY);
         var loc = map.tryPixelToLocation(point);
 
         document.getElementById('Latitude').value = loc.latitude;
