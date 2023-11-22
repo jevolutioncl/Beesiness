@@ -2,22 +2,23 @@
     ViewData["Title"] = "Mapa de Colmenas";
 }
 <link href="/css/mapa.css" rel="stylesheet" />
-<select id="filtroTipoColmena">
-    <option value="Todas">Todas</option>
-    <option value="Dadant">Dadant</option>
-    <option value="Langstroth">Langstroth</option>
-</select>
+<div class="filters">
+    <select id="filtroTipoColmena">
+        <option value="Todas">Todas</option>
+        <option value="Dadant">Dadant</option>
+        <option value="Langstroth">Langstroth</option>
+    </select>
 
-<!-- Asegúrate de que estos inputs estén definidos y sean accesibles -->
+    <select id="ubicacionesPredeterminadas">
+    </select>
+</div>
 <input type="hidden" id="Latitude" name="Latitude" />
 <input type="hidden" id="Longitude" name="Longitude" />
 <input type="hidden" id="ZoomLevel" name="ZoomLevel" />
 
 <div id="myMap" style="position:relative;width:100%;height:600px;"></div>
 
-<!-- Contenedor para Infobox personalizado -->
 <div id="customInfobox" class="custom-infobox">
-    <!-- El contenido del Infobox se llenará dinámicamente -->
 </div>
 
 @section Scripts {
