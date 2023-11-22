@@ -13,6 +13,12 @@ namespace Beesiness.Controllers
             _context = context;
         }
 
+        [HttpGet] 
+        public IActionResult UbicacionCrear()
+        {
+            return View(new UbicacionMapa());
+        }
+
         [HttpPost]
         public async Task<IActionResult> UbicacionCrear(UbicacionMapa ubicacion)
         {
@@ -20,9 +26,16 @@ namespace Beesiness.Controllers
             {
                 _context.tblUbicacionMapas.Add(ubicacion);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index");
+                return RedirectToAction("MapaColmena","Colmena");
             }
             return View(ubicacion);
         }
+        [HttpGet]
+        public async Task<IActionResult> ObtenerUbicacionesPredeterminadas()
+        {
+            var ubicaciones = await _context.tblUbicacionMapas.ToListAsync();
+            return Json(ubicaciones);
+        }
+
     }
 }

@@ -2,6 +2,7 @@
 let pins = [];
 let map;
 let contextMenuInfobox;
+let closeInfoboxTimer;
 function loadMapScenario() {
     map = new Microsoft.Maps.Map('#myMap', {
         center: new Microsoft.Maps.Location(-35.31917337366901, -71.36038685586249),
@@ -25,7 +26,12 @@ function loadMapScenario() {
 
         if (!contextMenuInfobox) {
             contextMenuInfobox = new Microsoft.Maps.Infobox(loc, {
-                htmlContent: '<div class="context-menu"><ul><li onclick="redirectToCreateLocation()">Guardar Ubicación</li></ul></div>',
+                htmlContent: `
+            <div class="context-menu">
+                <button class="context-menu-button" onclick="redirectToCreateLocation()">Guardar Ubicación</button>
+                <button class="context-menu-button" onclick="redirectToCreateColmena()">Guardar Colmena</button>
+                <button class="context-menu-close" onclick="closeContextMenu()">Cerrar</button>
+            </div>`,
                 visible: false
             });
             contextMenuInfobox.setMap(map);
@@ -40,10 +46,39 @@ function loadMapScenario() {
     });
 
 }
-function redirectToCreateLocation() {
-    window.location.href = `/Ubicacion/UbicacionCrear?lat=${document.getElementById('Latitude').value}&lng=${document.getElementById('Longitude').value}&zoom=${document.getElementById('ZoomLevel').value}`;
+function closeContextMenu() {
+    if (contextMenuInfobox) {
+        contextMenuInfobox.setOptions({ visible: false });
+    }
 }
 
+function redirectToCreateLocation() {
+    // Guardar en el almacenamiento local o de sesión
+    localStorage.setItem('LocationData', JSON.stringify({
+        latitude: document.getElementById('Latitude').value,
+        longitude: document.getElementById('Longitude').value,
+        zoomLevel: document.getElementById('ZoomLevel').value
+    }));
+
+    // Redirigir a la nueva vista
+    window.location.href = '/Mapa/UbicacionCrear';
+}
+function redirectToCreateColmena() {
+    
+    var lat = document.getElementById('Latitude').value;
+    var lng = document.getElementById('Longitude').value;
+
+    if (lat && lng) {
+        // Guardar en el almacenamiento local
+        localStorage.setItem('ColmenaLocation', JSON.stringify({
+            latitude: lat,
+            longitude: lng
+        }));
+
+        
+        window.location.href = '/Colmena/ColmenaCrear';
+    }
+}
 function displayColmenas(map, colmenas) {
     map.entities.clear();
     pins = [];
@@ -55,26 +90,36 @@ function displayColmenas(map, colmenas) {
             anchor: new Microsoft.Maps.Point(16, 16)
         });
 
-        // Agregar evento de clic al pin para mostrar tu infobox personalizado
-        Microsoft.Maps.Events.addHandler(pin, 'click', function () {
-            var pixelLocation = map.tryLocationToPixel(location, Microsoft.Maps.PixelReference.control);
-            var customInfobox = document.getElementById('customInfobox');
-            customInfobox.innerHTML = `
-                    <div class="infobox-content">
-                        <div>Fecha de Ingreso: ${new Date(colmena.fechaIngreso).toLocaleDateString()}</div>
-                        <div>Tipo de Colmena: ${colmena.tipoColmena}</div>
-                        <div>Descripción: ${colmena.descripcion}</div>
-                        <button onclick="location.href='/ruta_a_detalle_colmena/${colmena.Id}'">Más detalles</button>
-                    </div>
-                    <button class="infobox-close-btn" onclick="closeInfobox()">X</button>
-                `;
-            customInfobox.style.top = `${pixelLocation.y}px`;
-            customInfobox.style.left = `${pixelLocation.x}px`;
-            customInfobox.style.display = 'block';
+        Microsoft.Maps.Events.addHandler(pin, 'mouseover', function () {
+            showInfobox(pin, colmena);
         });
+
+        Microsoft.Maps.Events.addHandler(pin, 'mouseout', function () {
+            
+            closeInfoboxTimer = setTimeout(closeInfobox, 500); 
+        });
+
         map.entities.push(pin);
     });
 }
+function showInfobox(pin, colmena) {
+    var pixelLocation = map.tryLocationToPixel(pin.getLocation(), Microsoft.Maps.PixelReference.control);
+    var customInfobox = document.getElementById('customInfobox');
+    customInfobox.innerHTML = `
+        <div class="infobox-content">
+            <div>Fecha de Ingreso: ${new Date(colmena.fechaIngreso).toLocaleDateString()}</div>
+            <div>Tipo de Colmena: ${colmena.tipoColmena}</div>
+            <div>Descripción: ${colmena.descripcion}</div>
+            <button onclick="location.href='/ruta_a_detalle_colmena/${colmena.Id}'">Más detalles</button>
+        </div>
+        <button class="infobox-close-btn" onclick="closeInfobox()">X</button>
+    `;
+    customInfobox.style.top = `${pixelLocation.y}px`;
+    customInfobox.style.left = `${pixelLocation.x}px`;
+    customInfobox.style.display = 'block';
+    clearTimeout(closeInfoboxTimer);
+}
+
 
 function applyFilter(filter) {
     var filteredColmenas = colmenasData;
@@ -91,5 +136,36 @@ document.getElementById('filtroTipoColmena').addEventListener('change', function
 });
 function closeInfobox() {
     var customInfobox = document.getElementById('customInfobox');
-    customInfobox.style.display = 'none';
+    if (customInfobox) {
+        customInfobox.style.display = 'none';
+    }
 }
+
+var customInfobox = document.getElementById('customInfobox');
+customInfobox.addEventListener('mouseenter', function () {
+    clearTimeout(closeInfoboxTimer); 
+});
+customInfobox.addEventListener('mouseleave', function () {
+    closeInfobox(); 
+});
+
+function loadPredeterminedLocations() {
+    fetch('/Mapa/ObtenerUbicacionesPredeterminadas')
+        .then(response => response.json())
+        .then(data => {
+            let select = document.getElementById('ubicacionesPredeterminadas');
+            data.forEach(location => {
+                let option = document.createElement('option');
+                option.value = JSON.stringify({ lat: location.latitude, lng: location.longitude, zoom: location.zoomLevel });
+                option.textContent = location.nombre;
+                select.appendChild(option);
+            });
+        });
+}
+
+document.getElementById('ubicacionesPredeterminadas').addEventListener('change', function (e) {
+    let location = JSON.parse(e.target.value);
+    map.setView({ center: new Microsoft.Maps.Location(location.lat, location.lng), zoom: location.zoom });
+});
+
+loadPredeterminedLocations();

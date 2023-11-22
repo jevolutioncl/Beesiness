@@ -23,8 +23,33 @@
     cursor: pointer;
 }
 
-#contextMenu {
-    background-color: black;
-    border: 1px solid black;
-    z-index: 1000;
+.context-menu {
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.context-menu-button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+}
+
+.context-menu-close {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    margin-top: 10px;
+    cursor: pointer;
 }

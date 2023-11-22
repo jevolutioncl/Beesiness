@@ -1,0 +1,25 @@
+﻿@model Beesiness.Models.UbicacionMapa
+
+<form asp-action="UbicacionCrear" asp-controller="Mapa" method="post">
+    <input asp-for="Nombre" placeholder="Nombre de Ubicación" />
+    <input asp-for="Descripcion" placeholder="Descripción de Ubicación" />
+    <input id="Latitude" asp-for="Latitude" type="hidden" />
+    <input id="Longitude" asp-for="Longitude" type="hidden" />
+    <input id="ZoomLevel" asp-for="ZoomLevel" type="hidden" />
+    <button type="submit">Guardar Ubicación</button>
+</form>
+
+@section Scripts {
+    <script>
+        window.onload = function () {
+            var locationData = JSON.parse(localStorage.getItem('LocationData'));
+            if (locationData) {
+                document.getElementById('Latitude').value = locationData.latitude;
+                document.getElementById('Longitude').value = locationData.longitude;
+                document.getElementById('ZoomLevel').value = locationData.zoomLevel;
+
+                localStorage.removeItem('LocationData');
+            }
+        }
+    </script>
+}
