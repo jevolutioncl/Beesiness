@@ -38,9 +38,9 @@ namespace Beesiness.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> EliminarUbicacion(int id)
+        public async Task<IActionResult> EliminarUbicacion(int Id)
         {
-            var ubicacion = await _context.tblUbicacionMapas.FindAsync(id);
+            var ubicacion = await _context.tblUbicacionMapas.FindAsync(Id);
             if (ubicacion == null)
             {
                 return NotFound();
@@ -49,7 +49,7 @@ namespace Beesiness.Controllers
             _context.tblUbicacionMapas.Remove(ubicacion);
             await _context.SaveChangesAsync();
 
-            return Ok();
+            return NoContent();
         }
 
 
