@@ -37,5 +37,21 @@ namespace Beesiness.Controllers
             return Json(ubicaciones);
         }
 
+        [HttpDelete]
+        public async Task<IActionResult> EliminarUbicacion(int Id)
+        {
+            var ubicacion = await _context.tblUbicacionMapas.FindAsync(Id);
+            if (ubicacion == null)
+            {
+                return NotFound();
+            }
+
+            _context.tblUbicacionMapas.Remove(ubicacion);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+
     }
 }

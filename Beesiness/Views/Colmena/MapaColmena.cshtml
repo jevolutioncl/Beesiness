@@ -2,15 +2,35 @@
     ViewData["Title"] = "Mapa de Colmenas";
 }
 <link href="/css/mapa.css" rel="stylesheet" />
-<div class="filters">
-    <select id="filtroTipoColmena">
-        <option value="Todas">Todas</option>
-        <option value="Dadant">Dadant</option>
-        <option value="Langstroth">Langstroth</option>
-    </select>
-
-    <select id="ubicacionesPredeterminadas">
-    </select>
+<div class="panel-filtros">
+    <button class="boton-filtros">Filtros</button>
+    <div class="contenido-filtros" id="contenidoFiltros">
+        <div class="tarjetas-filtros">
+            <div class="filtro-grupo">
+                <label for="filtroTipoColmena" class="filtro-label">Tipo de Colmena</label>
+                <select id="filtroTipoColmena" class="filtro-select">
+                    <option value="Todas">Todas</option>
+                    <option value="Dadant">Dadant</option>
+                    <option value="Langstroth">Langstroth</option>
+                </select>
+            </div>
+            <div class="filtro-grupo">
+                <label for="ubicacionesPredeterminadas" class="filtro-label">Ubicaciones Predeterminadas</label>
+                <div class="filtro-ubicaciones-container">
+                    <select id="ubicacionesPredeterminadas" class="filtro-select">
+                        <!-- Opciones de ubicaciones se llenarán con JavaScript -->
+                    </select>
+                    <button onclick="eliminarUbicacionSeleccionada()" class="eliminar-btn">Eliminar</button>
+                </div>
+            </div>
+        </div>
+        <div class="filtro-grupo">
+            <label class="filtro-label">Colmenas en el Mapa</label>
+            <div id="listaColmenas" class="lista-colmenas">
+                <!-- Las colmenas se agregarán aquí dinámicamente -->
+            </div>
+        </div>
+    </div>
 </div>
 <input type="hidden" id="Latitude" name="Latitude" />
 <input type="hidden" id="Longitude" name="Longitude" />

@@ -82,6 +82,8 @@ function redirectToCreateColmena() {
 function displayColmenas(map, colmenas) {
     map.entities.clear();
     pins = [];
+    const listaColmenas = document.getElementById('listaColmenas');
+    listaColmenas.innerHTML = ''; // Limpia la lista actual
 
     colmenas.forEach(colmena => {
         var location = new Microsoft.Maps.Location(colmena.latitude, colmena.longitude);
@@ -99,6 +101,13 @@ function displayColmenas(map, colmenas) {
             closeInfoboxTimer = setTimeout(closeInfobox, 500); 
         });
 
+        var colmenaItem = document.createElement('div');
+        colmenaItem.classList.add('colmena-item');
+        colmenaItem.textContent = `Colmena ID: ${colmena.Id}`;
+        colmenaItem.onclick = function () {
+            map.setView({ center: new Microsoft.Maps.Location(colmena.latitude, colmena.longitude), zoom: 15 });
+        };
+        listaColmenas.appendChild(colmenaItem);
         map.entities.push(pin);
     });
 }
@@ -156,16 +165,59 @@ function loadPredeterminedLocations() {
             let select = document.getElementById('ubicacionesPredeterminadas');
             data.forEach(location => {
                 let option = document.createElement('option');
-                option.value = JSON.stringify({ lat: location.latitude, lng: location.longitude, zoom: location.zoomLevel });
+                option.value = JSON.stringify({
+                    id: location.id,
+                    lat: location.latitude,
+                    lng: location.longitude,
+                    zoom: location.zoomLevel
+                });
                 option.textContent = location.nombre;
                 select.appendChild(option);
             });
         });
 }
+function toggleFiltros() {
+    console.log('toggleFiltros llamado'); 
+    var contenido = document.getElementById('contenidoFiltros');
+    contenido.style.display = contenido.style.display === 'block' ? 'none' : 'block';
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    console.log("DOM completamente cargado y analizado");
+    var botonFiltros = document.querySelector('.boton-filtros');
+    botonFiltros.addEventListener('click', toggleFiltros);
+});
 
 document.getElementById('ubicacionesPredeterminadas').addEventListener('change', function (e) {
     let location = JSON.parse(e.target.value);
     map.setView({ center: new Microsoft.Maps.Location(location.lat, location.lng), zoom: location.zoom });
 });
+
+function eliminarUbicacionSeleccionada() {
+    var select = document.getElementById('ubicacionesPredeterminadas');
+    var selectedIndex = select.selectedIndex;
+
+    if (selectedIndex > -1) {
+        var selectedOption = select.options[selectedIndex];
+        var ubicacion = JSON.parse(selectedOption.value);
+
+        if (ubicacion.id && confirm('¿Estás seguro de que quieres eliminar esta ubicación?')) {
+            fetch(`/Mapa/EliminarUbicacion?id=${ubicacion.id}`, {
+                method: 'DELETE'
+            })
+                .then(response => {
+                    if (response.ok) {
+                        console.log('Ubicación eliminada');
+                        select.remove(selectedIndex); // Elimina la opción del DOM
+                    } else {
+                        console.error('Error al eliminar la ubicación');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    }
+}
+
+
 
 loadPredeterminedLocations();

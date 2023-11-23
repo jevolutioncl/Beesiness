@@ -7,7 +7,7 @@
     border-radius: 4px; /* Bordes redondeados */
     box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Sombra suave */
     z-index: 1000;
-    /* Más estilos según la identidad visual de tu página */
+ 
 }
 .infobox-content {
     padding: 10px;
@@ -52,4 +52,107 @@
     padding: 5px 10px;
     margin-top: 10px;
     cursor: pointer;
+}
+
+.panel-filtros {
+    position: absolute;
+    left: 10px;
+    z-index: 1000;
+    background: white;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.boton-filtros {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%; 
+    padding: 10px 0; 
+    margin-bottom: 15px; 
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.contenido-filtros {
+    display: none;
+    padding: 10px; 
+    flex-direction: column;
+    margin-top: 10px;
+}
+
+.tarjetas-filtros {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.filtro-grupo {
+    display: flex;
+    flex-direction: column; 
+    margin-bottom: 15px; 
+}
+
+.filtro-label {
+    font-size: 0.75rem;
+    margin-bottom: 5px;
+    display: block;
+    color: #666;
+}
+
+.filtro-select {
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    width: 100%;
+}
+.filtro-ubicaciones-container {
+    display: flex;
+    align-items: center;
+}
+.eliminar-btn {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    margin-top: 10px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.lista-colmenas {
+    max-height: 150px; /* Ajusta según la necesidad */
+    overflow-y: auto; /* Permite el desplazamiento vertical */
+    background: #f8f8f8; /* Color de fondo opcional */
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+    .lista-colmenas .colmena-item {
+        padding: 5px;
+        cursor: pointer;
+        border-bottom: 1px solid #ddd;
+    }
+
+        .lista-colmenas .colmena-item:hover {
+            background-color: #eee;
+        }
+
+
+@media (max-width: 768px) {
+    .tarjetas-filtros {
+        flex-direction: column;
+    }
+
+    .filtro-grupo {
+        width: 100%; 
+    }
 }
