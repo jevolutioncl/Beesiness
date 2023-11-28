@@ -6,7 +6,9 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
+using QuestPDF.Infrastructure;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 namespace Beesiness.Controllers
 {
@@ -51,7 +53,8 @@ namespace Beesiness.Controllers
                 c.TipoColmena,
                 c.Descripcion,
                 c.Latitude,
-                c.Longitude
+                c.Longitude,
+                c.EstadoSalud //agregado 4/11
             }).ToListAsync();
 
             return Json(colmenas);
@@ -167,7 +170,8 @@ namespace Beesiness.Controllers
                         Latitude = colmena.Latitude,
                         Longitude = colmena.Longitude,
                         UbicacionPredeterminada = ubicacionViewModel,
-                        UbicacionesPredeterminadas = new SelectList(await GetUbicacionesPredeterminadasAsync(), "Value", "Text")
+                        UbicacionesPredeterminadas = new SelectList(await GetUbicacionesPredeterminadasAsync(), "Value", "Text"),
+                        EstadoSalud = colmena.EstadoSalud  //agregados del difunto infoColmena
                     };
 
                     return View(viewModel);
@@ -208,9 +212,20 @@ namespace Beesiness.Controllers
                     if (colmena == null) { return NotFound(); }
                     else
                     {
-                        _context.Remove(colmena);
-                        await _context.SaveChangesAsync();
-                        return RedirectToAction("ColmenaIndex");
+                        //respaldamos la info en HistorialColmena
+                        var respaldado = await RespaldarColmena(colmena, "Colmena eliminada");
+
+                        if (respaldado == true)
+                        {
+                            _context.Remove(colmena);
+                            await _context.SaveChangesAsync();
+                            return RedirectToAction("ColmenaIndex");
+                        }
+                        else
+                        {
+                            ViewBag.result = "Problemas al eliminar la colmena";
+                            return RedirectToAction("ColmenaIndex");
+                        }                       
                     }
 
                 }
@@ -264,14 +279,17 @@ namespace Beesiness.Controllers
                         Descripcion = viewModel.Descripcion,
                         Latitude = viewModel.Latitude,
                         Longitude = viewModel.Longitude,
-                        UbicacionMapaId = ubicacionSeleccionada?.Id
+                        UbicacionMapaId = ubicacionSeleccionada?.Id,
+                        EstadoSalud = viewModel.EstadoSalud
                     };
-
-                    // Agregamos la nueva colmena al contexto
+                                        
                     _context.Add(nuevaColmena);
                     // Guardamos los cambios en la base de datos
                     await _context.SaveChangesAsync();
 
+                    //creamos el respaldo en HistorialColmena
+                    await RespaldarColmena(nuevaColmena, "Colmena creada");
+                                        
                     // Redireccionamos al índice de colmenas si todo ha ido bien
                     return RedirectToAction("ColmenaIndex");
                 }
@@ -321,17 +339,30 @@ namespace Beesiness.Controllers
                         ubicacionSeleccionada = JsonConvert.DeserializeObject<UbicacionViewModel>(viewModel.UbicacionPredeterminadaJson);
                     }
 
-                    colmena.numIdentificador = viewModel.numIdentificador;
-                    colmena.FechaIngreso = viewModel.FechaIngreso;
-                    colmena.TipoColmena = viewModel.TipoColmena;
-                    colmena.Descripcion = viewModel.Descripcion;
-                    colmena.Latitude = ubicacionSeleccionada?.Latitude ?? viewModel.Latitude;
-                    colmena.Longitude = ubicacionSeleccionada?.Longitude ?? viewModel.Longitude;
-                    colmena.UbicacionMapaId = ubicacionSeleccionada?.Id;
+                    //respaldamos la info en HistorialColmena
+                    var respaldado = await RespaldarColmena(colmena, "Colmena editada");
 
-                    _context.Update(colmena);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction("ColmenaIndex");
+                    if (respaldado == true)
+                    {
+                        colmena.numIdentificador = viewModel.numIdentificador;
+                        colmena.FechaIngreso = viewModel.FechaIngreso;
+                        colmena.TipoColmena = viewModel.TipoColmena;
+                        colmena.Descripcion = viewModel.Descripcion;
+                        colmena.Latitude = ubicacionSeleccionada?.Latitude ?? viewModel.Latitude;
+                        colmena.Longitude = ubicacionSeleccionada?.Longitude ?? viewModel.Longitude;
+                        colmena.UbicacionMapaId = ubicacionSeleccionada?.Id;
+                        colmena.EstadoSalud = viewModel.EstadoSalud;
+
+                        _context.Update(colmena);
+                        await _context.SaveChangesAsync();
+                        return RedirectToAction("ColmenaIndex");
+                    }
+                    else
+                    {
+                        ViewBag.result = "Error al Modificar";
+                        viewModel.UbicacionesPredeterminadas = new SelectList(await GetUbicacionesPredeterminadasAsync(), "Value", "Text", viewModel.UbicacionPredeterminada?.Id);
+                        return View(viewModel);
+                    }                    
                 }
                 else
                 {
@@ -342,13 +373,14 @@ namespace Beesiness.Controllers
             return RedirectToAction("LoginIn", "Auth");
         }
 
-
+        //falta modificar
         public async Task<IActionResult> ColmenaInfo(int colmenaId)
         {
             var colmena = await _context.tblColmenas.FirstOrDefaultAsync(x => x.Id == colmenaId);
-            var infoColmena = await _context.tblInformacionColmenas.LastOrDefaultAsync(x => x.IdColmena == colmenaId);
-            var inspeccion = await _context.tblInspecciones.FirstOrDefaultAsync(x => x.Id == infoColmena.IdInspeccion);
-            var usuario = await _context.tblUsuarios.FirstOrDefaultAsync(x => x.Id == inspeccion.IdUsuario);
+            var ubicacion = await _context.tblUbicacionMapas.FirstOrDefaultAsync(x => x.Id == colmena.UbicacionMapaId);
+            //var infoColmena = await _context.tblInformacionColmenas.LastOrDefaultAsync(x => x.IdColmena == colmenaId);
+            //var inspeccion = await _context.tblInspecciones.FirstOrDefaultAsync(x => x.Id == infoColmena.IdInspeccion);
+            //var usuario = await _context.tblUsuarios.FirstOrDefaultAsync(x => x.Id == inspeccion.IdUsuario);
             //falta obtener las enfermedades de la colmena con un inner join
             //var enfermedadesColmena = await _context.tblEnfermedadColmena.Include(x => x.IdColmena == colmenaId).ToListAsync();
             var enfermCol = await _context.tblEnfermedadColmena.Where(x => x.IdColmena == colmenaId)
@@ -360,12 +392,17 @@ namespace Beesiness.Controllers
 
             InfoColmenaViewModel model = new InfoColmenaViewModel();
             model.Id = colmenaId;
+            model.numeroIdentificador = colmena.numIdentificador;
             model.Descripcion = colmena.Descripcion;
-            model.FechaInforme = inspeccion.Fecha;
-            model.Inspector = usuario.Nombre;
-            model.Ubicacion = infoColmena.UbicacionColmena;
-            model.TiempoVida = infoColmena.TiempoVida;
-            model.EstadoSalud = infoColmena.EstadoSalud;
+            //model.FechaInforme = DateTime.Now;
+            //model.Inspector = usuario.Nombre;
+            model.Ubicacion = ubicacion.Nombre;
+            //model.TiempoVida = infoColmena.TiempoVida;
+            model.EstadoSalud = colmena.EstadoSalud;
+
+            int years = DateTime.Now.Year - colmena.FechaIngreso.Year;
+            int months = DateTime.Now.Month - colmena.FechaIngreso.Month;
+
             foreach (var item in enfermCol)
             {
                 model.NombreEnfermedad.Add(item.Nombre);
@@ -402,19 +439,88 @@ namespace Beesiness.Controllers
             return Json(query);
         }
 
-        public IActionResult DescargarPdf()
-        {
-            var hola = Document.Create(holapdf =>
+        //cambios eva 4
+        private async Task<Boolean> RespaldarColmena(Colmena c, string motivoRespaldo)
+        {     
+            var respColmena = new HistorialColmena()
             {
-                holapdf.Page(pagina1 =>
+                IdColmena = c.Id,
+                numIdentificador = c.numIdentificador,
+                FechaIngreso = c.FechaIngreso,
+                TipoColmena = c.TipoColmena,
+                Descripcion = c.Descripcion,
+                Latitude = c.Latitude,
+                Longitude = c.Longitude,
+                UbicacionMapaId = c.UbicacionMapaId,
+                EstadoSalud = c.EstadoSalud,
+                FechaRespaldo = DateTime.Now,
+                MotivoRespaldo = motivoRespaldo
+            };
+
+            _context.Add(respColmena);
+            // Guardamos los cambios en la base de datos
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public IActionResult GenerarPdf(InfoColmenaViewModel ivm)
+        {
+
+            var informe = Document.Create(document =>
+            {
+                document.Page(page =>
                 {
-                    pagina1.Header().Text("El PDF mas basico que hay!").SemiBold().FontSize(36).FontColor(Colors.Blue.Medium);
+                    page.Margin(30);
+
+                    page.Header().Height(50).Background(Colors.Yellow.Medium);
+
+                    page.Content()
+                        .PaddingVertical(1, Unit.Centimetre)
+                        .Column(x =>
+                        {
+                            x.Spacing(5);
+
+                            x.Item().Row(r =>
+                            {
+                                r.RelativeItem().Text("Id Colmena: " + ivm.Id).Bold().FontSize(25);
+                                //r.RelativeItem().Text("1").FontSize(25);
+                                //r.RelativeItem().Text("Fecha: " + ivm.FechaInforme.Date).Bold().FontSize(25);
+                                r.RelativeItem().Text("Fecha: " + DateTime.Now).Bold().FontSize(25);
+                            });
+
+                            /*x.Item().Row(r =>
+                            {
+                                r.RelativeItem().Text("Inspector: ").Bold().FontSize(25);
+                                r.RelativeItem().Text(ivm.Inspector).FontSize(25);
+                            });*/
+
+                            x.Item().Text("Descripción:").Bold().FontSize(20);
+                            x.Item().Text(ivm.Descripcion).FontSize(15);
+
+                            x.Item().Text("Ubicacion:").Bold().FontSize(20);
+                            x.Item().Text(ivm.Ubicacion).FontSize(15);
+
+                            x.Item().Text("Tiempo de Vida:").Bold().FontSize(20);
+                            x.Item().Text(ivm.TiempoVida).FontSize(15);
+
+                            x.Item().Text("Estado de salud actual:").Bold().FontSize(20);
+                            x.Item().Text(ivm.EstadoSalud).FontSize(15);
+
+                            x.Item().Text("Enfermedades encontradas:").Bold().FontSize(20);
+                            x.Item().Text("En construccion").FontSize(15);
+
+                            x.Item().Text("Conclusiones y acciones a realizar:").Bold().FontSize(20);
+                            x.Item().Text(Placeholders.LoremIpsum()).FontSize(15);
+                        });
+
+
+                    page.Footer().Height(50).Background(Colors.Grey.Medium);
 
                 });
             }).GeneratePdf();
 
-            Stream stream = new MemoryStream(hola);
-            return File(stream, "application/pdf", "nombreDelPdf.pdf");
+            Stream stream = new MemoryStream(informe);
+            return File(stream, "application/pdf", "informe.pdf");
         }
 
     }

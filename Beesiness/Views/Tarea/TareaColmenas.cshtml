@@ -1,0 +1,96 @@
+﻿@model TareaViewModel
+@{
+    ViewData["Title"] = "Colmenas Asociadas";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div>
+    <h2>Tarea: <strong>@Model.Id</strong> Nombre: <strong>@Model.Nombre</strong></h2>
+</div>
+<div>
+    <h2>Fecha agendada: <strong>@Model.FechaRealizacion</strong> </h2>
+</div>
+<div>
+    <a class="button" asp-controller="Home" asp-action="Index">Volver al Home</a>
+</div>
+<div>
+    <a class="button" asp-action="TareaIndex">Ver Tareas</a>
+</div>
+<div>
+    <a class="button" asp-action="TareaInfo" asp-route-id=@Model.Id>Detalle Tarea</a>
+</div>
+
+<div>
+    <h6>Colmenas Asociadas</h6>
+</div>
+<div class="row justify-content-evenly mt-3">
+    <div style="overflow:auto;">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Numero</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.ColmenasTarea != null)
+                {
+                    foreach (var item in Model.ColmenasTarea)
+                    {
+                        <tr>
+                            <td>
+                                @item.idColmena
+                            </td>
+                            <td>
+                                @item.numeroColmena
+                            </td>
+                            <td>
+                                <a asp-action="TCBorrar" asp-route-id=@item.Id asp-route-idTarea=@Model.Id>Quitar Colmena</a>
+                            </td>
+
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<div>
+    <h6>Todas las Colmenas</h6>
+</div>
+<div class="row justify-content-evenly mt-3">
+    <div style="overflow:auto;">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Numero</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.ColmenasTodas != null)
+                {
+                    foreach (var item in Model.ColmenasTodas)
+                    {
+                        <tr>
+                            <td>
+                                @item.Id
+                            </td>
+                            <td>
+                                @item.numIdentificador
+                            </td>
+                            <td>
+                                <a asp-action="TCCrear" asp-route-idTarea=@Model.Id asp-route-idColmena=@item.Id>Asociar Colmena</a>                            
+                            </td>
+
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>

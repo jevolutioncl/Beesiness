@@ -1,4 +1,4 @@
-﻿@model List<ColmenaViewModel>
+﻿@model List<Colmena>
 @{
     ViewData["Title"] = "Administrar Colmenas";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -50,7 +50,7 @@
                         <td>
                             <a asp-action="ColmenaEditar" asp-route-colmenaId="@item.Id">Editar</a>
                             <a onclick="return confirm('¿Eliminar Colmena?')" asp-action="ColmenaBorrar" asp-route-colmenaId="@item.Id">Borrar</a>
-                            <a asp-controller="InformacionColmena" asp-action="InformacionColmenaIndex" asp-route-colmenaId="@item.Id">Detalle</a>
+                            <a asp-action="ColmenaInfo" asp-route-colmenaId="@item.Id">Detalle</a>
                         </td>
 
                     </tr>

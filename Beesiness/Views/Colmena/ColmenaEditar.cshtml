@@ -34,6 +34,14 @@
                 <span asp-validation-for="Descripcion" class="text-danger"></span>
             </div>
             <div class="form-group mt-3">
+                <select asp-for="EstadoSalud" class="form-control" id="estadoSaludSelect">
+                    <option value="Sana">Sana</option>
+                    <option value="Enferma">Enferma</option>
+                    <option value="Muerta">Muerta</option>
+                </select>
+                <span asp-validation-for="EstadoSalud" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-3">
                 <select asp-for="UbicacionPredeterminada" asp-items="Model.UbicacionesPredeterminadas" class="form-control">
                     <option value="" id="defaultUbicacionOption">Seleccione el lugar donde estarán las colmenas</option>
                 </select>

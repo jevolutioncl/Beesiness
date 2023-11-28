@@ -22,12 +22,13 @@ namespace Beesiness.Models
         public DbSet<TipoFlor> tblTipoFlor { get; set; }
         public DbSet<Produccion> tblProducciones { get; set; }
         public DbSet<Usuario> tblUsuarios { get; set; }
-        public DbSet<Rol> tblRoles { get; set; }
-        public DbSet<Inspeccion> tblInspecciones { get; set; }
-        public DbSet<InformacionColmena> tblInformacionColmenas { get; set; }
+        public DbSet<Rol> tblRoles { get; set; }       
         public DbSet<UsuarioTemporal> tblUsuariosTemporales { get; set; }
         public DbSet<UbicacionMapa> tblUbicacionMapas { get; set; }
-
+        //public DbSet<InformacionColmena> tblInformacionColmenas { get; set; }
+        //public DbSet<Inspeccion> tblInspecciones { get; set; }
+        public DbSet<HistorialColmena> tblHistorialColmenas { get; set; }
+        //public DbSet<PruebaMigracion> tblPruebaMigraciones { get; set; } //prueba
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

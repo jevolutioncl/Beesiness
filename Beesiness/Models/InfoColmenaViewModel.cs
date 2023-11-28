@@ -6,8 +6,9 @@ namespace Beesiness.Models
     public class InfoColmenaViewModel
     {
         public int Id { get; set; }
-        public DateTime FechaInforme { get; set; }
-        public string Inspector { get; set; }
+        public int numeroIdentificador { get; set; }
+        //public DateTime FechaInforme { get; set; }
+        //public string Inspector { get; set; }
         public string Descripcion { get; set; }
         public string Ubicacion { get; set; }
         public string TiempoVida { get; set; }
@@ -20,10 +21,10 @@ namespace Beesiness.Models
         public double Longitude { get; set; }
 
         //agregado nuevo, probar si genera errores
-        public int IdInspeccion { get; set; }
-        [BindNever]
-        public IEnumerable<SelectListItem> InspeccionesDisponibles { get; set; }
-        [BindNever]
-        public IEnumerable<SelectListItem> ColmenasDisponibles { get; set; }
+        //public int IdInspeccion { get; set; }
+        //[BindNever]
+        //public IEnumerable<SelectListItem> InspeccionesDisponibles { get; set; }
+        //[BindNever]
+        //public IEnumerable<SelectListItem> ColmenasDisponibles { get; set; }
     }
 }

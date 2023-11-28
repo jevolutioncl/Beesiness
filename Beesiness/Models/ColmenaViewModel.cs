@@ -12,9 +12,10 @@ namespace Beesiness.Models
         public string TipoColmena { get; set; }
         public string Descripcion { get; set; }
         public float Latitude { get; set; }
-        public float Longitude { get; set; }
+        public float Longitude { get; set; }        
         public string UbicacionPredeterminadaJson { get; set; }
         public UbicacionViewModel UbicacionPredeterminada { get; set; }
         public SelectList UbicacionesPredeterminadas { get; set; }
+        public string EstadoSalud { get; set; } //agregados del difunto infoColmena
     }
 }

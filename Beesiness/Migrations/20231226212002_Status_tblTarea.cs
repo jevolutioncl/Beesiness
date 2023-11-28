@@ -5,25 +5,25 @@
 namespace Beesiness.Migrations
 {
     /// <inheritdoc />
-    public partial class tblColmenasUpt : Migration
+    public partial class Status_tblTarea : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<int>(
-                name: "numIdentificador",
-                table: "tblColmenas",
-                type: "int",
+            migrationBuilder.AddColumn<string>(
+                name: "Status",
+                table: "tblTareas",
+                type: "nvarchar(max)",
                 nullable: false,
-                defaultValue: 0);
+                defaultValue: "");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "numIdentificador",
-                table: "tblColmenas");
+                name: "Status",
+                table: "tblTareas");
         }
     }
 }

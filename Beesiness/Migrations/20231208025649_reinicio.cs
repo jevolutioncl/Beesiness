@@ -1,30 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace Beesiness.Migrations
 {
     /// <inheritdoc />
-    public partial class jevo : Migration
+    public partial class reinicio : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "tblColmenas",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    FechaIngreso = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    TipoColmena = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Descripcion = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_tblColmenas", x => x.Id);
-                });
-
             migrationBuilder.CreateTable(
                 name: "tblEnfermedades",
                 columns: table => new
@@ -37,6 +23,28 @@ namespace Beesiness.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_tblEnfermedades", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "tblHistorialColmenas",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    IdColmena = table.Column<int>(type: "int", nullable: false),
+                    numIdentificador = table.Column<int>(type: "int", nullable: false),
+                    FechaIngreso = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TipoColmena = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Descripcion = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
+                    Latitude = table.Column<float>(type: "real", nullable: false),
+                    Longitude = table.Column<float>(type: "real", nullable: false),
+                    UbicacionMapaId = table.Column<int>(type: "int", nullable: true),
+                    EstadoSalud = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    MotivoRespaldo = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_tblHistorialColmenas", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -81,6 +89,108 @@ namespace Beesiness.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "tblUbicacionMapas",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nombre = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Descripcion = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    Latitude = table.Column<float>(type: "real", nullable: false),
+                    Longitude = table.Column<float>(type: "real", nullable: false),
+                    ZoomLevel = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_tblUbicacionMapas", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "tblUsuariosTemporales",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nombre = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Correo = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Rol = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FechaSolicitud = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_tblUsuariosTemporales", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "tblUsuarios",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nombre = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Correo = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    PasswordHash = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
+                    PasswordSalt = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
+                    IdRol = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_tblUsuarios", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_tblUsuarios_tblRoles_IdRol",
+                        column: x => x.IdRol,
+                        principalTable: "tblRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "tblPolinizaciones",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Fecha = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Lugar = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    IdTipoFlor = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_tblPolinizaciones", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_tblPolinizaciones_tblTipoFlor_IdTipoFlor",
+                        column: x => x.IdTipoFlor,
+                        principalTable: "tblTipoFlor",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "tblColmenas",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    numIdentificador = table.Column<int>(type: "int", nullable: false),
+                    FechaIngreso = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TipoColmena = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Descripcion = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
+                    Latitude = table.Column<float>(type: "real", nullable: false),
+                    Longitude = table.Column<float>(type: "real", nullable: false),
+                    UbicacionMapaId = table.Column<int>(type: "int", nullable: true),
+                    EstadoSalud = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_tblColmenas", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_tblColmenas_tblUbicacionMapas_UbicacionMapaId",
+                        column: x => x.UbicacionMapaId,
+                        principalTable: "tblUbicacionMapas",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "tblAlertas",
                 columns: table => new
                 {
@@ -97,6 +207,60 @@ namespace Beesiness.Migrations
                         name: "FK_tblAlertas_tblColmenas_IdColmena",
                         column: x => x.IdColmena,
                         principalTable: "tblColmenas",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "tblColmenaPolinizacion",
+                columns: table => new
+                {
+                    IdPolinizacion = table.Column<int>(type: "int", nullable: false),
+                    IdColmena = table.Column<int>(type: "int", nullable: false),
+                    PolinizacionId = table.Column<int>(type: "int", nullable: false),
+                    ColmenaId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_tblColmenaPolinizacion", x => new { x.IdPolinizacion, x.IdColmena });
+                    table.ForeignKey(
+                        name: "FK_tblColmenaPolinizacion_tblColmenas_ColmenaId",
+                        column: x => x.ColmenaId,
+                        principalTable: "tblColmenas",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_tblColmenaPolinizacion_tblPolinizaciones_PolinizacionId",
+                        column: x => x.PolinizacionId,
+                        principalTable: "tblPolinizaciones",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "tblEnfermedadColmena",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FechaDeteccion = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    FechaRecuperacion = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IdColmena = table.Column<int>(type: "int", nullable: false),
+                    IdEnfermedad = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_tblEnfermedadColmena", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_tblEnfermedadColmena_tblColmenas_IdColmena",
+                        column: x => x.IdColmena,
+                        principalTable: "tblColmenas",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_tblEnfermedadColmena_tblEnfermedades_IdEnfermedad",
+                        column: x => x.IdEnfermedad,
+                        principalTable: "tblEnfermedades",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -145,148 +309,6 @@ namespace Beesiness.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "tblEnfermedadColmena",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    FechaDeteccion = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    FechaRecuperacion = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IdColmena = table.Column<int>(type: "int", nullable: false),
-                    IdEnfermedad = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_tblEnfermedadColmena", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_tblEnfermedadColmena_tblColmenas_IdColmena",
-                        column: x => x.IdColmena,
-                        principalTable: "tblColmenas",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_tblEnfermedadColmena_tblEnfermedades_IdEnfermedad",
-                        column: x => x.IdEnfermedad,
-                        principalTable: "tblEnfermedades",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "tblUsuarios",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombre = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Correo = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    PasswordHash = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
-                    PasswordSalt = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
-                    IdRol = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_tblUsuarios", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_tblUsuarios_tblRoles_IdRol",
-                        column: x => x.IdRol,
-                        principalTable: "tblRoles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "tblTareaColmena",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    FechaRegistro = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    FechaRealizacion = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    IdColmena = table.Column<int>(type: "int", nullable: false),
-                    IdTarea = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_tblTareaColmena", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_tblTareaColmena_tblColmenas_IdColmena",
-                        column: x => x.IdColmena,
-                        principalTable: "tblColmenas",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_tblTareaColmena_tblTareas_IdTarea",
-                        column: x => x.IdTarea,
-                        principalTable: "tblTareas",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "tblPolinizaciones",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Fecha = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Lugar = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    IdTipoFlor = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_tblPolinizaciones", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_tblPolinizaciones_tblTipoFlor_IdTipoFlor",
-                        column: x => x.IdTipoFlor,
-                        principalTable: "tblTipoFlor",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "tblTratamientos",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Fecha = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Detalle = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
-                    idEnfermedadColmena = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_tblTratamientos", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_tblTratamientos_tblEnfermedadColmena_idEnfermedadColmena",
-                        column: x => x.idEnfermedadColmena,
-                        principalTable: "tblEnfermedadColmena",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "tblInspecciones",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Fecha = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Observaciones = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
-                    IdUsuario = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_tblInspecciones", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_tblInspecciones_tblUsuarios_IdUsuario",
-                        column: x => x.IdUsuario,
-                        principalTable: "tblUsuarios",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "tblProducciones",
                 columns: table => new
                 {
@@ -323,27 +345,50 @@ namespace Beesiness.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "tblColmenaPolinizacion",
+                name: "tblTareaColmena",
                 columns: table => new
                 {
-                    IdPolinizacion = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FechaRegistro = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    FechaRealizacion = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IdColmena = table.Column<int>(type: "int", nullable: false),
-                    PolinizacionId = table.Column<int>(type: "int", nullable: false),
-                    ColmenaId = table.Column<int>(type: "int", nullable: false)
+                    IdTarea = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_tblColmenaPolinizacion", x => new { x.IdPolinizacion, x.IdColmena });
+                    table.PrimaryKey("PK_tblTareaColmena", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_tblColmenaPolinizacion_tblColmenas_ColmenaId",
-                        column: x => x.ColmenaId,
+                        name: "FK_tblTareaColmena_tblColmenas_IdColmena",
+                        column: x => x.IdColmena,
                         principalTable: "tblColmenas",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_tblColmenaPolinizacion_tblPolinizaciones_PolinizacionId",
-                        column: x => x.PolinizacionId,
-                        principalTable: "tblPolinizaciones",
+                        name: "FK_tblTareaColmena_tblTareas_IdTarea",
+                        column: x => x.IdTarea,
+                        principalTable: "tblTareas",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "tblTratamientos",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Fecha = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Detalle = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
+                    idEnfermedadColmena = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_tblTratamientos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_tblTratamientos_tblEnfermedadColmena_idEnfermedadColmena",
+                        column: x => x.idEnfermedadColmena,
+                        principalTable: "tblEnfermedadColmena",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -364,6 +409,17 @@ namespace Beesiness.Migrations
                 column: "PolinizacionId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_tblColmenas_numIdentificador",
+                table: "tblColmenas",
+                column: "numIdentificador",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_tblColmenas_UbicacionMapaId",
+                table: "tblColmenas",
+                column: "UbicacionMapaId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_tblEnfermedadColmena_IdColmena",
                 table: "tblEnfermedadColmena",
                 column: "IdColmena");
@@ -377,11 +433,6 @@ namespace Beesiness.Migrations
                 name: "IX_tblInfoSensores_IdColmena",
                 table: "tblInfoSensores",
                 column: "IdColmena");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_tblInspecciones_IdUsuario",
-                table: "tblInspecciones",
-                column: "IdUsuario");
 
             migrationBuilder.CreateIndex(
                 name: "IX_tblNotas_IdColmena",
@@ -439,10 +490,10 @@ namespace Beesiness.Migrations
                 name: "tblColmenaPolinizacion");
 
             migrationBuilder.DropTable(
-                name: "tblInfoSensores");
+                name: "tblHistorialColmenas");
 
             migrationBuilder.DropTable(
-                name: "tblInspecciones");
+                name: "tblInfoSensores");
 
             migrationBuilder.DropTable(
                 name: "tblNotas");
@@ -455,6 +506,9 @@ namespace Beesiness.Migrations
 
             migrationBuilder.DropTable(
                 name: "tblTratamientos");
+
+            migrationBuilder.DropTable(
+                name: "tblUsuariosTemporales");
 
             migrationBuilder.DropTable(
                 name: "tblPolinizaciones");
@@ -479,6 +533,9 @@ namespace Beesiness.Migrations
 
             migrationBuilder.DropTable(
                 name: "tblEnfermedades");
+
+            migrationBuilder.DropTable(
+                name: "tblUbicacionMapas");
         }
     }
 }

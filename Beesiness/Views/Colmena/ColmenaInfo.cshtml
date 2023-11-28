@@ -1,56 +1,82 @@
 ﻿@model InfoColmenaViewModel
+@{
+    ViewData["Title"] = "Administrar Colmenas";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<head>
+    <link rel="stylesheet" href="~/css/index.css" />
+</head>
+<h1 class="text-center">Administrar Inspecciones</h1>
+<div>
+    <a class="button" asp-controller="Colmena" asp-action="ColmenaIndex">Menu Colmenas</a>
+</div>
+<div>
+    <a class="button" asp-controller="Inspeccion" asp-action="InspeccionIndex">Menu Inspecciones</a>
+</div>
+<div>
+    <a class="button" asp-controller="Inspeccion" asp-action="InspeccionCrear">Nueva Inspeccion</a>
+</div>
 
 <div>
-    <h1>Información correspondiente a la ultima inspección de la Colmena</h1>
-</div>
-<div>
-    <h1>Informacion Colmena Id: @Model.Id</h1>
-</div>
-<div>
-    <h1>FEcha ultimo Informe Colmena: @Model.FechaInforme</h1>
-</div>
-<div>
-    <h1>Inspector: @Model.Inspector</h1>
-</div>
-<div>
-    <h1>Descripcion Colmena: @Model.Descripcion</h1>
-</div>
-<div>
-    <h1>Ubicacion Colmena: @Model.Ubicacion</h1>
-</div>
-<div id="bingMap" style="position:relative;width:600px;height:400px;"></div>
-<div>
-    <h1>Tiempo de vida Colmena: @Model.TiempoVida</h1>
-</div>
-<div>
-    <h1>Estado salud actual Colmena: @Model.EstadoSalud</h1>
-</div>
-<div>
-    <h1>Ultimas Enfermedades colmena:</h1>
-</div>
-<div class="row justify-content-evenly mt-3">
-    <div class="col-md-4">
-        @foreach (var item in Model.NombreEnfermedad)
-        {
-            <div>
-                <h6>Nombre enfermedad: @Model.NombreEnfermedad</h6>
-            </div>           
-        }
-    </div>
-    <div class="col-md-4">
-        @foreach (var item in Model.FechaDeteccionEnfermedad)
-        {
-            <div>
-                <h6>Nombre enfermedad: @Model.FechaRecuperacionEnfermedad</h6>
+    <form class="row justify-content-evenly" asp-action="GenerarPdf" method="post">
+        <div class="col-md-6">
+            <div class="form-group mt-3">
+                <label asp-for="Id">Id Colmena:</label>
+                <input asp-for="Id" class="form-control" placeholder=@Model.Id readonly />
+            </div>                     
+            <div class="form-group mt-3">
+                <label asp-for="Descripcion">Descripcion Colmena:</label>
+                <input asp-for="Descripcion" class="form-control" placeholder=@Model.Descripcion readonly />
             </div>
-        }
-    </div>
-    <div class="col-md-4">
-        @foreach (var item in Model.FechaRecuperacionEnfermedad)
-        {
-            <div>
-                <h6>Nombre enfermedad: @Model.FechaRecuperacionEnfermedad</h6>
+            <div class="form-group mt-3">
+                <label asp-for="Ubicacion">Ubicacion Colmena:</label>
+                <input asp-for="Ubicacion" class="form-control" placeholder=@Model.Ubicacion readonly />
             </div>
-        }
-    </div>
+            <div class="form-group mt-3">
+                <label asp-for="TiempoVida">Tiempo de vida Colmena:</label>
+                <input asp-for="TiempoVida" class="form-control" placeholder=@Model.TiempoVida readonly />
+            </div>
+            <div class="form-group mt-3">
+                <label asp-for="EstadoSalud">Estado salud actual:</label>
+                <input asp-for="EstadoSalud" class="form-control" placeholder=@Model.EstadoSalud readonly />
+            </div>
+
+            <div class="card">
+                <p>Ultimas enfermedades en la colmena:</p>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Enfermedad:</th>
+                            <th>Fecha Deteccion</th>
+                            <th>Fecha Recuperacion</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <p>En construccion</p>
+                            </td>
+                            <td>
+                                <p>En construccion</p>
+                            </td>
+                            <td>
+                                <p>En construccion</p>
+                            </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="form-group mt-3">
+                <input type="submit" value="Descargar PDF" class="btn btn-outline-success col-12" />
+            </div>
+        </div>
+    </form>
 </div>
+
+
+<div>
+    <a class="button" asp-action="InformacionColmenaCrear" asp-route-id=@Model.Id>Crear nuevo informe para la Colmena</a>
+</div>
+

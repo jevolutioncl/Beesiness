@@ -1,19 +1,20 @@
-﻿@model List<Inspeccion>
+﻿@model List<Tarea>
 @{
-    ViewData["Title"] = "Administrar Inspecciones a Colmenas";
+    ViewData["Title"] = "Administrar Tareas";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Administrar Inspecciones a Colmenas</h1>
+<h1>Administrar Tareas</h1>
 
 <div>
     <a class="button" asp-controller="Home" asp-action="Index">Volver al Home</a>
 </div>
 <div>
-    <a class="button" asp-action="InspeccionCrear">Nueva Inspeccion</a>
+    <a class="button" asp-action="TareaCrear">Nueva Tarea</a>
 </div>
+
 <div>
-    <h6>Listado de Inspecciones</h6>
+    <h6>Listado de Tareas</h6>
 </div>
 <div class="row justify-content-evenly mt-3">
     <div style="overflow:auto;">
@@ -21,9 +22,10 @@
             <thead>
                 <tr>
                     <th>Id</th>
-                    <th>Fecha</th>
-                    <th>Observaciones</th>
-                    <th>Id Inspector</th>
+                    <th>Nombre</th>                    
+                    <th>Fecha Agendada</th>
+                    <th>Status</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -35,20 +37,19 @@
                             @item.Id
                         </td>
                         <td>
-                            @item.Fecha
+                            @item.Nombre
                         </td>
                         <td>
-                            @item.Observaciones
+                            @item.FechaRealizacion
                         </td>
                         <td>
-                            @item.IdUsuario
+                            @item.Status
                         </td>
                         <td>
-                            <a asp-action="InspeccionEditar" asp-route-id="@item.Id">Editar</a>
-                            <a onclick="return confirm('¿Eliminar Inspeccion?')" asp-action="InspeccionBorrar" asp-route-id="@item.Id">Borrar</a>
-                            <a asp-action="InspeccionInfo" asp-route-id="@item.Id">Detalle</a>
+                            <a asp-action="TareaEditar" asp-route-id="@item.Id">Editar</a>
+                            <a onclick="return confirm('¿Eliminar Tarea?')" asp-action="TareaBorrar" asp-route-id="@item.Id">Borrar</a>
+                            <a asp-action="TareaInfo" asp-route-id="@item.Id">Detalle</a>
                         </td>
-
                     </tr>
                 }
             </tbody>

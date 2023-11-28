@@ -30,6 +30,5 @@ namespace Beesiness.Models
         // Navigation properties
         public Inspeccion Inspeccion { get; set; }
         public Colmena Colmena { get; set; }
-
     }
 }
