@@ -77,7 +77,20 @@ namespace Beesiness.Controllers
                         .Where(d => d.TipoColmena.Contains(filtro))
                         .ToListAsync();
                 }
-                return View(colmenas);
+                                
+                var viewModel = new List<ColmenaViewModel>();
+                foreach (var item in colmenas)
+                {
+                    var dato = new ColmenaViewModel();
+                    dato.Id = item.Id;
+                    dato.numIdentificador = item.numIdentificador;
+                    dato.FechaIngreso = item.FechaIngreso;
+                    dato.TipoColmena = item.TipoColmena;
+                    dato.Descripcion = item.Descripcion;
+                    viewModel.Add(dato);
+                };                
+                //return View(colmenas);
+                return View(viewModel);
             }
             return RedirectToAction("LoginIn", "Auth");
 
