@@ -1,0 +1,27 @@
+﻿@{
+    ViewData["Title"] = "Administrar Roles";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<head>
+    <link rel="stylesheet" href="~/css/index.css" />
+</head>
+<h1 class="text-center">Administrar Roles</h1>
+<div class="row">
+    <div class="card mx-auto image-fade-in-expand card-personalizada" style="width: 15rem;">
+        <img src="/css/roles.svg" class="card-img-top img-fluid mx-auto d-block" alt="...">
+        <div class="card-body">
+            <h5 class="card-title">Crear nuevo rol</h5>
+            <p class="card-text">¿Necesitas crear un nuevo rol?, ¡has llegado al apartatdo correcto!</p>
+            <a asp-action="RolCrear" class="btn btn-primary">Crear rol</a>
+        </div>
+    </div>
+    <div class="card mx-auto image-fade-in-expand card-personalizada" style="width: 15rem;">
+        <img src="/css/roles.svg" class="card-img-top img-fluid mx-auto d-block" alt="...">
+        <div class="card-body">
+            <h5 class="card-title">Ver roles</h5>
+            <p class="card-text">¿Necesitas ver, editar o eliminar algun rol?, ¡has llegado al apartado correcto!</p>
+            <a asp-action="RolIndex" class="btn btn-primary">Ver roles</a>
+        </div>
+    </div>
+</div>
+

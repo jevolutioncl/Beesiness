@@ -1,0 +1,52 @@
+﻿@model List<Rol>
+@{
+    ViewData["Title"] = "Administrar Roles";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<head>
+    <link rel="stylesheet" href="~/css/index.css" />
+</head>
+
+<h1>Administrar Roles</h1>
+
+<div class="cards-container">
+    <a class="card card-personalizada card-link button" asp-controller="Home" asp-action="Index">Volver al Home</a>
+    <a class="card card-personalizada card-link button" asp-action="RolCrear">Nuevo Rol</a>    
+</div>
+<div class="center">
+    <h6>Listado de Roles</h6>
+</div>
+<div class="row justify-content-evenly mt-3">
+    <div style="overflow:auto;">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Nombre</th>                    
+                    <th>Descripcion</th>                    
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @item.Id
+                        </td>
+                        <td>
+                            @item.Nombre
+                        </td>                        
+                        <td>
+                            @item.Descripcion
+                        </td>
+                        <td>
+                            <a asp-action="RolEditar" asp-route-id="@item.Id">Editar</a>
+                            <a onclick="return confirm('¿Eliminar Rol?')" asp-action="RolBorrar" asp-route-id="@item.Id">Borrar</a>                            
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>
