@@ -1,16 +1,33 @@
 ﻿var userPin;
+var map;
+function mapLoaded() {
+    loadMapScenario();
+
+    var ubicacionSelect = document.getElementById('UbicacionPredeterminada');
+    if (ubicacionSelect) {
+        ubicacionSelect.addEventListener('change', function (e) {
+            var selectedLocation = JSON.parse(e.target.value);
+            updateMapToLocation(selectedLocation);
+        });
+    }
+}
+
 $(document).ready(function () {
     var colmenaLocation = localStorage.getItem('ColmenaLocation');
     if (colmenaLocation) {
         colmenaLocation = JSON.parse(colmenaLocation);
         $('#Latitude').val(colmenaLocation.latitude);
         $('#Longitude').val(colmenaLocation.longitude);
-
-        loadMapScenario();
     }
+
+    var ubicacionSelect = document.getElementById('UbicacionPredeterminada');
+    ubicacionSelect.addEventListener('change', function (e) {
+        var selectedLocation = JSON.parse(e.target.value);
+        updateMapToLocation(selectedLocation);
+    });
 });
 function loadMapScenario() {
-    var map = new Microsoft.Maps.Map('#myMap', {
+    map = new Microsoft.Maps.Map('#myMap', {
         center: new Microsoft.Maps.Location(-35.31917337366901, -71.36038685586249),
         zoom: 250,
         mapTypeId: Microsoft.Maps.MapTypeId.aerial
@@ -49,6 +66,20 @@ function loadMapScenario() {
         reverseGeocode(location);
     });
 }
+function updateMapToLocation(location) {
+    console.log("Actualizando mapa a:", location); // Para depuración
+    if (map && location && location.Latitude && location.Longitude) {
+        var newCenter = new Microsoft.Maps.Location(location.Latitude, location.Longitude);
+        map.setView({ center: newCenter, zoom: location.Zoom ? location.Zoom : 250 });
+
+        if (userPin) {
+            userPin.setLocation(newCenter);
+        }
+    } else {
+        console.error("Datos de ubicación no válidos:", location);
+    }
+}
+
 function displayColmenas(map, colmenas) {
     colmenas.forEach(colmena => {
         var location = new Microsoft.Maps.Location(colmena.latitude, colmena.longitude);
@@ -82,3 +113,5 @@ function reverseGeocode(location) {
             }
         });
 }
+
+

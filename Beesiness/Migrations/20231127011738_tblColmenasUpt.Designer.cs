@@ -4,6 +4,7 @@ using Beesiness.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Beesiness.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231127011738_tblColmenasUpt")]
+    partial class tblColmenasUpt
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -75,18 +78,10 @@ namespace Beesiness.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int?>("UbicacionMapaId")
-                        .HasColumnType("int");
-
                     b.Property<int>("numIdentificador")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("UbicacionMapaId");
-
-                    b.HasIndex("numIdentificador")
-                        .IsUnique();
 
                     b.ToTable("tblColmenas");
                 });
@@ -582,15 +577,6 @@ namespace Beesiness.Migrations
                         .IsRequired();
 
                     b.Navigation("Colmena");
-                });
-
-            modelBuilder.Entity("Beesiness.Models.Colmena", b =>
-                {
-                    b.HasOne("Beesiness.Models.UbicacionMapa", "UbicacionMapa")
-                        .WithMany()
-                        .HasForeignKey("UbicacionMapaId");
-
-                    b.Navigation("UbicacionMapa");
                 });
 
             modelBuilder.Entity("Beesiness.Models.ColmenaPolinizacion", b =>

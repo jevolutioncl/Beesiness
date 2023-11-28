@@ -2,7 +2,6 @@
     display: none; /* Ocultar por defecto */
     position: absolute;
     background: #feedc6; /* Fondo claro */
-    border: 1px solid #ccc; /* Bordes sutiles */
     padding: 10px;
     border-radius: 4px; /* Bordes redondeados */
     box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Sombra suave */
