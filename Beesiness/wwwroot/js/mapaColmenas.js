@@ -103,9 +103,9 @@ function displayColmenas(map, colmenas) {
 
         var colmenaItem = document.createElement('div');
         colmenaItem.classList.add('colmena-item');
-        colmenaItem.textContent = `Colmena ID: ${colmena.Id}`;
+        colmenaItem.textContent = `Colmena N°: ${colmena.numIdentificador}`;
         colmenaItem.onclick = function () {
-            map.setView({ center: new Microsoft.Maps.Location(colmena.latitude, colmena.longitude), zoom: 15 });
+            map.setView({ center: new Microsoft.Maps.Location(colmena.latitude, colmena.longitude), zoom: 150 });
         };
         listaColmenas.appendChild(colmenaItem);
         map.entities.push(pin);
@@ -121,7 +121,7 @@ function showInfobox(pin, colmena) {
             <div>Descripción: ${colmena.descripcion}</div>
             <button onclick="location.href='/ruta_a_detalle_colmena/${colmena.Id}'">Más detalles</button>
         </div>
-        <button class="infobox-close-btn" onclick="closeInfobox()">X</button>
+        <button class="infobox-close-btn" onclick="closeInfobox()">❌</button>
     `;
     customInfobox.style.top = `${pixelLocation.y}px`;
     customInfobox.style.left = `${pixelLocation.x}px`;
@@ -130,11 +130,15 @@ function showInfobox(pin, colmena) {
 }
 
 
-function applyFilter(filter) {
-    var filteredColmenas = colmenasData;
+function applyFilter(filterTipoColmena, filterUbicacionPredeterminada) {
+    let filteredColmenas = colmenasData;
 
-    if (filter !== 'Todas') {
-        filteredColmenas = colmenasData.filter(c => c.tipoColmena === filter);
+    if (filterTipoColmena !== 'Todas') {
+        filteredColmenas = filteredColmenas.filter(c => c.tipoColmena === filterTipoColmena);
+    }
+
+    if (filterUbicacionPredeterminada && filterUbicacionPredeterminada !== 'Todas') {
+        filteredColmenas = filteredColmenas.filter(c => c.UbicacionPredeterminadaId == filterUbicacionPredeterminada);
     }
 
     displayColmenas(map, filteredColmenas);
@@ -188,9 +192,25 @@ document.addEventListener('DOMContentLoaded', function () {
     botonFiltros.addEventListener('click', toggleFiltros);
 });
 
-document.getElementById('ubicacionesPredeterminadas').addEventListener('change', function (e) {
-    let location = JSON.parse(e.target.value);
-    map.setView({ center: new Microsoft.Maps.Location(location.lat, location.lng), zoom: location.zoom });
+document.getElementById('ubicacionesPredeterminadas').addEventListener('change', async function (e) {
+    const ubicacionSeleccionada = JSON.parse(e.target.value);
+
+    // Aplicar filtro basado en la ubicación seleccionada
+    const lat = ubicacionSeleccionada.lat;
+    const lng = ubicacionSeleccionada.lng;
+
+    const response = await fetch(`/Colmena/ObtenerDatosColmenas?lat=${lat}&lng=${lng}`);
+    const data = await response.json();
+
+    displayColmenas(map, data);
+
+    // Centrar el mapa en la ubicación seleccionada
+    if (ubicacionSeleccionada && ubicacionSeleccionada.lat && ubicacionSeleccionada.lng) {
+        map.setView({
+            center: new Microsoft.Maps.Location(ubicacionSeleccionada.lat, ubicacionSeleccionada.lng),
+            zoom: ubicacionSeleccionada.zoom || 15
+        });
+    }
 });
 
 function eliminarUbicacionSeleccionada() {
@@ -210,14 +230,12 @@ function eliminarUbicacionSeleccionada() {
                         console.log('Ubicación eliminada');
                         select.remove(selectedIndex); // Elimina la opción del DOM
                     } else {
-                        console.error('Error al eliminar la ubicación');
+                        console.error('Error al eliminar la ubicación: ' + response.status);
                     }
                 })
                 .catch(error => console.error('Error:', error));
         }
     }
 }
-
-
 
 loadPredeterminedLocations();
