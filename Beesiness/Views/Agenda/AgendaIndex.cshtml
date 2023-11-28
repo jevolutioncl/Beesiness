@@ -1,0 +1,21 @@
+﻿
+
+<div>
+    <h2>Enviar Correo</h2>
+</div>
+<div>
+    <form class="row justify-content-evenly" asp-controller="Agenda" asp-action="EnviarEmail" method="post">
+        <div class="form-group mt-3">
+            <input name="destinatario" value="" placeholder="Correo destinatario"/>
+        </div>
+        <div class="form-group mt-3">
+            <input name="asunto" value="" placeholder="Asunto" />
+        </div>
+        <div class="form-group mt-3">
+            <input name="cuerpo" value="" placeholder="Cuerpo" />
+        </div>                
+        <div class="form-group mt-3">
+            <button type="submit" class="btn btn-primary">Enviar Correo</button>
+        </div>        
+    </form>
+</div>
