@@ -8,10 +8,12 @@
 
   <ItemGroup>
     <Content Remove="Views\Inspeccion\InspeccionDetalle.cshtml" />
+    <Content Remove="wwwroot\js\graficos.js" />
     <Content Remove="wwwroot\js\sensor.js" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="MailKit" Version="4.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="7.0.12" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.12" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.23" />
@@ -40,11 +42,13 @@
     <_ContentIncludedByDefault Remove="Views\Enfermedad\EnfermedadGeneral.cshtml" />
     <_ContentIncludedByDefault Remove="Views\Inspeccion\InspeccionDetalle.cshtml" />
     <_ContentIncludedByDefault Remove="wwwroot\css\mapa.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\graficos.js" />
     <_ContentIncludedByDefault Remove="wwwroot\js\sensor.js" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="Views\Inspeccion\InspeccionDetalle.cshtml" />
+    <None Include="wwwroot\js\graficos.js" />
     <None Include="wwwroot\js\sensor.js" />
   </ItemGroup>
 
