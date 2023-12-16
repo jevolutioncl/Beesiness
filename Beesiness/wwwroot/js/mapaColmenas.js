@@ -103,7 +103,7 @@ function displayColmenas(map, colmenas) {
 
         var colmenaItem = document.createElement('div');
         colmenaItem.classList.add('colmena-item');
-        colmenaItem.textContent = `Colmena ID: ${colmena.Id}`;
+        colmenaItem.textContent = `Colmena ID: ${colmena.numIdentificador}`;
         colmenaItem.onclick = function () {
             map.setView({ center: new Microsoft.Maps.Location(colmena.latitude, colmena.longitude), zoom: 15 });
         };
@@ -112,22 +112,38 @@ function displayColmenas(map, colmenas) {
     });
 }
 function showInfobox(pin, colmena) {
+    console.log('Datos de la colmena:', colmena); 
     var pixelLocation = map.tryLocationToPixel(pin.getLocation(), Microsoft.Maps.PixelReference.control);
     var customInfobox = document.getElementById('customInfobox');
     customInfobox.innerHTML = `
         <div class="infobox-content">
-            <div>Fecha de Ingreso: ${new Date(colmena.fechaIngreso).toLocaleDateString()}</div>
-            <div>Tipo de Colmena: ${colmena.tipoColmena}</div>
-            <div>Descripción: ${colmena.descripcion}</div>
-            <button onclick="location.href='/ruta_a_detalle_colmena/${colmena.Id}'">Más detalles</button>
+            <div class="infobox-header">
+                <div class="infobox-title">Info Colmena</div>
+                <button class="infobox-close-btn" onclick="closeInfobox()">×</button>
+            </div>
+            <div class="infobox-body">
+                <div>Fecha de Ingreso: ${new Date(colmena.fechaIngreso).toLocaleDateString()}</div>
+                <div>Tipo de Colmena: ${colmena.tipoColmena}</div>
+                <div>Descripción: ${colmena.descripcion}</div>
+                <div id="ultimaTemperatura">Cargando temperatura...</div>
+            </div>
+            <div class="infobox-footer">
+                <a href="/Colmena/ColmenaIndex" class="infobox-detail-link">Más detalles</a>
+            </div>
         </div>
-        <button class="infobox-close-btn" onclick="closeInfobox()">X</button>
     `;
     customInfobox.style.top = `${pixelLocation.y}px`;
     customInfobox.style.left = `${pixelLocation.x}px`;
     customInfobox.style.display = 'block';
     clearTimeout(closeInfoboxTimer);
+
+    // Obtener y mostrar la última temperatura
+    getUltimaTemperatura(colmena.id, (temperatura, errorMessage) => {
+        var mensaje = errorMessage || `Última temperatura: ${temperatura}°C`;
+        document.getElementById('ultimaTemperatura').textContent = mensaje;
+    });
 }
+
 
 
 function applyFilter(filter) {
@@ -216,6 +232,32 @@ function eliminarUbicacionSeleccionada() {
                 .catch(error => console.error('Error:', error));
         }
     }
+}
+function getUltimaTemperatura(idColmena, callback) {
+    fetch(`/SensorData/UltimaTemperatura/${idColmena}`)
+        .then(response => {
+            if (!response.ok) {
+                if (response.status === 404) {
+                    // No se encontraron datos de temperatura
+                    return 'No se encontró una temperatura';
+                } else {
+                    throw new Error('Error al obtener la temperatura');
+                }
+            }
+            return response.json();
+        })
+        .then(temperatura => {
+            // Si la temperatura es una cadena, significa que es un mensaje
+            if (typeof temperatura === 'string') {
+                callback(null, temperatura);
+            } else {
+                callback(temperatura);
+            }
+        })
+        .catch(error => {
+            console.error('Error al obtener la temperatura:', error);
+            callback(null, 'Error al obtener la temperatura');
+        });
 }
 
 

@@ -1,0 +1,35 @@
+﻿@{
+    ViewData["Title"] = "Estado del Sistema";
+}
+
+<link href="/css/estado-sistema.css" rel="stylesheet" />
+
+<div class="estado-sistema-container">
+    <h2>Estado del Sistema</h2>
+
+    <div id="estadoFrontend" class="estado-componente">
+        <span class="estado-titulo">Frontend:</span>
+        <span id="textoEstadoFrontend" class="">Cargando...</span>
+    </div>
+
+    <div id="estadoBackend" class="estado-componente">
+        <span class="estado-titulo">Backend:</span>
+        <span id="textoEstadoBackend" class="">Cargando...</span>
+    </div>
+
+    <div id="estadoDatabase" class="estado-componente">
+        <span class="estado-titulo">Base de datos:</span>
+        <span id="textoEstadoDatabase" class="">Cargando...</span>
+    </div>
+
+    <div id="estadoArduino" class="estado-componente">
+        <span class="estado-titulo">Arduino:</span>
+        <span id="textoEstadoArduino" class="">Cargando...</span>
+    </div>
+
+    <button id="verificarEstadoSistema" class="boton-verificar">Verificar Estado</button>
+</div>
+
+@section Scripts {
+    <script src="/js/estado-sistema.js"></script>
+}
