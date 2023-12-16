@@ -1,9 +1,10 @@
 ﻿@model Beesiness.Models.EstadoArduino
 
 <link href="/css/Arduino.css" rel="stylesheet" />
-<h2>Estado del Arduino</h2>
+
 
 <div id="estadoArduino" class="estado-arduino-container">
+    <h3>Estado del Arduino</h3>
     <p>Arduino Conectado: <span id="arduinoConectado" class="@Model.ArduinoConectado ? "conectado" : "desconectado"">@Model.ArduinoConectado</span></p>
     <div id="indicadorConexion" class="indicador-conexion @Model.ArduinoConectado ? "conectado" : "desconectado""></div>
     <button id="verificarEstado" class="boton-verificar">Verificar Estado</button>

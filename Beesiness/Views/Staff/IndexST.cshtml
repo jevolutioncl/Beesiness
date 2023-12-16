@@ -6,7 +6,7 @@
 <head>
     <link rel="stylesheet" href="~/css/index.css" />
 </head>
-<h1 class="text-center">Administrar Usuarios</h1>
+<h1 class="text-center">Administrar Sistema</h1>
 <div class="row">
     <div class="card card-personalizada mx-auto image-fade-in-expand" style="width: 15rem;">
         <img src="/css/apicultorver.svg" class="card-img-top img-fluid mx-auto d-block" alt="...">
@@ -30,6 +30,14 @@
             <h5 class="card-title">Roles</h5>
             <p class="card-text">Apartado dedicado a los roles, donde puedes crear, editar y eliminar roles de los usuarios del sistema</p>
             <a asp-controller="Rol" asp-action="RolGeneral" class="btn btn-primary">Ver roles</a>
+        </div>
+    </div>
+    <div class="card mx-auto image-fade-in-expand card-personalizada" style="width: 15rem;">
+        <img src="/css/status.svg" class="card-img-top img-fluid mx-auto d-block" alt="...">
+        <div class="card-body">
+            <h5 class="card-title">Estado de los servicios</h5>
+            <p class="card-text">Apartado para ver el estado de los servicios</p>
+            <a asp-controller="Status" asp-action="EstadoSistema" class="btn btn-primary">Estado Sistema</a>
         </div>
     </div>
 </div>
