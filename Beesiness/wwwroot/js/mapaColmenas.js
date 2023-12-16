@@ -103,7 +103,7 @@ function displayColmenas(map, colmenas) {
 
         var colmenaItem = document.createElement('div');
         colmenaItem.classList.add('colmena-item');
-        colmenaItem.textContent = `Colmena ID: ${colmena.numIdentificador}`;
+        colmenaItem.textContent = `Colmena N°: ${colmena.numIdentificador}`;
         colmenaItem.onclick = function () {
             map.setView({ center: new Microsoft.Maps.Location(colmena.latitude, colmena.longitude), zoom: 15 });
         };
