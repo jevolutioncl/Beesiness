@@ -47,9 +47,27 @@
                             @item.Descripcion
                         </td>
                         <td>
-                            <a asp-action="ColmenaEditar" asp-route-colmenaId="@item.Id">Editar</a>
-                            <a onclick="return confirm('¿Eliminar Colmena?')" asp-action="ColmenaBorrar" asp-route-colmenaId="@item.Id">Borrar</a>
-                            <a asp-controller="InformacionColmena" asp-action="InformacionColmenaIndex" asp-route-colmenaId="@item.Id">Detalle</a>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <a href="@Url.Action("ColmenaEditar","Colmena", new { id = item.Id})"
+                                   class="btn"
+                                   style="background: none; border: none; padding: 0;">
+                                    <i class="fa-solid fa-pen-to-square fa-lg" style="color: #0b5c13;"></i>
+                                </a>
+                                <form asp-action="ColmenaBorrar"
+                                      asp-controller="Colmena"
+                                      asp-route-colmenaId="@item.Id"
+                                      method="post"
+                                      onsubmit="return confirm('Está seguro de querer eliminar esta colmena?');"
+                                      style="margin: 0; padding: 0;">
+                                    <input type="hidden" asp-for="@item.Id" />
+                                    <button type="submit"
+                                            class="btn"
+                                            style="background: none; border: none; padding: 0;">
+                                        <i class="fa-solid fa-trash fa-lg" style="color: #920a0a;"></i>
+                                    </button>
+                                </form>
+                                <a asp-controller="InformacionColmena" asp-action="InformacionColmenaIndex" asp-route-colmenaId="@item.Id">Detalle</a>
+                            </div>
                         </td>
 
                     </tr>

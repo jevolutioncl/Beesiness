@@ -25,8 +25,13 @@
                 <input asp-for="Registration.NombreCompleto" type="text" placeholder="Nombre y apellido">
                 <span asp-validation-for="Registration.Correo" class="text-danger"></span>
                 <input asp-for="Registration.Correo" type="email" placeholder="Correo electrónico">
+                <span>Seleccione un rol</span>
                 <span asp-validation-for="Registration.RolSeleccionado" class="text-danger"></span>
-                <input asp-for="Registration.RolSeleccionado" type="text" placeholder="Rol">
+                <select asp-for="Registration.RolSeleccionado">
+                    <option value="Apicultor">Apicultor</option>
+                    <option value="Asistente">Asistente</option>
+                    <option value="Chofer">Chofer</option>
+                </select>
                 <button>Solicitar registro</button>
             </form>
         </div>
@@ -65,11 +70,6 @@
             </div>
         </div>
     </div>
-        <br />
-            <h3>Profesor Christian, se nos olvidó comentarle su cuenta para ingresar al sistema la cual es la siguiente:</h3>
-            <p>Correo: cristian.perez48@inacapmail.cl</p>
-            <p>Contraseña: leica666</p>
-
     <script src="/js/scripts.js"></script>
 </body>
 

@@ -1,26 +1,60 @@
 ﻿.custom-infobox {
     display: none; /* Ocultar por defecto */
     position: absolute;
-    background: #feedc6; /* Fondo claro */
+    background: white; /* Fondo blanco para minimalismo */
     padding: 10px;
-    border-radius: 4px; /* Bordes redondeados */
-    box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Sombra suave */
+    border-radius: 8px; /* Bordes redondeados más pronunciados */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Sombra más marcada */
     z-index: 1000;
- 
-}
-.infobox-content {
-    padding: 10px;
-    // ... (cualquier otro estilo que desees aplicar al contenido)
+    width: 250px; /* Definir un ancho máximo */
+    font-family: Arial, sans-serif; /* Fuente más moderna */
+    overflow: hidden;
 }
 
-.infobox-close-btn {
-    position: absolute;
-    top: 0;
-    right: 0;
-    background-color: #fff;
-    // O cualquier color que combine con tu diseño border: none;
-    cursor: pointer;
+.infobox-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ccc;
 }
+.infobox-title {
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.infobox-content .infobox-close-btn {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    line-height: 1;
+    font-size: 20px;
+    padding: 0 10px;
+}
+
+.infobox-body {
+    padding: 5px 0; /* Espaciado vertical para el cuerpo del infobox */
+}
+
+.infobox-footer {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.infobox-detail-link {
+    display: inline-block;
+    padding: 5px 15px;
+    text-decoration: none;
+    background-color: #0b5c13;
+    color: white;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+    .infobox-detail-link:hover {
+        background-color: #088a0b; /* Cambio de color al pasar el mouse */
+    }
+
 
 .context-menu {
     background-color: white;

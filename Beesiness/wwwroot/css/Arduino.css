@@ -1,0 +1,60 @@
+﻿/* Estilos base para la aplicación */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f7f6f3;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Contenedor del estado del Arduino */
+.estado-arduino-container {
+    max-width: 300px;
+    margin: 30px auto;
+    padding: 20px;
+    background-color: #fff9e6;
+    border: 1px solid #eee2c9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Título del estado del Arduino */
+.estado-arduino-title {
+    font-size: 1.2em;
+    color: #856404;
+    margin-bottom: 15px;
+}
+
+/* Indicador de conexión */
+.indicador-conexion {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+/* Colores para el indicador de conexión */
+.conectado {
+    background-color: #28a745;
+}
+
+.desconectado {
+    background-color: #dc3545;
+}
+
+/* Botón para verificar estado */
+.boton-verificar {
+    padding: 8px 16px;
+    border: none;
+    background-color: #ffc107;
+    color: #333;
+    border-radius: 5px;
+    font-size: 0.9em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+    .boton-verificar:hover {
+        background-color: #e0a800;
+    }

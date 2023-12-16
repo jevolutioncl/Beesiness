@@ -101,26 +101,6 @@ namespace Beesiness.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "tblInfoSensores",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Fecha = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Temperatura = table.Column<float>(type: "real", nullable: false),
-                    IdColmena = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_tblInfoSensores", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_tblInfoSensores_tblColmenas_IdColmena",
-                        column: x => x.IdColmena,
-                        principalTable: "tblColmenas",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
 
             migrationBuilder.CreateTable(
                 name: "tblNotas",
@@ -374,11 +354,6 @@ namespace Beesiness.Migrations
                 column: "IdEnfermedad");
 
             migrationBuilder.CreateIndex(
-                name: "IX_tblInfoSensores_IdColmena",
-                table: "tblInfoSensores",
-                column: "IdColmena");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_tblInspecciones_IdUsuario",
                 table: "tblInspecciones",
                 column: "IdUsuario");
@@ -437,9 +412,6 @@ namespace Beesiness.Migrations
 
             migrationBuilder.DropTable(
                 name: "tblColmenaPolinizacion");
-
-            migrationBuilder.DropTable(
-                name: "tblInfoSensores");
 
             migrationBuilder.DropTable(
                 name: "tblInspecciones");

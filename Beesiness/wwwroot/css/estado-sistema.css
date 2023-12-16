@@ -1,0 +1,41 @@
+﻿.estado-sistema-container {
+    max-width: 400px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.estado-componente {
+    margin-bottom: 10px;
+}
+
+.estado-titulo {
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.estado-conectado {
+    color: #28a745; /* color verde para conectado */
+}
+
+.estado-desconectado {
+    color: #dc3545; /* color rojo para desconectado */
+}
+
+.boton-verificar {
+    padding: 8px 16px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    font-size: 0.9em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+    .boton-verificar:hover {
+        background-color: #0056b3;
+    }
