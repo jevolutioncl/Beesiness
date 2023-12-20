@@ -20,7 +20,10 @@
                     <select id="ubicacionesPredeterminadas" class="filtro-select">
                         <!-- Opciones de ubicaciones se llenarán con JavaScript -->
                     </select>
-                    <button onclick="eliminarUbicacionSeleccionada()" class="eliminar-btn">Eliminar</button>
+                    @if(User.IsInRole("Root"))
+                    {
+                        <button onclick="eliminarUbicacionSeleccionada()" class="eliminar-btn">Eliminar</button>
+                    }
                 </div>
             </div>
         </div>

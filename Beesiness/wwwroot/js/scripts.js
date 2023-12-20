@@ -10,3 +10,8 @@ loginBtn.addEventListener('click', () => {
     container.classList.remove("active");
 });
 
+function togglePasswordFields() {
+    var passwordFields = document.getElementById('passwordFields');
+    var isChecked = document.getElementById('changePasswordCheckbox').checked;
+    passwordFields.style.display = isChecked ? 'block' : 'none';
+}
