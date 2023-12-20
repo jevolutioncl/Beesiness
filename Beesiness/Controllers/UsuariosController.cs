@@ -152,7 +152,7 @@ namespace Beesiness.Controllers
 
                 _context.tblUsuarios.Add(U);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(GestionUsuario));
             }
             else
             {
