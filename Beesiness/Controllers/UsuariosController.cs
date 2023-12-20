@@ -55,6 +55,13 @@ namespace Beesiness.Controllers
         public async Task<IActionResult> EditUser(EditUserViewModel model)
         {
             ModelState.Remove("RolesDisponibles");
+            // Remover validaciones de contraseña si no se desea cambiar
+            if (string.IsNullOrWhiteSpace(model.NewPassword) && string.IsNullOrWhiteSpace(model.ConfirmNewPassword))
+            {
+                ModelState.Remove("NewPassword");
+                ModelState.Remove("ConfirmNewPassword");
+            }
+
             if (ModelState.IsValid)
             {
                 var usuario = await _context.tblUsuarios.FindAsync(model.Id);
@@ -63,16 +70,13 @@ namespace Beesiness.Controllers
                     return NotFound();
                 }
 
-                // Actualizar los campos
+                // Actualizar campos básicos
                 usuario.Nombre = model.Nombre;
                 usuario.Correo = model.Correo;
                 usuario.IdRol = model.IdRolSeleccionado;
 
-                // Si se ingresó una nueva contraseña, actualizarla.
                 if (!string.IsNullOrWhiteSpace(model.NewPassword))
                 {
-                    // Aquí debes usar el mismo mecanismo que utilizaste para crear la contraseña original
-                    // Esto es solo un ejemplo y deberás reemplazarlo por tu lógica de hashing
                     byte[] passwordHash, passwordSalt;
                     CreatePasswordHash(model.NewPassword, out passwordHash, out passwordSalt);
 
@@ -87,7 +91,6 @@ namespace Beesiness.Controllers
                 return RedirectToAction(nameof(GestionUsuario));
             }
 
-            // Si el modelo no es válido, recarga la vista con la información existente
             model.RolesDisponibles = _context.tblRoles.Select(r => new SelectListItem
             {
                 Value = r.Id.ToString(),
@@ -105,12 +108,6 @@ namespace Beesiness.Controllers
             {
                 return NotFound();
             }
-
-            // Añadir validación si es necesario para evitar que un usuario se elimine a sí mismo
-            // Por ejemplo:
-            // if (User.Identity.Name == usuario.Correo) {
-            //     // Mostrar mensaje de error o redirigir
-            // }
 
             _context.tblUsuarios.Remove(usuario);
             await _context.SaveChangesAsync();
@@ -141,7 +138,7 @@ namespace Beesiness.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateUser(CreateUserViewModel Uvm)
         {
-            ModelState.Remove("RolesDisponibles"); //Esto para que no pase el RolesDisponibles de CreateViewMoedl
+            ModelState.Remove("RolesDisponibles"); 
             if (ModelState.IsValid)
             {
                 Usuario U = new Usuario();

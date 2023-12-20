@@ -117,6 +117,8 @@ namespace Beesiness.Controllers
 
                 _context.tblUsuariosTemporales.Add(usuarioTemporal);
                 await _context.SaveChangesAsync();
+
+                TempData["SuccessMessage"] = "Tu solicitud ha sido enviada exitosamente. Recibirás un correo cuando tu solicitud haya sido aprobada.";
                 return RedirectToAction("LoginIn", "Auth");
             }
 
