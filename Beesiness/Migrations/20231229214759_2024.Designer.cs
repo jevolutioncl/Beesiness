@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Beesiness.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231022195649_jevo")]
-    partial class jevo
+    [Migration("20231229214759_2024")]
+    partial class _2024
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -67,12 +67,29 @@ namespace Beesiness.Migrations
                     b.Property<DateTime>("FechaIngreso")
                         .HasColumnType("datetime2");
 
+                    b.Property<float>("Latitude")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Longitude")
+                        .HasColumnType("real");
+
                     b.Property<string>("TipoColmena")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<int?>("UbicacionMapaId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("numIdentificador")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UbicacionMapaId");
+
+                    b.HasIndex("numIdentificador")
+                        .IsUnique();
 
                     b.ToTable("tblColmenas");
                 });
@@ -152,6 +169,30 @@ namespace Beesiness.Migrations
                     b.ToTable("tblEnfermedadColmena");
                 });
 
+            modelBuilder.Entity("Beesiness.Models.EstadoArduino", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("ArduinoConectado")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("ColmenaId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UltimaComunicacion")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ColmenaId");
+
+                    b.ToTable("tblEstadoArduino");
+                });
+
             modelBuilder.Entity("Beesiness.Models.InfoSensores", b =>
                 {
                     b.Property<int>("Id")
@@ -174,6 +215,50 @@ namespace Beesiness.Migrations
                     b.HasIndex("IdColmena");
 
                     b.ToTable("tblInfoSensores");
+                });
+
+            modelBuilder.Entity("Beesiness.Models.InformacionColmena", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("EstadoSalud")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("IdColmena")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdInspeccion")
+                        .HasColumnType("int");
+
+                    b.Property<double>("Latitude")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Longitude")
+                        .HasColumnType("float");
+
+                    b.Property<string>("TiempoVida")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("UbicacionColmena")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdColmena");
+
+                    b.HasIndex("IdInspeccion");
+
+                    b.ToTable("tblInformacionColmenas");
                 });
 
             modelBuilder.Entity("Beesiness.Models.Inspeccion", b =>
@@ -417,6 +502,38 @@ namespace Beesiness.Migrations
                     b.ToTable("tblTratamientos");
                 });
 
+            modelBuilder.Entity("Beesiness.Models.UbicacionMapa", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Descripcion")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<float>("Latitude")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Longitude")
+                        .HasColumnType("real");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("ZoomLevel")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("tblUbicacionMapas");
+                });
+
             modelBuilder.Entity("Beesiness.Models.Usuario", b =>
                 {
                     b.Property<int>("Id")
@@ -453,6 +570,36 @@ namespace Beesiness.Migrations
                     b.ToTable("tblUsuarios");
                 });
 
+            modelBuilder.Entity("Beesiness.Models.UsuarioTemporal", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Correo")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("FechaSolicitud")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Rol")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("tblUsuariosTemporales");
+                });
+
             modelBuilder.Entity("Beesiness.Models.Alertas", b =>
                 {
                     b.HasOne("Beesiness.Models.Colmena", "Colmena")
@@ -462,6 +609,15 @@ namespace Beesiness.Migrations
                         .IsRequired();
 
                     b.Navigation("Colmena");
+                });
+
+            modelBuilder.Entity("Beesiness.Models.Colmena", b =>
+                {
+                    b.HasOne("Beesiness.Models.UbicacionMapa", "UbicacionMapa")
+                        .WithMany()
+                        .HasForeignKey("UbicacionMapaId");
+
+                    b.Navigation("UbicacionMapa");
                 });
 
             modelBuilder.Entity("Beesiness.Models.ColmenaPolinizacion", b =>
@@ -502,6 +658,17 @@ namespace Beesiness.Migrations
                     b.Navigation("Enfermedad");
                 });
 
+            modelBuilder.Entity("Beesiness.Models.EstadoArduino", b =>
+                {
+                    b.HasOne("Beesiness.Models.Colmena", "Colmena")
+                        .WithMany()
+                        .HasForeignKey("ColmenaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Colmena");
+                });
+
             modelBuilder.Entity("Beesiness.Models.InfoSensores", b =>
                 {
                     b.HasOne("Beesiness.Models.Colmena", "Colmena")
@@ -511,6 +678,25 @@ namespace Beesiness.Migrations
                         .IsRequired();
 
                     b.Navigation("Colmena");
+                });
+
+            modelBuilder.Entity("Beesiness.Models.InformacionColmena", b =>
+                {
+                    b.HasOne("Beesiness.Models.Colmena", "Colmena")
+                        .WithMany()
+                        .HasForeignKey("IdColmena")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Beesiness.Models.Inspeccion", "Inspeccion")
+                        .WithMany()
+                        .HasForeignKey("IdInspeccion")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Colmena");
+
+                    b.Navigation("Inspeccion");
                 });
 
             modelBuilder.Entity("Beesiness.Models.Inspeccion", b =>
@@ -606,12 +792,17 @@ namespace Beesiness.Migrations
             modelBuilder.Entity("Beesiness.Models.Usuario", b =>
                 {
                     b.HasOne("Beesiness.Models.Rol", "Rol")
-                        .WithMany()
+                        .WithMany("Usuarios")
                         .HasForeignKey("IdRol")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Rol");
+                });
+
+            modelBuilder.Entity("Beesiness.Models.Rol", b =>
+                {
+                    b.Navigation("Usuarios");
                 });
 #pragma warning restore 612, 618
         }
