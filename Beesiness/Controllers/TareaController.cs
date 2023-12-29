@@ -234,8 +234,7 @@ namespace Beesiness.Controllers
                             {
                                 Id = item2.Id,
                                 numIdentificador = item2.numIdentificador,
-                                Descripcion = item2.Descripcion,
-                                EstadoSalud = item2.EstadoSalud
+                                Descripcion = item2.Descripcion
                             };
                             vm.ColmenasTodas.Add(item2);
                         }
