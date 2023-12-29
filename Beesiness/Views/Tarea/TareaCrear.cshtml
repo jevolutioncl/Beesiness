@@ -1,0 +1,42 @@
+﻿﻿@model Tarea
+@{
+    ViewData["Title"] = "Crear Tarea";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div>
+    <h2>Ingresar nueva Tarea</h2>
+</div>
+<div>
+    <form class="row justify-content-evenly" asp-action="TareaCrear" method="post">
+        <div class="col-md-6">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group mt-3">
+                <input asp-for="Nombre" class="form-control" placeholder="Nombre de la Tarea" />
+                <span asp-validation-for="Nombre" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-3">
+                <input asp-for="Descripcion" class="form-control" placeholder="Descripcion de la Tarea" />
+                <span asp-validation-for="Descripcion" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-3">
+                <input asp-for="CorreoAviso" class="form-control" placeholder="Correo para enviar el aviso" />
+                <span asp-validation-for="CorreoAviso" class="text-danger"></span>
+            </div>            
+            <div class="form-group mt-3">
+                <input asp-for="FechaRealizacion" class="form-control" placeholder="Fecha para realizar de la tarea" />
+                <span asp-validation-for="FechaRealizacion" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-3">
+                <select asp-for="Status" class="form-control" id="statusSelect">
+                    <option value="Pendiente" id="defaultOption">Pendiente</option>
+                    <option value="Realizada">Realizada</option>                                        
+                </select>
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-3">
+                <input type="submit" value="Crear Tarea" class="btn btn-outline-success col-12" />
+            </div>
+        </div>
+    </form>
+</div>

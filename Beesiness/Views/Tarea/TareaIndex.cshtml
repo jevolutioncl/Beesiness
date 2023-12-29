@@ -1,0 +1,59 @@
+﻿﻿@model List<Tarea>
+@{
+    ViewData["Title"] = "Administrar Tareas";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Administrar Tareas</h1>
+
+<div>
+    <a class="button" asp-controller="Home" asp-action="Index">Volver al Home</a>
+</div>
+<div>
+    <a class="button" asp-action="TareaCrear">Nueva Tarea</a>
+</div>
+
+<div>
+    <h6>Listado de Tareas</h6>
+</div>
+<div class="row justify-content-evenly mt-3">
+    <div style="overflow:auto;">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Nombre</th>                    
+                    <th>Fecha Agendada</th>
+                    <th>Status</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @item.Id
+                        </td>
+                        <td>
+                            @item.Nombre
+                        </td>
+                        <td>
+                            @item.FechaRealizacion
+                        </td>
+                        <td>
+                            @item.Status
+                        </td>
+                        <td>
+                            <a asp-action="TareaEditar" asp-route-id="@item.Id">Editar</a>
+                            <a onclick="return confirm('¿Eliminar Tarea?')" asp-action="TareaBorrar" asp-route-id="@item.Id">Borrar</a>
+                            <a asp-action="TareaInfo" asp-route-id="@item.Id">Detalle</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>
