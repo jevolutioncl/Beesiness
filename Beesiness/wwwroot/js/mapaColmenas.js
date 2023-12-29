@@ -9,6 +9,14 @@ function loadMapScenario() {
         zoom: 250,
         mapTypeId: Microsoft.Maps.MapTypeId.aerial
     });
+    const selectedColmena = JSON.parse(localStorage.getItem('selectedColmena'));
+    if (selectedColmena) {
+        map.setView({
+            center: new Microsoft.Maps.Location(selectedColmena.latitude, selectedColmena.longitude),
+            zoom: selectedColmena.zoomLevel
+        });
+        localStorage.removeItem('selectedColmena'); // Limpia después de usar
+    }
 
     // Cargar los datos de las colmenas desde el servidor
     fetch('/Colmena/ObtenerDatosColmenas')
@@ -20,6 +28,7 @@ function loadMapScenario() {
         .catch(error => {
             console.error('Error al obtener los datos de la colmena: ', error);
         });
+
     Microsoft.Maps.Events.addHandler(map, 'rightclick', function (e) {
         var point = new Microsoft.Maps.Point(e.getX(), e.getY());
         var loc = map.tryPixelToLocation(point);
@@ -44,6 +53,7 @@ function loadMapScenario() {
         document.getElementById('Longitude').value = loc.longitude;
         document.getElementById('ZoomLevel').value = map.getZoom();
     });
+
 
 }
 function closeContextMenu() {
@@ -79,6 +89,8 @@ function redirectToCreateColmena() {
         window.location.href = '/Colmena/ColmenaCrear';
     }
 }
+const selectedColmena = JSON.parse(localStorage.getItem('selectedColmena')) || {};
+
 function displayColmenas(map, colmenas) {
     map.entities.clear();
     pins = [];
@@ -87,10 +99,20 @@ function displayColmenas(map, colmenas) {
 
     colmenas.forEach(colmena => {
         var location = new Microsoft.Maps.Location(colmena.latitude, colmena.longitude);
+        var isSelectedColmena = selectedColmena.latitude == colmena.latitude && selectedColmena.longitude == colmena.longitude;
+        var iconUrl = isSelectedColmena ? '/css/highlighted-bee-box.png' : '/css/bee-box.png';
+
         var pin = new Microsoft.Maps.Pushpin(location, {
-            icon: '/css/bee-box.png',
+            icon: iconUrl,
             anchor: new Microsoft.Maps.Point(16, 16)
         });
+
+        // Agregar metadatos al pin para identificación futura
+        pin.metadata = {
+            id: colmena.id
+        };
+
+        pins.push(pin);
 
         Microsoft.Maps.Events.addHandler(pin, 'mouseover', function () {
             showInfobox(pin, colmena);
@@ -103,9 +125,26 @@ function displayColmenas(map, colmenas) {
 
         var colmenaItem = document.createElement('div');
         colmenaItem.classList.add('colmena-item');
+        colmenaItem.setAttribute('data-colmena-id', colmena.id); // Atributo para identificar la colmena
         colmenaItem.textContent = `Colmena N°: ${colmena.numIdentificador}`;
+
         colmenaItem.onclick = function () {
-            map.setView({ center: new Microsoft.Maps.Location(colmena.latitude, colmena.longitude), zoom: 15 });
+            // Actualizar el mapa
+            map.setView({
+                center: new Microsoft.Maps.Location(colmena.latitude, colmena.longitude),
+                zoom: 150
+            });
+
+            // Actualizar icono de todos los pins a default
+            pins.forEach(pin => {
+                pin.setOptions({ icon: '/css/bee-box.png' });
+            });
+
+            // Encontrar el pin de la colmena seleccionada y actualizar su icono
+            const selectedPin = pins.find(pin => pin.metadata.id === colmena.id);
+            if (selectedPin) {
+                selectedPin.setOptions({ icon: '/css/highlighted-bee-box.png' });
+            }
         };
         listaColmenas.appendChild(colmenaItem);
         map.entities.push(pin);
@@ -122,9 +161,9 @@ function showInfobox(pin, colmena) {
                 <button class="infobox-close-btn" onclick="closeInfobox()">×</button>
             </div>
             <div class="infobox-body">
-                <div>Fecha de Ingreso: ${new Date(colmena.fechaIngreso).toLocaleDateString()}</div>
-                <div>Tipo de Colmena: ${colmena.tipoColmena}</div>
-                <div>Descripción: ${colmena.descripcion}</div>
+                <div><strong>Fecha de Ingreso:</strong> ${new Date(colmena.fechaIngreso).toLocaleDateString()}.</div>
+                <div><strong>Tipo de Colmena:</strong> ${colmena.tipoColmena}.</div>
+                <div><strong>Descripción:</strong> ${colmena.descripcion}.</div>
                 <div id="ultimaTemperatura">Cargando temperatura...</div>
             </div>
             <div class="infobox-footer">
@@ -239,9 +278,9 @@ function getUltimaTemperatura(idColmena, callback) {
             if (!response.ok) {
                 if (response.status === 404) {
                     // No se encontraron datos de temperatura
-                    return 'No se encontró una temperatura';
+                    return 'No se encontró una temperatura.';
                 } else {
-                    throw new Error('Error al obtener la temperatura');
+                    throw new Error('Error al obtener la temperatura.');
                 }
             }
             return response.json();
@@ -256,7 +295,7 @@ function getUltimaTemperatura(idColmena, callback) {
         })
         .catch(error => {
             console.error('Error al obtener la temperatura:', error);
-            callback(null, 'Error al obtener la temperatura');
+            callback(null, 'Error al obtener la temperatura.');
         });
 }
 

@@ -1,42 +1,51 @@
-﻿@model List<Enfermedad>
+﻿@model EnfermedadListViewModel
 @{
     ViewData["Title"] = "Administrar Enfermedades en Apicultura";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<head>
+    <link rel="stylesheet" href="~/css/index.css" />
+    <link href="/css/usuarios.css" rel="stylesheet" />
+    @section Scripts {
+        <script src="/js/enfermedades.js"></script>
+    }
+</head>
 
-<h1>Administrar Enfermedades en Apicultura</h1>
+<h2 style="text-align: center;">Administrar Enfermedades de Apicultura</h2>
 
-<div>
-    <a class="button" asp-controller="Home" asp-action="Index">Volver al Home</a>
-</div>
-<div>
-    <a class="button" asp-action="EnfermedadCrear">Nueva Enfermedad</a>
-</div>
-<div>
-    <a class="button" asp-action="EnfermedadResumen">Informacion Enfermedades</a>
+<div class="cards-container">
+    <a class="card card-personalizada card-link button" asp-controller="Home" asp-action="Index">Volver al Home</a>
+    <a class="card card-personalizada card-link button" asp-action="EnfermedadCrear">Nueva Enfermedad</a>
+    <!--<a class="card card-personalizada card-link button" asp-action="Enfermedad Resumen">Información Enfermedades</a>-->
 </div>
 
-<div>
-    <h6>Listado de Enfermedades</h6>
+<div class="filter-container">
+    <div class="dropdown">
+        <button class="dropbtn ">Filtrar por</button>
+        <div class="dropdown-content">
+            <a href="#" onclick="setFilterType('Nombre')">Nombre</a>
+            <a href="#" onclick="setFilterType('Descripcion')">Descripcion</a>
+        </div>
+    </div>
+    <span id="currentFilterType">Nombre</span> <!-- Elemento agregado para mostrar el filtro activo -->
+    <input type="text" id="searchString" placeholder="Buscar..." oninput="filterUsers()" />
 </div>
+
 <div class="row justify-content-evenly mt-3">
     <div style="overflow:auto;">
         <table class="table">
             <thead>
                 <tr>
-                    <th>Id</th>
                     <th>Nombre</th>
-                    <th>Descripcion</th>                    
+                    <th>Descripcion</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
 
-                @foreach (var item in Model)
+                @foreach (var item in Model.Enfermedades)
                 {
                     <tr>
-                        <td>
-                            @item.Id
-                        </td>
                         <td>
                             @item.Nombre
                         </td>                        
@@ -44,9 +53,31 @@
                             @item.Descripcion
                         </td>
                         <td>
-                            <a asp-action="EnfermedadEditar" asp-route-id="@item.Id">Editar</a>
-                            <a onclick="return confirm('¿Eliminar Enfermedad?')" asp-action="EnfermedadBorrar" asp-route-id="@item.Id">Borrar</a>                            
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <a href="@Url.Action("EnfermedadEditar","Enfermedad", new { id = item.Id})"
+                                    class="btn"
+                                    style="background: none; border: none; padding: 0;">
+                                    <i class="fa-solid fa-pen-to-square fa-lg" style="color: #0b5c13;"></i>
+                                    </a>
+                                    <form asp-action="EnfermedadBorrar"
+                                          asp-controler="Enfermedad"
+                                          asp-route-enfermedadId="@item.Id"
+                                          method="post"
+                                          onsubmit="return confirm('Está seguro de querer eliminar esta enfermedad?');"
+                                          style="margin: 0; padding: 0;">
+                                          <input type="hidden" asp-for="@item.Id" />
+                                          <button type="submit"
+                                                  class="btn"
+                                                  style="background: none; border: none; padding: 0;">
+                                              <i class="fa-solid fa-trash fa-lg" style="color: #920a0a;"></i>
+                                          </button>
+                                    </form>
+                            </div>
                         </td>
+                        <!--<td>
+                            <a asp-action="EnfermedadEditar" asp-route-id="@item.Id">Editar</a>
+                            <a onclick="return confirm('¿Eliminar Enfermedad?')" asp-action="EnfermedadBorrar" asp-route-id="@item.Id">Borrar</a>
+                        </td>-->
                     </tr>
                 }
             </tbody>
@@ -54,3 +85,28 @@
     </div>
 
 </div>
+@if (Model.TotalPages > 1)
+{
+    <nav aria-label="User pagination">
+        <ul class="pagination">
+            @if (Model.HasPreviousPage)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="#" onclick="window.goToPage(@(Model.CurrentPage - 1))">Anterior</a>
+                </li>
+            }
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                    <a class="page-link" href="#" onclick="window.goToPage(@i)">@i</a>
+                </li>
+            }
+            @if (Model.HasNextPage)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="#" onclick="window.goToPage(@(Model.CurrentPage + 1))">Siguiente</a>
+                </li>
+            }
+        </ul>
+    </nav>
+}

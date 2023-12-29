@@ -1,122 +1,105 @@
 ﻿@model RequestRegistrationIndexViewModel
-<div class="card text-center">
-    <div class="card-header">
-        Listado de Usuarios
-    </div>
+<head>
+    <link href="/css/usuarios.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/index.css" />
+    @section Scripts {
+        <script src="/js/usuariosPendientes.js"></script>
+    }
+</head>
+<h2 style="text-align: center;">Usuarios Pendientes de Registro</h2>
+
+<div class="cards-container">
+    <a class="card card-personalizada card-link button" asp-controller="Home" asp-action="Index">Volver al Home</a>
+    <a class="card card-personalizada card-link button" asp-controller="Usuarios" asp-action="GestionUsuario">Ver usuarios registrados</a>
 </div>
 
-<div class="row justify-content-evenly mt-3">
-    <div style="overflow:auto;">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>
-                        <a href="@Url.Action("RequestRegistrationIndex", "Auth", new { sortOrder = Model.IdSort })">
-                            Id
-                            @if (Model.CurrentSort == "id_desc")
-                            {
-                                <i class="fas fa-arrow-down"></i>
-                            }
-                            else
-                            {
-                                <i class="fas fa-arrow-up"></i>
-                            }
-                        </a>
-                    </th>
-                    <th>
-                        <a href="@Url.Action("RequestRegistrationIndex", "Auth", new { sortOrder = Model.NombreSort })">
-                            Nombre
-                            @if (Model.CurrentSort == "nombre_desc")
-                            {
-                                <i class="fas fa-arrow-down"></i>
-                            }
-                            else
-                            {
-                                <i class="fas fa-arrow-up"></i>
-                            }
-                        </a>
-                    </th>
-                    <th>
-                        <a href="@Url.Action("RequestRegistrationIndex", "Auth", new { sortOrder = Model.CorreoSort })">
-                            Correo
-                            @if (Model.CurrentSort == "correo_desc")
-                            {
-                                <i class="fas fa-arrow-down"></i>
-                            }
-                            else
-                            {
-                                <i class="fas fa-arrow-up"></i>
-                            }
-                        </a>
-                    </th>
-                    <th>
-                        <a href="@Url.Action("RequestRegistrationIndex", "Auth", new { sortOrder = Model.RolSort })">
-                            Rol
-                            @if (Model.CurrentSort == "rol_desc")
-                            {
-                                <i class="fas fa-arrow-down"></i>
-                            }
-                            else
-                            {
-                                <i class="fas fa-arrow-up"></i>
-                            }
-                        </a>
-                    </th>
-                    <th>
-                        <a href="@Url.Action("RequestRegistrationIndex", "Auth", new { sortOrder = Model.FechaSort })">
-                            Fecha solicitud
-                            @if (Model.CurrentSort == "fecha_desc")
-                            {
-                                <i class="fas fa-arrow-down"></i>
-                            }
-                            else
-                            {
-                                <i class="fas fa-arrow-up"></i>
-                            }
-                        </a>
-                    </th>
-                    <th>Acción</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if(Model != null && Model.Usuarios.Any())
-                {
-                    @foreach (var usuario in Model.Usuarios)
-                    {
-                        <tr>
-                            <td>
-                                @usuario.Id
-                            </td>
-                            <td>
-                                @usuario.Nombre
-                            </td>
-                            <td>
-                                @usuario.Correo
-                            </td>
-                            <td>
-                                @usuario.Rol
-                            </td>
-                            <td>
-                                @usuario.FechaSolicitud
-                            </td>
-                            <td>
-                                <a href="@Url.Action("RegisterFromRequest", "Usuarios", new { id = usuario.Id })" class="btn btn-primary">
-                                    Registrar Usuario
-                                    </a>
-                            </td>
-                        </tr>
-                    }
-                }
-                else
-                {
-                    <p>No hay usuarios disponibles</p>
-                }
-
-            </tbody>
-        </table>
+<div class="filter-container">
+    <div class="dropdown">
+        <button class="dropbtn ">Filtrar por</button>
+        <div class="dropdown-content">
+            <a href="#" onclick="setFilterType('Nombre')">Nombre</a>
+            <a href="#" onclick="setFilterType('Correo')">Correo</a>
+            <a href="#" onclick="setFilterType('Rol')">Rol</a>
+            <a href="#" onclick="showDateSortButtons()">Fecha</a>
+        </div>
     </div>
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    <span id="currentFilterType">Nombre</span> <!-- Elemento agregado para mostrar el filtro activo -->
+    <!-- Contenedor para los botones de ordenamiento de fecha -->
+    <div id="dateSortButtons" style="display: none;">
+        <button class="btn btn-secondary btn-sm" onclick="sortUsers('fecha_asc')">Fecha Ascendente</button>
+        <button class="btn btn-secondary btn-sm" onclick="sortUsers('fecha_desc')">Fecha Descendente</button>
+    </div>
+    <input type="text" id="searchString" placeholder="Buscar..." oninput="filterUsers()" />
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Rol</th>
+            <th>Fecha Solicitud</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var usuario in Model.Usuarios)
+        {
+            <tr>
+                <td>@usuario.Nombre</td>
+                <td>@usuario.Correo</td>
+                <td>@usuario.Rol</td>
+                <td>@usuario.FechaSolicitud</td>
+                <td>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <a href="@Url.Action("RegisterFromRequest", "Usuarios", new { id = usuario.Id })"
+                           class="btn"
+                           style="background: none; border: none; padding: 0;">
+                            <i class="fa-solid fa-user-plus" style="color: #0b5c13;"></i>
+                        </a>
+                        <form asp-controller="Auth"
+                              asp-action="DeletePendiente"
+                              method="post"
+                              onsubmit="return confirm('¿Está seguro de querer eliminar este usuario pendiente de registro?');"
+                              style="margin: 0; padding: 0;">
+                            <input type="hidden" name="id" value="@usuario.Id" />
+                            <button type="submit"
+                                    class="btn"
+                                    style="background: none; border: none; padding: 0;">
+                                <i class="fa-solid fa-trash fa-lg" style="color: #920a0a;"></i>
+                            </button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<input type="hidden" id="currentSortOrder" value="" />
+
+
+@if (Model.TotalPages > 1)
+{
+    <nav aria-label="User pagination">
+        <ul class="pagination">
+            @if (Model.HasPreviousPage)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="#" onclick="window.goToPage(@(Model.CurrentPage - 1))">Anterior</a>
+                </li>
+            }
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                    <a class="page-link" href="#" onclick="window.goToPage(@i)">@i</a>
+                </li>
+            }
+            @if (Model.HasNextPage)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="#" onclick="window.goToPage(@(Model.CurrentPage + 1))">Siguiente</a>
+                </li>
+            }
+        </ul>
+    </nav>
 }

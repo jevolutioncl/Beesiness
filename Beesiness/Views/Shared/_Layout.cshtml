@@ -29,26 +29,25 @@
                 <div class="offcanvas-body">
                     <ul class="navbar-nav justify-content-center flex-grow-1 pe-3">
                         <li class="nav-item">
-                            <a class="nav-link mx-lg-2 active" aria-current="page" asp-controller="Home" asp-action="Index">Inicio</a>
+                            <a class="nav-link mx-lg-2 @(IsActive("Index", "Home") ? "active" : "")" asp-controller="Home" asp-action="Index">Inicio</a>
                         </li>
                         @if (User.IsInRole("Root"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link mx-lg-2" asp-controller="Staff" asp-action="IndexST">Staff</a>
+                                <a class="nav-link mx-lg-2 @(IsActive("IndexST", "Staff") ? "active" : "")" asp-controller="Staff" asp-action="IndexST">Staff</a>
                             </li>
                         }
                         <li class="nav-item">
-                            <a class="nav-link mx-lg-2" asp-controller="Colmena" asp-action="ColmenaGeneral">Colmenas</a>
+                            <a class="nav-link mx-lg-2 @(IsActive("ColmenaGeneral", "Colmena") ? "active" : "")" asp-controller="Colmena" asp-action="ColmenaGeneral">Colmenas</a>
                         </li>
+                        <!--
                         <li class="nav-item">
-                            <a class="nav-link mx-lg-2" asp-controller="Inspeccion" asp-action="InspeccionGeneral">Inspección</a>
-                        </li>
+                            <a class="nav-link mx-lg-2 @(IsActive("InspeccionGeneral", "Inspeccion") ? "active" : "")" asp-controller="Inspeccion" asp-action="InspeccionGeneral">Inspección</a>
+                        </li> -->
                         <li class="nav-item">
-                            <a class="nav-link mx-lg-2" asp-controller="Enfermedad" asp-action="EnfermedadGeneral">Enfermedades</a>
+                            <a class="nav-link mx-lg-2 @(IsActive("EnfermedadGeneral", "Enfermedad") ? "active" : "")" asp-controller="Enfermedad" asp-action="EnfermedadGeneral">Enfermedades</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link mx-lg-2" href="#">Contacto</a>
-                        </li>
+                        <!-- Continúa con el resto de los elementos del menú -->
                     </ul>
                 </div>
             </div>
@@ -77,3 +76,15 @@
 </body>
 
 </html>
+@inject Microsoft.AspNetCore.Mvc.ViewFeatures.IHtmlGenerator HtmlGenerator
+
+@functions {
+    public bool IsActive(string action, string controller)
+    {
+        string currentAction = ViewContext.RouteData.Values["action"].ToString();
+        string currentController = ViewContext.RouteData.Values["controller"].ToString();
+
+        return string.Equals(currentAction, action, StringComparison.OrdinalIgnoreCase) &&
+               string.Equals(currentController, controller, StringComparison.OrdinalIgnoreCase);
+    }
+}

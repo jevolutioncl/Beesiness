@@ -1,21 +1,66 @@
-﻿@model List<Colmena>
+﻿@model Beesiness.Models.ColmenaViewModel
 @{
     ViewData["Title"] = "Administrar Colmenas";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <head>
     <link rel="stylesheet" href="~/css/index.css" />
-</head>
+    <link href="/css/usuarios.css" rel="stylesheet" />
+    @section Scripts {
+        <script src="/js/colmenaIndex.js"></script>
+        <script>
+            document.addEventListener('click', function (e) {
+                if (e.target.matches('.btn-sort-date')) {
+                    sortUsers(e.target.getAttribute('data-sort-order'), 'date');
+                }
+                if (e.target.matches('.btn-sort-num')) {
+                    sortUsers(e.target.getAttribute('data-sort-order'), 'num');
+                }
+            });
+            document.querySelectorAll('.btn-ver-en-mapa').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const lat = this.getAttribute('data-lat');
+                    const lng = this.getAttribute('data-lng');
+                    const zoomLevel = 150; // Nivel de zoom deseado
+                    localStorage.setItem('selectedColmena', JSON.stringify({ latitude: lat, longitude: lng, zoomLevel: zoomLevel }));
+                    window.location.href = '/Colmena/MapaColmena'; // Cambiar por la ruta correcta
+                });
+            });
 
-<h1>Administrar Colmenas</h1>
+
+        </script>
+    }
+</head>
+<h2 style="text-align: center;">Colmenas Registradas</h2>
 
 <div class="cards-container">
     <a class="card card-personalizada card-link button" asp-controller="Home" asp-action="Index">Volver al Home</a>
     <a class="card card-personalizada card-link button" asp-action="ColmenaCrear">Nueva Colmena</a>
     <a class="card card-personalizada card-link button" asp-action="ColmenaResumen">Graficos Colmenas</a>
 </div>
-<div class="center">
-    <h6>Listado de Colmenas</h6>
+<div class="filter-container">
+    <div class="dropdown">
+        <button class="dropbtn ">Filtrar por</button>
+        <div class="dropdown-content">
+            <a href="#" onclick="setFilterType('tipoColmena')">tipoColmena</a>
+            <a href="#" onclick="setFilterType('Descripcion')">Descripcion</a>
+            <a href="#" onclick="showDateSortButtons()">Fecha</a>
+            <a href="#" onclick="showNumSortButtons()">numIdentificador</a>
+        </div>
+    </div>
+    <span id="currentFilterType">tipoColmena</span>
+    <div id="dateSortButtons" style="display: none;">
+        <button class="btn btn-secondary btn-sm" onclick="sortUsers('fecha_asc')">Fecha Ascendente</button>
+        <button class="btn btn-secondary btn-sm" onclick="sortUsers('fecha_desc')">Fecha Descendente</button>
+    </div>
+    <div id="numSortButtons" style="display: none;">
+        <button class="btn btn-secondary btn-sm" onclick="sortUsers('numIdentificador_asc')">Número identificador Ascendente</button>
+        <button class="btn btn-secondary btn-sm" onclick="sortUsers('numIdentificador_desc')">Número identificador Descendente</button>
+    </div>
+    <input type="text" id="searchString" placeholder="Buscar..." oninput="filterUsers()" />
+    <div id="numIdentificadorInput" style="display: none;">
+        <input type="number" id="searchInt" placeholder="Introduce el número de identificación..." oninput="filterByNumIdentificador()" />
+    </div>
 </div>
 <div class="row justify-content-evenly mt-3">
     <div style="overflow:auto;">
@@ -31,7 +76,7 @@
             </thead>
             <tbody>
 
-                @foreach (var item in Model)
+                @foreach (var item in Model.Colmenas)
                 {
                     <tr>
                         <td>
@@ -48,6 +93,10 @@
                         </td>
                         <td>
                             <div style="display: flex; align-items: center; gap: 10px;">
+                                <button class="btn btn-ver-en-mapa" data-lat="@item.Latitude" data-lng="@item.Longitude"
+                                        style="background: none; border: none; padding: 0;">
+                                    <i class="fa-solid fa-location-dot fa-lg" style="color: #fb4a59"></i>
+                                </button>
                                 <a href="@Url.Action("ColmenaEditar","Colmena", new { id = item.Id})"
                                    class="btn"
                                    style="background: none; border: none; padding: 0;">
@@ -66,7 +115,6 @@
                                         <i class="fa-solid fa-trash fa-lg" style="color: #920a0a;"></i>
                                     </button>
                                 </form>
-                                <a asp-controller="InformacionColmena" asp-action="InformacionColmenaIndex" asp-route-colmenaId="@item.Id">Detalle</a>
                             </div>
                         </td>
 
@@ -77,4 +125,32 @@
     </div>
     
 </div>
+<input type="hidden" id="currentSortOrder" value="" />
+
+
+@if (Model.TotalPages > 1)
+{
+    <nav aria-label="User pagination">
+        <ul class="pagination">
+            @if (Model.HasPreviousPage)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="#" onclick="window.goToPage(@(Model.CurrentPage - 1))">Anterior</a>
+                </li>
+            }
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                    <a class="page-link" href="#" onclick="window.goToPage(@i)">@i</a>
+                </li>
+            }
+            @if (Model.HasNextPage)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="#" onclick="window.goToPage(@(Model.CurrentPage + 1))">Siguiente</a>
+                </li>
+            }
+        </ul>
+    </nav>
+}
 

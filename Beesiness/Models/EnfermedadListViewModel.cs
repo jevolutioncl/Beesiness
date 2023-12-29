@@ -1,8 +1,8 @@
 ﻿namespace Beesiness.Models
 {
-    public class EnfermedadViewModel
+    public class EnfermedadListViewModel
     {
-        public IEnumerable<Usuario> Usuarios { get; set; }
+        public IEnumerable<Enfermedad> Enfermedades { get; set; }
         public int CurrentPage { get; set; }
         public int TotalPages { get; set; }
 
@@ -14,7 +14,6 @@
             }
         }
 
-        // Calcula si hay una página anterior basado en la página actual.
         public bool HasPreviousPage
         {
             get

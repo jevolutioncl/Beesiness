@@ -17,15 +17,63 @@ namespace Beesiness.Controllers
             _context = context;
         }
 
-        [HttpGet]
-        public IActionResult GestionUsuario()
+        private const int PageSize = 6; // Para configurar los atributos de la página
+        public async Task<IActionResult> GestionUsuario(string searchString, string filterType, int pageNumber = 1)
         {
-            var model = new UserListViewModel
+            ViewData["CurrentFilter"] = searchString;
+
+            var usuarios = from u in _context.tblUsuarios.Include(u => u.Rol) select u;
+
+            if (!String.IsNullOrEmpty(searchString))
             {
-                Usuarios = _context.tblUsuarios.Include(u => u.Rol).ToList()
+                switch (filterType)
+                {
+                    case "Nombre":
+                        usuarios = usuarios.Where(u => u.Nombre.Contains(searchString));
+                        break;
+                    case "Correo":
+                        usuarios = usuarios.Where(u => u.Correo.Contains(searchString));
+                        break;
+                    case "Rol":
+                        usuarios = usuarios.Where(u => u.Rol.Nombre.Contains(searchString));
+                        break;
+                }
+            }
+
+            /* Ordenar por nombre (deshabilitado)
+            switch (sortOrder)
+            {
+                case "nombre_desc":
+                    usuarios = usuarios.OrderByDescending(u => u.Nombre);
+                    break;
+                default:
+                    usuarios = usuarios.OrderBy(u => u.Nombre);
+                    break;
+            } */
+
+            int totalUsers = await usuarios.CountAsync();
+            int totalPages = (int)Math.Ceiling(totalUsers / (double)PageSize);
+
+            var pagedUsers = await usuarios
+                    .Skip((pageNumber - 1) * PageSize)
+                    .Take(PageSize)
+                    .ToListAsync();
+            // Crear modelo con la nueva paginación
+            var model = new EnfermedadViewModel
+            {
+                Usuarios = pagedUsers,
+                CurrentPage = pageNumber,
+                TotalPages = (int)Math.Ceiling(totalUsers / (double)PageSize)
             };
+
+            if (HttpContext.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                return PartialView("_UserListPartial", model);
+            }
+
             return View(model);
         }
+
 
         [HttpGet]
         public IActionResult EditUser(int id)
@@ -182,7 +230,6 @@ namespace Beesiness.Controllers
             {
                 Nombre = usuarioTemporal.Nombre,
                 Email = usuarioTemporal.Correo,
-                // Pre-rellena el Rol basado en el texto, esto supone que tienes una correspondencia entre el texto del rol y el IdRol.
                 IdRolSeleccionado = _context.tblRoles.Where(r => r.Nombre == usuarioTemporal.Rol).Select(r => r.Id).FirstOrDefault(),
                 RolesDisponibles = _context.tblRoles.Select(r => new SelectListItem
                 {

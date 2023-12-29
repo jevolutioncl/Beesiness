@@ -1,20 +1,30 @@
-﻿@model List<Rol>
+﻿@model RolesIndexViewModel
 @{
     ViewData["Title"] = "Administrar Roles";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <head>
+    <link href="/css/usuarios.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/css/index.css" />
+    @section Scripts {
+        <script src="/js/roles.js"></script>
+    }
 </head>
-
-<h1>Administrar Roles</h1>
-
+<h2 style="text-align: center;">Administrar Roles</h2>
 <div class="cards-container">
     <a class="card card-personalizada card-link button" asp-controller="Home" asp-action="Index">Volver al Home</a>
     <a class="card card-personalizada card-link button" asp-action="RolCrear">Nuevo Rol</a>    
 </div>
-<div class="center">
-    <h6>Listado de Roles</h6>
+<div class="filter-container">
+    <div class="dropdown">
+        <button class="dropbtn">Filtrar por</button>
+        <div class="dropdown-content">
+            <a href="#" onclick="setFilterType('Nombre')">Nombre</a>
+            <a href="#" onclick="setFilterType('Descripcion')">Descripcion</a>
+        </div>
+    </div>
+    <span id="currentFilterType">Nombre</span> <!-- Elemento agregado para mostrar el filtro activo -->
+    <input type="text" id="searchString" placeholder="Buscar..." oninput="filterUsers()" />
 </div>
 <div class="row justify-content-evenly mt-3">
     <div style="overflow:auto;">
@@ -28,7 +38,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model)
+                @foreach (var item in Model.Roles)
                 {
                     <tr>
                         <td>
@@ -66,5 +76,29 @@
             </tbody>
         </table>
     </div>
-
+    @if (Model.TotalPages > 1)
+    {
+        <nav aria-label="User pagination">
+            <ul class="pagination">
+                @if (Model.HasPreviousPage)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="#" onclick="window.goToPage(@(Model.CurrentPage - 1))">Anterior</a>
+                    </li>
+                }
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                        <a class="page-link" href="#" onclick="window.goToPage(@i)">@i</a>
+                    </li>
+                }
+                @if (Model.HasNextPage)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="#" onclick="window.goToPage(@(Model.CurrentPage + 1))">Siguiente</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    }
 </div>
