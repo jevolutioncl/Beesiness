@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Claims;
 using System.Security.Cryptography;
 
@@ -18,23 +19,45 @@ namespace Beesiness.Controllers
             _context = context;
         }
 
+        private const int PageSize = 6;
         [Authorize(Roles = "Root")]
-        public async Task<IActionResult> RequestRegistrationIndex(string sortOrder)
+        [HttpGet]
+        [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
+        public async Task<IActionResult> RequestRegistrationIndex(string searchString, string filterType, string sortOrder, int pageNumber = 1)
         {
             if (User.Identity.IsAuthenticated)
             {
-                // Criterios de ordenamiento
-                ViewBag.CurrentSort = sortOrder;
-                ViewBag.IdSort = String.IsNullOrEmpty(sortOrder) ? "id_desc" : "";
-                ViewBag.NombreSort = sortOrder == "nombre" ? "nombre_desc" : "nombre";
-                ViewBag.CorreoSort = sortOrder == "correo" ? "correo_desc" : "correo";
-                ViewBag.RolSort = sortOrder == "rol" ? "rol_desc" : "rol";
-                ViewBag.FechaSort = sortOrder == "fecha" ? "fecha_desc" : "fecha";
+                ViewData["CurrentFilter"] = searchString;
 
                 var usuarios = from u in _context.tblUsuariosTemporales
                                select u;
-
+                
+                if (!String.IsNullOrEmpty(searchString))
+                {
+                    switch (filterType)
+                    {
+                        case "Nombre":
+                            usuarios = usuarios.Where(u => u.Nombre.Contains(searchString));
+                            break;
+                        case "Correo":
+                            usuarios = usuarios.Where(u => u.Correo.Contains(searchString));
+                            break;
+                        case "Rol":
+                            usuarios = usuarios.Where(u => u.Rol.Contains(searchString));
+                            break;
+                    }
+                }
                 switch (sortOrder)
+                {
+                    case "fecha_asc":
+                        usuarios = usuarios.OrderBy(u => u.FechaSolicitud);
+                        break;
+                    case "fecha_desc":
+                        usuarios = usuarios.OrderByDescending(u => u.FechaSolicitud);
+                        break;
+                        // ... otros casos de ordenamiento ...
+                }
+                /*switch (sortOrder) DESHABILITADO
                 {
                     case "id_desc":
                         usuarios = usuarios.OrderByDescending(u => u.Id);
@@ -66,22 +89,44 @@ namespace Beesiness.Controllers
                     default:
                         usuarios = usuarios.OrderBy(u => u.Id);
                         break;
-                }
+                }*/
 
-                var viewModel = new RequestRegistrationIndexViewModel
+                int totalUsers = await usuarios.CountAsync();
+                int totalPages = (int)Math.Ceiling(totalUsers / (double)PageSize);
+
+                var pagedUsers = await usuarios
+                        .Skip((pageNumber - 1) * PageSize)
+                        .Take(PageSize)
+                        .ToListAsync();
+                var model = new RequestRegistrationIndexViewModel
                 {
-                    Usuarios = await usuarios.ToListAsync(),
-                    CurrentSort = sortOrder,
-                    IdSort = ViewBag.IdSort,
-                    NombreSort = ViewBag.NombreSort,
-                    CorreoSort = ViewBag.CorreoSort,
-                    RolSort = ViewBag.RolSort,
-                    FechaSort = ViewBag.FechaSort
+                    Usuarios = pagedUsers,
+                    CurrentPage = pageNumber,
+                    TotalPages = (int)Math.Ceiling(totalUsers / (double)PageSize)
                 };
 
-                return View(viewModel);
+                if (HttpContext.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                {
+                    return PartialView("_UserListPartial", model);
+                }
+                return View(model);
             }
             return RedirectToAction("LoginIn", "Auth");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeletePendiente(int id)
+        {
+            var usuario = await _context.tblUsuariosTemporales.FindAsync(id);
+            if (usuario == null)
+            {
+                return NotFound();
+            }
+
+            _context.tblUsuariosTemporales.Remove(usuario);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(RequestRegistrationIndex));
         }
 
         public IActionResult ContraseñaOlvidada()

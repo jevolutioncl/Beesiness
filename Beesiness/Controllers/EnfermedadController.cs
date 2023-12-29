@@ -12,18 +12,47 @@ namespace Beesiness.Controllers
         {
             _context = context;
         }
-        public async Task<IActionResult> EnfermedadIndex(string filtro)
+        private const int PageSize = 6;
+
+        public async Task<IActionResult> EnfermedadIndex(string searchString, string filterType, int pageNumber = 1)
         {
             if (User.Identity.IsAuthenticated)
             {
-                var variable1 = await _context.tblEnfermedades.ToListAsync();
-                if (filtro != null)
+                ViewData["CurrentFilter"] = searchString;
+
+                var enfermedad = from u in _context.tblEnfermedades select u;
+                if(!String.IsNullOrEmpty(searchString))
                 {
-                    variable1 = await _context.tblEnfermedades
-                        .Where(d => d.Nombre.Contains(filtro))
-                        .ToListAsync();
+                    switch (filterType)
+                    {
+                        case "Nombre":
+                            enfermedad = enfermedad.Where(u => u.Nombre.Contains(searchString));
+                            break;
+                        case "Descripcion":
+                            enfermedad = enfermedad.Where(u => u.Descripcion.Contains(searchString));
+                            break;
+                    }
                 }
-                return View(variable1);
+
+                int totalEnfermedades = await enfermedad.CountAsync();
+                int totalPages = (int)Math.Ceiling(totalEnfermedades / (double)PageSize);
+
+                var pagedEnfermedades = await enfermedad
+                            .Skip((pageNumber - 1) * PageSize)
+                            .Take(PageSize)
+                            .ToListAsync();
+                var model = new EnfermedadListViewModel
+                {
+                    Enfermedades = pagedEnfermedades,
+                    CurrentPage = pageNumber,
+                    TotalPages = (int)Math.Ceiling(totalEnfermedades / (double)PageSize)
+                };
+
+                if (HttpContext.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                {
+                    return PartialView("_UserListPartial", model);
+                }
+                return View(model);
             }
             return RedirectToAction("LoginIn", "Auth");
 

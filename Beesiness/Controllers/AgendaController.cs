@@ -23,15 +23,15 @@ namespace Beesiness.Controllers
             string cuerpo = Request.Form["cuerpo"];
 
             var email = new MimeMessage();
-            email.From.Add(MailboxAddress.Parse("simeon33@ethereal.email"));
+            email.From.Add(MailboxAddress.Parse("dev19811471@gmail.com"));
             //email.To.Add(MailboxAddress.Parse("ashley.nienow69@ethereal.email"));
             email.To.Add(MailboxAddress.Parse(destinatario));
             email.Subject = asunto;
             email.Body = new TextPart(MimeKit.Text.TextFormat.Html) { Text = cuerpo };
 
             using var smtp = new SmtpClient();
-            smtp.Connect("smtp.ethereal.email", 587, SecureSocketOptions.StartTls);
-            smtp.Authenticate("simeon33@ethereal.email", "qzBuZJ1RrPzTKBqZNq");
+            smtp.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
+            smtp.Authenticate("dev19811471@gmail.com", "oiia gmnl yvqa raym");
             smtp.Send(email);
             smtp.Disconnect(true);
 

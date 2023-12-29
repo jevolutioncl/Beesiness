@@ -11,6 +11,14 @@
                 <canvas id="canvas2" style="max-height:250px"></canvas>
             </div>
         </div>
+    <div class="card">
+        <div class="card-header">
+            Gráfico 2: Distribución de Colmenas por Tipo
+        </div>
+        <div class="card-body">
+            <canvas id="canvasTipoColmena" style="max-height:250px"></canvas>
+        </div>
+    </div>
     </div>
 </div>
 
@@ -18,14 +26,6 @@
 @section Scripts{
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="/js/graficos.js"></script>
-
-    <script>
-        const canvas3 = document.getElementById("canvas3");
-        let labels = ['hola', 'mundo'];
-        let data = [5,4];
-        let title = 'Hola Como estas';
-        GraficoBarras(canvas3, labels, data, title);
-    </script>
 
     <script>
         async function GraficoColmenasFecha()
@@ -58,7 +58,25 @@
             const canvas2 = document.getElementById('canvas2');
             GraficoBarras(canvas2, years, cantidad, 'Colmenas por año');
                        
-        }       
+        }
+        async function GraficoTipoColmenas() {
+            const res = await fetch("DatosPorTipoColmena");
+            const datos = await res.json();
+
+            
+
+            let tipos = [];
+            let cantidades = [];
+
+            datos.forEach(item => {
+                tipos.push(item.tipo); 
+                cantidades.push(item.cantidad); 
+            });
+
+
+            const canvasTipoColmena = document.getElementById('canvasTipoColmena');
+            GraficoDoughnut(canvasTipoColmena, tipos, cantidades, 'Distribución por Tipo');
+        }
         
         //definimos esta funcion por problemas con el arreglo.lenght
         function CalcularSize(arreglo)
@@ -70,9 +88,9 @@
 
         //cargamos todos los graficos cuando esta lista la pagina
         $(document).ready(() => {
-            GraficoBarras();
-            GraficoColmenasFecha();            
-        })        
+            GraficoColmenasFecha();
+            GraficoTipoColmenas();
+        });
     </script>
 
 }

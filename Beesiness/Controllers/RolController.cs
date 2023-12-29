@@ -1,6 +1,7 @@
 ﻿using Beesiness.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Protocol.Core.Types;
 using System.Security.Permissions;
 
 namespace Beesiness.Controllers
@@ -22,12 +23,49 @@ namespace Beesiness.Controllers
             }
             return RedirectToAction("LoginIn", "Auth");
         }
-
-        public async Task<IActionResult> RolIndex()
+        private const int PageSize = 6;
+        [HttpGet]
+        [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
+        public async Task<IActionResult> RolIndex(string searchString, string filterType, int pageNumber = 1)
         {
             if (User.Identity.IsAuthenticated)
             {
-                var model = await _context.tblRoles.ToListAsync();
+                ViewData["CurrentFilter"] = searchString;
+
+                var roles = from u in _context.tblRoles
+                            select u;
+                if (!String.IsNullOrEmpty(searchString))
+                {
+                    switch (filterType)
+                    {
+                        case "Nombre":
+                            roles = roles.Where(u => u.Nombre.Contains(searchString));
+                            break;
+                        case "Descripcion":
+                            roles = roles.Where(u => u.Descripcion.Contains(searchString));
+                            break;
+                    }    
+                }
+
+                int totalRoles = await roles.CountAsync();
+                int totalPages = (int)Math.Ceiling(totalRoles / (double)PageSize);
+
+                var pagedRoles = await roles
+                        .Skip((pageNumber - 1) * PageSize)
+                        .Take(PageSize)
+                        .ToListAsync();
+                var model = new RolesIndexViewModel
+                {
+                    Roles = pagedRoles,
+                    CurrentPage = pageNumber,
+                    TotalPages = (int)Math.Ceiling(totalRoles / (double)PageSize)
+                };
+
+                if (HttpContext.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                {
+                    return PartialView("_RolListPartial", model);
+                }
+
                 return View(model);
             }
             return RedirectToAction("LoginIn", "Auth");

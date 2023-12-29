@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
@@ -12,13 +13,16 @@ namespace Beesiness.Controllers
 {
 
     [Authorize]
+
     public class ColmenaController : Controller
     {
         private readonly AppDbContext _context;
+        private readonly ILogger<ColmenaController> _logger;
 
-        public ColmenaController(AppDbContext context)
+        public ColmenaController(AppDbContext context, ILogger<ColmenaController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         public async Task<IActionResult> ColmenaGeneral()
@@ -65,26 +69,71 @@ namespace Beesiness.Controllers
             }
             return RedirectToAction("LoginIn", "Auth");
         }
-
-        public async Task<IActionResult> ColmenaIndex(string filtro)
+        private const int PageSize = 6;
+        [HttpGet]
+        [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
+        public async Task<IActionResult> ColmenaIndex(string searchString, string filterType, string sortOrder, int pageNumber = 1)
         {
             if (User.Identity.IsAuthenticated)
             {
-                var colmenas = await _context.tblColmenas.ToListAsync();
-                if (filtro != null)
+                ViewData["CurrentFilter"] = searchString;
+
+                var colmenas = from u in _context.tblColmenas
+                               select u;
+
+                if (!String.IsNullOrEmpty(searchString))
                 {
-                    colmenas = await _context.tblColmenas
-                        .Where(d => d.TipoColmena.Contains(filtro))
-                        .ToListAsync();
+                    switch (filterType)
+                    {
+                        case "tipoColmena":
+                            colmenas = colmenas.Where(u => u.TipoColmena.Contains(searchString));
+                            break;
+                        case "Descripcion":
+                            colmenas = colmenas.Where(u => u.Descripcion.Contains(searchString));
+                            break;
+                    }
                 }
-                return View(colmenas);
+                switch (sortOrder)
+                {
+                    case "fecha_asc":
+                        colmenas = colmenas.OrderBy(u => u.FechaIngreso);
+                        break;
+                    case "fecha_desc":
+                        colmenas = colmenas.OrderByDescending(u => u.FechaIngreso);
+                        break;
+                    case "numIdentificador_asc":
+                        colmenas = colmenas.OrderBy(u => u.numIdentificador);
+                        break;
+                    case "numIdentificador_desc":
+                        colmenas = colmenas.OrderByDescending(u => u.numIdentificador);
+                        break;
+                }
+                int totalColmenas = await colmenas.CountAsync();
+                int totalPages = (int)Math.Ceiling(totalColmenas / (double)PageSize);
+
+                var pagedColmenas = await colmenas
+                            .Skip((pageNumber - 1) * PageSize)
+                            .Take(PageSize)
+                            .ToListAsync();
+
+                var viewModel = new ColmenaViewModel
+                {
+                    Colmenas = pagedColmenas,
+                    CurrentPage = pageNumber,
+                    TotalPages = (int)Math.Ceiling(totalColmenas / (double)PageSize)
+                };
+                if (HttpContext.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                {
+                    return PartialView("_ColmenasListPartial", viewModel);
+                }
+
+                return View(viewModel);
             }
             return RedirectToAction("LoginIn", "Auth");
-
         }
-
         public IActionResult ColmenaCrear()
         {
+            ModelState.Remove("Colmenas");
             if (User.Identity.IsAuthenticated)
             {
                 var ubicaciones = _context.tblUbicacionMapas
@@ -109,61 +158,28 @@ namespace Beesiness.Controllers
             }
             return RedirectToAction("LoginIn", "Auth");
         }
-        public async Task<IActionResult> ColmenaEditar(int colmenaId)
+        // Método GET para cargar la vista de edición
+        public async Task<IActionResult> ColmenaEditar(int id)
         {
-            if (User.Identity.IsAuthenticated)
+            var colmena = await _context.tblColmenas.FindAsync(id);
+            if (colmena == null)
             {
-                if (colmenaId == 0)
-                {
-                    var viewModel = new ColmenaViewModel
-                    {
-                        UbicacionesPredeterminadas = new SelectList(await GetUbicacionesPredeterminadasAsync(), "Value", "Text")
-                    };
-                    return View(viewModel);
-                }
-                else
-                {
-                    var colmena = await _context.tblColmenas
-                        .Include(c => c.UbicacionMapa)
-                        .FirstOrDefaultAsync(x => x.Id == colmenaId);
-
-                    if (colmena == null)
-                    {
-                        return NotFound();
-                    }
-
-                    UbicacionViewModel ubicacionViewModel = null;
-                    if (colmena.UbicacionMapa != null)
-                    {
-                        ubicacionViewModel = new UbicacionViewModel
-                        {
-                            Id = colmena.UbicacionMapaId ?? 0,
-                            Latitude = colmena.UbicacionMapa.Latitude,
-                            Longitude = colmena.UbicacionMapa.Longitude,
-                            Zoom = colmena.UbicacionMapa.ZoomLevel
-                        };
-                    }
-
-                    var viewModel = new ColmenaViewModel
-                    {
-                        Id = colmena.Id,
-                        numIdentificador = colmena.numIdentificador,
-                        FechaIngreso = colmena.FechaIngreso,
-                        TipoColmena = colmena.TipoColmena,
-                        Descripcion = colmena.Descripcion,
-                        Latitude = colmena.Latitude,
-                        Longitude = colmena.Longitude,
-                        UbicacionPredeterminada = ubicacionViewModel,
-                        UbicacionesPredeterminadas = new SelectList(await GetUbicacionesPredeterminadasAsync(), "Value", "Text")
-                    };
-
-                    return View(viewModel);
-                }
+                return NotFound(); // O maneja el error como prefieras
             }
-            else
+
+            var viewModel = new ColmenaViewModel
             {
-                return RedirectToAction("LoginIn", "Auth");
-            }
+                Id = colmena.Id,
+                numIdentificador = colmena.numIdentificador,
+                FechaIngreso = colmena.FechaIngreso,
+                TipoColmena = colmena.TipoColmena,
+                Descripcion = colmena.Descripcion,
+                Latitude = colmena.Latitude,
+                Longitude = colmena.Longitude,
+                UbicacionesPredeterminadas = new SelectList(_context.tblUbicacionMapas, "Id", "Nombre")
+            };
+
+            return View(viewModel);
         }
 
 
@@ -213,6 +229,7 @@ namespace Beesiness.Controllers
             ModelState.Remove("UbicacionPredeterminada");
             ModelState.Remove("UbicacionesPredeterminadas");
             ModelState.Remove("UbicacionPredeterminadaJson");
+            ModelState.Remove("Colmenas");
 
             if (User.Identity.IsAuthenticated)
             {
@@ -283,52 +300,50 @@ namespace Beesiness.Controllers
             }
         }
 
-
-
         [HttpPost]
         public async Task<IActionResult> ColmenaEditar(ColmenaViewModel viewModel)
         {
             ModelState.Remove("UbicacionPredeterminada");
             ModelState.Remove("UbicacionesPredeterminadas");
             ModelState.Remove("UbicacionPredeterminadaJson");
-            if (User.Identity.IsAuthenticated)
+            ModelState.Remove("Colmenas");
+            ModelState.Remove("TipoColmena");
+            if (!ModelState.IsValid)
             {
-                if (ModelState.IsValid)
+                var errors = ModelState.Values.SelectMany(v => v.Errors);
+                foreach (var error in errors)
                 {
-                    var colmena = await _context.tblColmenas.FirstOrDefaultAsync(c => c.Id == viewModel.Id);
-                    if (colmena == null)
-                    {
-                        return NotFound();
-                    }
-
-                    UbicacionViewModel ubicacionSeleccionada = null;
-                            colmena.UbicacionMapaId = ubicacionSeleccionada?.Id ?? 0;
-                    if (!string.IsNullOrWhiteSpace(viewModel.UbicacionPredeterminadaJson))
-                    {
-                        ubicacionSeleccionada = JsonConvert.DeserializeObject<UbicacionViewModel>(viewModel.UbicacionPredeterminadaJson);
-                    }
-
-                    colmena.numIdentificador = viewModel.numIdentificador;
-                    colmena.FechaIngreso = viewModel.FechaIngreso;
-                    colmena.TipoColmena = viewModel.TipoColmena;
-                    colmena.Descripcion = viewModel.Descripcion;
-                    colmena.Latitude = ubicacionSeleccionada?.Latitude ?? viewModel.Latitude;
-                    colmena.Longitude = ubicacionSeleccionada?.Longitude ?? viewModel.Longitude;
-                    colmena.UbicacionMapaId = ubicacionSeleccionada?.Id;
-
-                    _context.Update(colmena);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction("ColmenaIndex");
+                    _logger.LogError("Error de validación: {ErrorMessage}", error.ErrorMessage);
                 }
-                else
-                {
-                    viewModel.UbicacionesPredeterminadas = new SelectList(await GetUbicacionesPredeterminadasAsync(), "Value", "Text", viewModel.UbicacionPredeterminada?.Id);
-                    return View(viewModel);
-                }
+
+                return View(viewModel);
             }
-            return RedirectToAction("LoginIn", "Auth");
-        }
 
+            var colmena = await _context.tblColmenas.FindAsync(viewModel.Id);
+            if (colmena == null)
+            {
+                return NotFound();
+            }
+
+            // Actualizar solo los campos necesarios
+            colmena.numIdentificador = viewModel.numIdentificador;
+            colmena.Descripcion = viewModel.Descripcion;
+            colmena.Latitude = viewModel.Latitude;
+            colmena.Longitude = viewModel.Longitude;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                return RedirectToAction("ColmenaIndex"); 
+            }
+            catch (Exception ex)
+            {
+                // Log the exception details
+                _logger.LogError(ex, "Error al editar colmena");
+                ModelState.AddModelError("", "Hubo un error al guardar los cambios. Por favor, inténtalo de nuevo.");
+                return View(viewModel);
+            }
+        }
 
         public async Task<IActionResult> ColmenaInfo(int colmenaId)
         {
@@ -388,6 +403,21 @@ namespace Beesiness.Controllers
 
             return Json(query);
         }
+        public async Task<IActionResult> DatosPorTipoColmena()
+        {
+            var colmenas = await _context.tblColmenas.ToListAsync();
+
+            var query = colmenas.GroupBy(
+                x => x.TipoColmena,
+                (tipo, colmenas) => new
+                {
+                    Tipo = tipo,
+                    Cantidad = colmenas.Count()
+                }
+            ).OrderBy(x => x.Tipo);
+
+            return Json(query);
+        }
 
         public IActionResult DescargarPdf()
         {
@@ -402,6 +432,15 @@ namespace Beesiness.Controllers
 
             Stream stream = new MemoryStream(hola);
             return File(stream, "application/pdf", "nombreDelPdf.pdf");
+        }
+
+        [HttpGet]
+        [Route("api/colmenas/validar-identificador/{numIdentificador:int}")]
+        public async Task<IActionResult> ValidarIdentificador(int numIdentificador)
+        {
+            bool ocupado = await _context.tblColmenas
+                                         .AnyAsync(c => c.numIdentificador == numIdentificador);
+            return Json(new { ocupado });
         }
 
     }
