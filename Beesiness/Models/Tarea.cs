@@ -13,5 +13,17 @@ namespace Beesiness.Models
 
         [StringLength(250)]
         public string Descripcion { get; set; }
+
+        [Required]
+        public string CorreoAviso { get; set; }
+
+        [Required]
+        public DateTime FechaRegistro { get; set; }
+
+        [Required]
+        public string Status { get; set; }
+
+        public DateTime FechaRealizacion { get; set; }
+
     }
 }

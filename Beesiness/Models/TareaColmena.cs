@@ -8,10 +8,10 @@ namespace Beesiness.Models
         [Key]
         public int Id { get; set; }
 
-        [Required]
-        public DateTime FechaRegistro { get; set; }
+        //[Required]
+        //public DateTime FechaRegistro { get; set; }
 
-        public DateTime FechaRealizacion { get; set; }
+        //public DateTime FechaRealizacion { get; set; }
 
         [Required]
         [ForeignKey("Colmena")]
