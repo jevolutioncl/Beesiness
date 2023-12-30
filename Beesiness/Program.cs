@@ -22,7 +22,7 @@ builder.Services.AddHttpContextAccessor();
 // Agregar el DbContext al contenedor de inyección de dependencias
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
+builder.Services.AddHostedService<TareasSP>();
 var supportedCultures = new[] { CultureInfo.InvariantCulture };
 var localizationOptions = new RequestLocalizationOptions
 {
@@ -58,7 +58,7 @@ app.UseAuthorization(); //Middleware
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Auth}/{action=LoginIn}/{id?}");
+    pattern: "{controller=Agenda}/{action=Iniciar}/{id?}");
 
 
 app.Run();

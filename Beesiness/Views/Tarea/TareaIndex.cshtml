@@ -1,4 +1,4 @@
-﻿﻿@model List<Tarea>
+﻿@model List<Tarea>
 @{
     ViewData["Title"] = "Administrar Tareas";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -22,7 +22,7 @@
             <thead>
                 <tr>
                     <th>Id</th>
-                    <th>Nombre</th>                    
+                    <th>Nombre</th>
                     <th>Fecha Agendada</th>
                     <th>Status</th>
                     <th>Acciones</th>
@@ -47,7 +47,7 @@
                         </td>
                         <td>
                             <a asp-action="TareaEditar" asp-route-id="@item.Id">Editar</a>
-                            <a onclick="return confirm('¿Eliminar Tarea?')" asp-action="TareaBorrar" asp-route-id="@item.Id">Borrar</a>
+                            <a onclick="return confirm('Â¿Eliminar Tarea?')" asp-action="TareaBorrar" asp-route-id="@item.Id">Borrar</a>
                             <a asp-action="TareaInfo" asp-route-id="@item.Id">Detalle</a>
                         </td>
                     </tr>
