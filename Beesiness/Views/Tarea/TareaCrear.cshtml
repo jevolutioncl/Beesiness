@@ -1,5 +1,4 @@
 ﻿@model Tarea
-
 @{
     ViewData["Title"] = "Crear Tarea";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -23,7 +22,7 @@
             <div class="form-group mt-3">
                 <input asp-for="CorreoAviso" class="form-control" placeholder="Correo para enviar el aviso" />
                 <span asp-validation-for="CorreoAviso" class="text-danger"></span>
-            </div>            
+            </div>
             <div class="form-group mt-3">
                 <input asp-for="FechaRealizacion" class="form-control" placeholder="Fecha para realizar de la tarea" />
                 <span asp-validation-for="FechaRealizacion" class="text-danger"></span>
@@ -31,7 +30,7 @@
             <div class="form-group mt-3">
                 <select asp-for="Status" class="form-control" id="statusSelect">
                     <option value="Pendiente" id="defaultOption">Pendiente</option>
-                    <option value="Realizada">Realizada</option>                                        
+                    <option value="Realizada">Realizada</option>
                 </select>
                 <span asp-validation-for="Status" class="text-danger"></span>
             </div>

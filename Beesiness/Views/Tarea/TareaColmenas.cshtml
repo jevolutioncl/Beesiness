@@ -1,4 +1,4 @@
-﻿﻿@model TareaViewModel
+﻿@model TareaViewModel
 @{
     ViewData["Title"] = "Colmenas Asociadas";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -83,7 +83,7 @@
                                 @item.numIdentificador
                             </td>
                             <td>
-                                <a asp-action="TCCrear" asp-route-idTarea=@Model.Id asp-route-idColmena=@item.Id>Asociar Colmena</a>                            
+                                <a asp-action="TCCrear" asp-route-idTarea=@Model.Id asp-route-idColmena=@item.Id>Asociar Colmena</a>
                             </td>
 
                         </tr>

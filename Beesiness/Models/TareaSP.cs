@@ -20,7 +20,7 @@ namespace Beesiness.Models
         public Task StartAsync(CancellationToken cancellationToken)
         {
             //_timer = new Timer(EnviarAvisos, null, TimeSpan.Zero, TimeSpan.FromSeconds(10));
-            _timer = new Timer(EnviarAvisos, null, TimeSpan.Zero, TimeSpan.FromSeconds(30)); //media hora
+            _timer = new Timer(EnviarAvisos, null, TimeSpan.Zero, TimeSpan.FromSeconds(10)); //media hora
             return Task.CompletedTask;
         }
 
@@ -28,26 +28,30 @@ namespace Beesiness.Models
         {
             Console.WriteLine("TareasSP");
             Console.WriteLine("Fecha y hora actual: " + DateTime.Now);
+            Console.WriteLine(AgendaController.Agenda.Count);
             //string correo = ViewData["Correo"].ToString();
 
-            foreach (var item in AgendaController.Agenda)
+            if (AgendaController.Agenda != null)
             {
-                DateTime fecha = item.FechaRealizacion.Value;
-
-                //primero eliminamos todos los elementos antiguos de Agenda
-                //AgendaController.Agenda.RemoveAll(x => x.FechaRegistro.Value < DateTime.Now.AddMinutes(60));
-
-                //solo para probar el codigo: Tareas antiguas = no mandamos mail
-                if (fecha < DateTime.Now.AddMinutes(-60) || fecha > DateTime.Now.AddMinutes(60))
+                foreach (var item in AgendaController.Agenda)
                 {
-                    Console.WriteLine("NO envio mail a esta tarea: " + item.Nombre + " con fecha: " + fecha);
-                }
+                    DateTime fecha = item.FechaRealizacion.Value;
 
-                if (fecha >= DateTime.Now.AddMinutes(-60) && fecha <= DateTime.Now.AddMinutes(60))
-                {
-                    //necesito agregar el campo usuario a las tareas.
-                    EnviarEmail(item.CorreoAviso.ToString(), item.Nombre.ToString(), item.Descripcion.ToString());
-                    Console.WriteLine("SI envio mail a esta tarea: " + item.Nombre + " con fecha: " + fecha);
+                    //primero eliminamos todos los elementos antiguos de Agenda
+                    //AgendaController.Agenda.RemoveAll(x => x.FechaRegistro.Value < DateTime.Now.AddMinutes(60));
+
+                    //solo para probar el codigo: Tareas antiguas = no mandamos mail
+                    if (fecha < DateTime.Now.AddMinutes(-60) || fecha > DateTime.Now.AddMinutes(60))
+                    {
+                        Console.WriteLine("NO envio mail a esta tarea: " + item.Nombre + " con fecha: " + fecha);
+                    }
+
+                    if (fecha >= DateTime.Now.AddMinutes(-60) && fecha <= DateTime.Now.AddMinutes(60))
+                    {
+                        //necesito agregar el campo usuario a las tareas.
+                        EnviarEmail(item.CorreoAviso.ToString(), item.Nombre.ToString(), item.Descripcion.ToString());
+                        Console.WriteLine("SI envio mail a esta tarea: " + item.Nombre + " con fecha: " + fecha);
+                    }
                 }
             }
 
