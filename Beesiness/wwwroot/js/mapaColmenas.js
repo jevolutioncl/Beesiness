@@ -1,4 +1,4 @@
-﻿let colmenasData = [];
+﻿|let colmenasData = [];
 let pins = [];
 let map;
 let contextMenuInfobox;

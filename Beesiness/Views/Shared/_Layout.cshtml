@@ -40,9 +40,13 @@
                         <li class="nav-item">
                             <a class="nav-link mx-lg-2 @(IsActive("ColmenaGeneral", "Colmena") ? "active" : "")" asp-controller="Colmena" asp-action="ColmenaGeneral">Colmenas</a>
                         </li>
-                   
+
                         <li class="nav-item">
-                            <a class="nav-link mx-lg-2 @(IsActive("TareaGeneral", "Tarea") ? "active" : "")" asp-controller="Tarea" asp-action="TareaGeneral">Inspección</a>
+                            <a class="nav-link mx-lg-2 @(IsActive("Index", "ApiAI") ? "active" : "")" asp-controller="ApiAI" asp-action="Index">ApiAI</a>
+                        </li>
+             
+                        <li class="nav-item">
+                            <a class="nav-link mx-lg-2 @(IsActive("TareaGeneral", "Tarea") ? "active" : "")" asp-controller="Tarea" asp-action="TareaGeneral">Tareas</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link mx-lg-2 @(IsActive("EnfermedadGeneral", "Enfermedad") ? "active" : "")" asp-controller="Enfermedad" asp-action="EnfermedadGeneral">Enfermedades</a>

@@ -46,7 +46,11 @@ namespace Beesiness.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Nombre = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Descripcion = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false)
+                    Descripcion = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
+                    CorreoAviso = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FechaRegistro = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FechaRealizacion = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -369,8 +373,6 @@ namespace Beesiness.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    FechaRegistro = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    FechaRealizacion = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IdColmena = table.Column<int>(type: "int", nullable: false),
                     IdTarea = table.Column<int>(type: "int", nullable: false)
                 },

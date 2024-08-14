@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Beesiness.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231229220523_2025")]
-    partial class _2025
+    [Migration("20240513020846_2024")]
+    partial class _2024
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -440,7 +440,7 @@ namespace Beesiness.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tarea");
+                    b.ToTable("tblTareas");
                 });
 
             modelBuilder.Entity("Beesiness.Models.TareaColmena", b =>

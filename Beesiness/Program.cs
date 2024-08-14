@@ -2,6 +2,7 @@ using Beesiness.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.SqlServer.Management.Smo.Wmi;
 using System.Globalization;
 
 
@@ -19,6 +20,10 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 builder.Services.AddSession();
 builder.Services.AddMemoryCache();
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddHttpClient<ChatGptService>();
+builder.Services.AddSingleton<ChatGptService>();
+builder.Services.AddControllersWithViews();
+
 // Agregar el DbContext al contenedor de inyección de dependencias
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
