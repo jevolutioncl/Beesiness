@@ -35,29 +35,32 @@ namespace Beesiness.Models
             {
                 foreach (var item in AgendaController.Agenda)
                 {
-                    DateTime fecha = item.FechaRealizacion.Value;
-
-                    //primero eliminamos todos los elementos antiguos de Agenda
-                    //AgendaController.Agenda.RemoveAll(x => x.FechaRegistro.Value < DateTime.Now.AddMinutes(60));
-
-                    //solo para probar el codigo: Tareas antiguas = no mandamos mail
-                    if (fecha < DateTime.Now.AddMinutes(-60) || fecha > DateTime.Now.AddMinutes(60))
+                    // Verifica si item.FechaRealizacion tiene un valor antes de acceder a .Value
+                    if (item.FechaRealizacion.HasValue)
                     {
-                        Console.WriteLine("NO envio mail a esta tarea: " + item.Nombre + " con fecha: " + fecha);
+                        DateTime fecha = item.FechaRealizacion.Value;
+                        if (fecha < DateTime.Now.AddMinutes(-60) || fecha > DateTime.Now.AddMinutes(60))
+                        {
+                            Console.WriteLine("NO envio mail a esta tarea: " + item.Nombre + " con fecha: " + fecha);
+                        }
+
+                        if (fecha >= DateTime.Now.AddMinutes(-60) && fecha <= DateTime.Now.AddMinutes(60))
+                        {
+                            //necesito agregar el campo usuario a las tareas.
+                            EnviarEmail(item.CorreoAviso.ToString(), item.Nombre.ToString(), item.Descripcion.ToString());
+                            Console.WriteLine("SI envio mail a esta tarea: " + item.Nombre + " con fecha: " + fecha);
+                        }
                     }
-
-                    if (fecha >= DateTime.Now.AddMinutes(-60) && fecha <= DateTime.Now.AddMinutes(60))
+                    else
                     {
-                        //necesito agregar el campo usuario a las tareas.
-                        EnviarEmail(item.CorreoAviso.ToString(), item.Nombre.ToString(), item.Descripcion.ToString());
-                        Console.WriteLine("SI envio mail a esta tarea: " + item.Nombre + " con fecha: " + fecha);
+                        // Maneja la situación donde item.FechaRealizacion es null
+                        Console.WriteLine("La tarea " + item.Nombre + " no tiene fecha de realización asignada.");
                     }
                 }
             }
-
             //eliminamos las tareas antiguas despues solo para probar el codigo
             //eliminamos las incluso las tareas de una hora mas tarde porque ya mandamos los avisos
-            AgendaController.Agenda.RemoveAll(x => x.FechaRealizacion.Value < DateTime.Now.AddMinutes(60));
+            AgendaController.Agenda.RemoveAll(x => x.FechaRealizacion.HasValue && x.FechaRealizacion.Value < DateTime.Now.AddMinutes(60));
             //una forma mas segura de eliminar seria agregar un statusAviso en las Tareas y luego
             //borro todas las tareas de Agenda con el status enviado.
             Console.WriteLine(AgendaController.Agenda.Count);

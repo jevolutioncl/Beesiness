@@ -437,7 +437,7 @@ namespace Beesiness.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tarea");
+                    b.ToTable("tblTareas");
                 });
 
             modelBuilder.Entity("Beesiness.Models.TareaColmena", b =>

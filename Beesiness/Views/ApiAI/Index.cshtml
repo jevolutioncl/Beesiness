@@ -1,0 +1,40 @@
+﻿@model Beesiness.Models.ChatViewModel
+@{
+    ViewData["Title"] = "Chat con BeeGPT";
+}
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-pzjw8f+ua7Kw1TIqQUaWkMf4TH9Z/b7E1q1ztj3Mo3tIi4itfLrp3Yel5ckE5jtq" crossorigin="anonymous">
+    <link rel="stylesheet" href="~/css/index.css" />
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="text-center">
+            <h1 class="my-4 tracking-in-expand">Chat con BeeGPT</h1>
+            <p>Este asistente está diseñado para ayudar a los usuarios con preguntas relacionadas con la apicultura.</p>
+            <div class="mb-4">
+                <a class="btn btn-primary card-personalizada" asp-controller="Home" asp-action="Index">Volver al Home</a>
+            </div>
+            <form asp-controller="ApiAI" asp-action="AskApiAI" method="post" class="mb-3">
+                <div class="form-group">
+                    <label for="prompt">Pregunta para ApiAI:</label>
+                    <input type="text" id="prompt" name="prompt" class="form-control form-control-blue" required />
+                </div>
+                <button type="submit" class="btn btn-primary">Enviar</button>
+            </form>
+            @if (Model.Mensajes.Any())
+            {
+                <div class="mt-4 bg-blue p-3 rounded">
+                    <h5>Historial de conversación:</h5>
+                    <ul class="list-group list-group-flush">
+                        @foreach (var mensaje in Model.Mensajes.Where(m => m.Role != "system"))
+                        {
+                            <li class="list-group-item list-group-item-blue">
+                                <strong>@(mensaje.Role == "user" ? "Usuario" : "ApiAI"):</strong> @mensaje.Content
+                            </li>
+                        }
+                    </ul>
+                </div>
+            }
+        </div>
+    </div>
+</body>
