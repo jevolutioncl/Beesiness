@@ -1,6 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
     string userName = ViewData["UserName"] as string;
+    var netVersion = Environment.Version;
 }
 
 <!doctype html>
@@ -20,6 +21,7 @@
         <div class="content-header">
             <h2 class="tracking-in-expand">¡Bienvenido a Beesiness@(string.IsNullOrEmpty(userName) ? "" : ", " + userName)!</h2>
             <p>Bienvenido al panel de Usuario de Beesiness, desde aquí podrás gestionar tus colmenas, estadística de la cosecha de miel como de polinización, entre otras cosas más.</p>
+            <p class="net-version">¡Usando .NET @netVersion.Major!</p>
         </div>
         <div class="imagen-header image-fade-in-expand"></div>
     </header>

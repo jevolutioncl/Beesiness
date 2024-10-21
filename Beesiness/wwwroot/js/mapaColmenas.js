@@ -1,9 +1,10 @@
-﻿|let colmenasData = [];
+﻿let colmenasData = [];
 let pins = [];
 let map;
 let contextMenuInfobox;
 let closeInfoboxTimer;
 function loadMapScenario() {
+    console.log("Cargando mapa...");
     map = new Microsoft.Maps.Map('#myMap', {
         center: new Microsoft.Maps.Location(-35.31917337366901, -71.36038685586249),
         zoom: 250,

@@ -1,6 +1,12 @@
 ﻿@{
     ViewData["Title"] = "Mapa de Colmenas";
 }
+<head>
+    @section Scripts {
+        <script type='text/javascript' src='https://www.bing.com/api/maps/mapcontrol?key=AmrnF-1-dvaNYDUkUuogYW8SOvy2cut1Xdxs4EzsahlVv8HrT_MvGx0HPKP8dOlZ&callback=loadMapScenario' async defer></script>
+        <script src="/js/mapaColmenas.js"></script>
+    }
+</head>
 <link href="/css/mapa.css" rel="stylesheet" />
 <div class="panel-filtros">
     <button class="boton-filtros">Filtros</button>
@@ -43,8 +49,3 @@
 
 <div id="customInfobox" class="custom-infobox">
 </div>
-
-@section Scripts {
-    <script type='text/javascript' src='https://www.bing.com/api/maps/mapcontrol?key=AmrnF-1-dvaNYDUkUuogYW8SOvy2cut1Xdxs4EzsahlVv8HrT_MvGx0HPKP8dOlZ&callback=loadMapScenario' async defer></script>
-    <script src="/js/mapaColmenas.js"></script>
-}

@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.SqlServer.Management.Smo.Wmi;
 using System.Globalization;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -21,8 +20,9 @@ builder.Services.AddSession();
 builder.Services.AddMemoryCache();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient<ChatGptService>();
-builder.Services.AddSingleton<ChatGptService>();
-builder.Services.AddControllersWithViews();
+
+// Cambia el registro de ChatGptService a Scoped
+builder.Services.AddScoped<ChatGptService>();
 
 // Agregar el DbContext al contenedor de inyección de dependencias
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -45,7 +45,6 @@ var app = builder.Build();
 
 app.UseRequestLocalization(localizationOptions);
 
-
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -63,7 +62,10 @@ app.UseAuthorization(); //Middleware
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Agenda}/{action=Iniciar}/{id?}");
+    pattern: "{controller=Home}/{action=Inicio}/{id?}"); 
 
+app.MapControllerRoute(
+    name: "agenda",
+    pattern: "{controller=Agenda}/{action=Iniciar}/{id?}"); 
 
 app.Run();

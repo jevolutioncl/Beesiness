@@ -18,6 +18,13 @@ namespace Beesiness.Controllers
         public IActionResult Index()
         {
             var model = new ChatViewModel();
+
+            // Asegúrate de que la lista de mensajes esté inicializada
+            if (model.Mensajes == null)
+            {
+                model.Mensajes = new List<MensajeAI>();
+            }
+
             return View("Index", model);
         }
 
@@ -26,6 +33,7 @@ namespace Beesiness.Controllers
         {
             if (string.IsNullOrEmpty(prompt))
             {
+                model.Mensajes.Add(new MensajeAI { Role = "assistant", Content = "Por favor, escribe una pregunta o solicitud." });
                 return View("Index", model);
             }
 

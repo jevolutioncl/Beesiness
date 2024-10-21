@@ -6,11 +6,15 @@ using System.Security.Claims;
 
 namespace Beesiness.Controllers
 {
-    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
 
+        [AllowAnonymous] // Permite el acceso sin autenticación
+        public IActionResult Inicio()
+        {
+            return View();
+        }
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
