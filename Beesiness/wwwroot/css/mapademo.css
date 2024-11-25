@@ -1,0 +1,47 @@
+﻿/* src/styles/mapa.css */
+
+.custom-infobox {
+    display: none;
+    position: absolute;
+    background: #ffffff;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 220px;
+    max-width: 250px;
+    font-family: Arial, sans-serif;
+    z-index: 1000;
+    overflow: hidden;
+}
+
+.infobox-content {
+    color: #333;
+}
+
+.infobox-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+.infobox-title {
+    font-weight: bold;
+    font-size: 1em;
+    color: #333;
+}
+
+.infobox-close-btn {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    color: #666;
+}
+
+.infobox-body {
+    padding-top: 10px;
+    font-size: 0.9em;
+    color: #555;
+}
