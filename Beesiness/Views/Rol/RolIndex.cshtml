@@ -5,80 +5,87 @@
 }
 <head>
     <link href="/css/usuarios.css" rel="stylesheet" />
-    <link rel="stylesheet" href="~/css/index.css" />
     @section Scripts {
         <script src="/js/roles.js"></script>
     }
 </head>
-<h2 style="text-align: center;">Administrar Roles</h2>
-<div class="cards-container">
-    <a class="card card-personalizada card-link button" asp-controller="Home" asp-action="Index">Volver al Home</a>
-    <a class="card card-personalizada card-link button" asp-action="RolCrear">Nuevo Rol</a>    
-</div>
-<div class="filter-container">
-    <div class="dropdown">
-        <button class="dropbtn">Filtrar por</button>
-        <div class="dropdown-content">
-            <a href="#" onclick="setFilterType('Nombre')">Nombre</a>
-            <a href="#" onclick="setFilterType('Descripcion')">Descripcion</a>
+
+<div class="usuarios-container">
+    <!-- Título -->
+    <h2 class="usuarios-title">Administrar Roles</h2>
+
+    <!-- Botones de navegación y opciones -->
+    <div class="options-container">
+        <!-- Botones de navegación -->
+        <div class="cards-container">
+            <a class="btn-nav" asp-controller="Home" asp-action="Index">
+                <i class="fa-solid fa-house"></i> Volver al Home
+            </a>
+            <a class="btn-nav" asp-action="RolCrear">
+                <i class="fa-solid fa-plus"></i> Nuevo Rol
+            </a>
+        </div>
+
+        <!-- Filtros -->
+        <div class="filter-container">
+            <!-- Grupo de filtro -->
+            <div class="filter-group">
+                <button class="btn-filter" id="filterDropdown" onclick="toggleFilterDropdown()">
+                    <i class="fa-solid fa-filter"></i> <span id="filterDropdownText">Filtrar por</span>
+                </button>
+                <div class="dropdown-content" id="filterOptions">
+                    <a href="#" onclick="setFilterType('Nombre')">Nombre</a>
+                    <a href="#" onclick="setFilterType('Descripcion')">Descripción</a>
+                </div>
+            </div>
+
+            <!-- Campo de búsqueda -->
+            <input type="text" class="filter-input" id="searchString" placeholder="Buscar..." oninput="filterUsers()" />
         </div>
     </div>
-    <span id="currentFilterType">Nombre</span> <!-- Elemento agregado para mostrar el filtro activo -->
-    <input type="text" id="searchString" placeholder="Buscar..." oninput="filterUsers()" />
-</div>
-<div class="row justify-content-evenly mt-3">
-    <div style="overflow:auto;">
+
+    <!-- Tabla -->
+    <div class="table-container">
         <table class="table">
             <thead>
                 <tr>
-                    <th>Id</th>
-                    <th>Nombre</th>                    
-                    <th>Descripcion</th>
-                    <th>Acciones</th>
+                    <th>ID</th>
+                    <th>NOMBRE</th>
+                    <th>DESCRIPCIÓN</th>
+                    <th>ACCIONES</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var item in Model.Roles)
                 {
                     <tr>
-                        <td>
-                            @item.Id
-                        </td>
-                        <td>
-                            @item.Nombre
-                        </td>                        
-                        <td>
-                            @item.Descripcion
-                        </td>
-                        <td>
-                            <div style="display: flex; align-items: center; gap: 10px;">
-                                <a href="@Url.Action("RolEditar","Rol", new { id = item.Id})"
-                                   class="btn"
-                                   style="background: none; border: none; padding: 0;">
-                                    <i class="fa-solid fa-pen-to-square fa-lg" style="color: #0b5c13;"></i>
-                                </a>
+                        <td>@item.Id</td>
+                        <td>@item.Nombre</td>
+                        <td>@item.Descripcion</td>
+                        <td class="action-buttons">
+                            <a href="@Url.Action("RolEditar", "Rol", new { id = item.Id })" class="btn-action btn-edit">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </a>
                             <form asp-controller="Rol"
                                   asp-action="RolBorrar"
                                   method="post"
-                                  onsubmit="return confirm('Está seguro de querer eliminar este rol?');"
-                                  style="margin: 0; padding: 0;">
-                              <input type="hidden" name="id" value="@item.Id" />
-                              <button type="submit"
-                                      class="btn"
-                                      style="background: none; border: none; padding: 0;">
-                                  <i class="fa-solid fa-trash fa-lg" style="color: #920a0a;"></i>
-                                    </button>
-                                </form>
-                            </div>
+                                  onsubmit="return confirm('¿Está seguro de querer eliminar este rol?');">
+                                <input type="hidden" name="id" value="@item.Id" />
+                                <button type="submit" class="btn-action btn-delete">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </form>
                         </td>
                     </tr>
                 }
             </tbody>
         </table>
     </div>
+
+    <!-- Paginación -->
     @if (Model.TotalPages > 1)
     {
-        <nav aria-label="User pagination">
+        <nav aria-label="Pagination">
             <ul class="pagination">
                 @if (Model.HasPreviousPage)
                 {

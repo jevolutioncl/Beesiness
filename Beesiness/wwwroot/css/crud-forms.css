@@ -1,0 +1,105 @@
+﻿/* Contenedor general */
+.crud-container {
+    padding: 20px;
+    background-color: #111820;
+    color: #f5f5f5;
+    font-family: 'Roboto', sans-serif;
+    max-width: 600px;
+    margin: 0 auto;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Título */
+.crud-title {
+    text-align: center;
+    font-size: 2rem;
+    color: #ffcc00;
+    margin-bottom: 20px;
+}
+
+/* Navegación */
+.crud-navigation {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.btn-nav {
+    background-color: #1c2331;
+    color: #ffcc00;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+    .btn-nav:hover {
+        background-color: #ffcc00;
+        color: #1c2331;
+    }
+
+/* Formulario */
+.crud-form {
+    background-color: #1c2331;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* Grupo de formulario */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.control-label {
+    font-size: 1rem;
+    color: #f5f5f5;
+}
+
+.form-input,
+.form-select {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    color: #f5f5f5;
+    background-color: #111820;
+    border: 1px solid #ffcc00;
+    border-radius: 5px;
+}
+
+    .form-input:focus,
+    .form-select:focus {
+        outline: none;
+        border-color: #ffcc00;
+        box-shadow: 0px 0px 8px rgba(255, 204, 0, 0.7);
+    }
+
+/* Botón de envío */
+.btn-submit {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    color: #1c2331;
+    background-color: #ffcc00;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.2s ease, background-color 0.3s ease;
+}
+
+    .btn-submit:hover {
+        background-color: #e6b800;
+        transform: scale(1.02);
+    }
+
+/* Mensajes de validación */
+.validation-summary {
+    margin-bottom: 15px;
+}
+
+.validation-message {
+    font-size: 0.9rem;
+    color: #ff4d4d;
+}

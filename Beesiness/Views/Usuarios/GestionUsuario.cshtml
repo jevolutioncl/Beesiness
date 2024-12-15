@@ -2,96 +2,109 @@
 
 <head>
     <link href="/css/usuarios.css" rel="stylesheet" />
-    <link rel="stylesheet" href="~/css/index.css" />
     @section Scripts {
         <script src="/js/usuarios.js"></script>
     }
 </head>
-<h2 style="text-align: center;">Usuarios Registrados</h2>
 
-<div class="cards-container">
-    <a class="card card-personalizada card-link button" asp-controller="Home" asp-action="Index">Volver al Home</a>
-    <a class="card card-personalizada card-link button" asp-action="CreateUser">Crear nuevo usuario</a>
-    <a class="card card-personalizada card-link button" asp-controller="Auth" asp-action="RequestRegistrationIndex">Ver usuarios pendientes de registro</a>
-</div>
+<div class="usuarios-container">
+    <!-- Título -->
+    <h2 class="usuarios-title">Usuarios Registrados</h2>
 
-<div class="filter-container">
-    <div class="dropdown">
-        <button class="dropbtn ">Filtrar por</button>
-        <div class="dropdown-content">
-            <a href="#" onclick="setFilterType('Nombre')">Nombre</a>
-            <a href="#" onclick="setFilterType('Correo')">Correo</a>
-            <a href="#" onclick="setFilterType('Rol')">Rol</a>
+    <!-- Botones de navegación y opciones -->
+    <div class="options-container">
+        <div class="cards-container">
+            <a class="btn-nav" asp-controller="Home" asp-action="Index">
+                <i class="fa-solid fa-house"></i> Volver al Home
+            </a>
+            <a class="btn-nav" asp-action="CreateUser">
+                <i class="fa-solid fa-user-plus"></i> Crear nuevo usuario
+            </a>
+            <a class="btn-nav" asp-controller="Auth" asp-action="RequestRegistrationIndex">
+                <i class="fa-solid fa-users"></i> Pendientes de registro
+            </a>
+        </div>
+
+        <!-- Filtros -->
+        <div class="filter-container">
+            <div class="filter-group">
+                <button class="btn-filter" id="filterDropdown" onclick="toggleFilterDropdown()">
+                    <i class="fa-solid fa-filter"></i> Filtrar por
+                </button>
+                <div class="dropdown-content" id="filterOptions">
+                    <a href="#" onclick="setFilterType('Nombre')">Nombre</a>
+                    <a href="#" onclick="setFilterType('Correo')">Correo</a>
+                    <a href="#" onclick="setFilterType('Rol')">Rol</a>
+                </div>
+            </div>
+            <input type="text" class="filter-input" id="searchString" placeholder="Buscar..." oninput="filterUsers()" />
         </div>
     </div>
-    <span id="currentFilterType">Nombre</span> <!-- Elemento agregado para mostrar el filtro activo -->
-    <input type="text" id="searchString" placeholder="Buscar..." oninput="filterUsers()" />
+
+    <!-- Tabla -->
+    <div class="table-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Rol</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var usuario in Model.Usuarios)
+                {
+                    <tr>
+                        <td>@usuario.Nombre</td>
+                        <td>@usuario.Correo</td>
+                        <td>@usuario.Rol?.Nombre</td>
+                        <td>
+                            <div class="action-buttons">
+                                <a href="@Url.Action("EditUser", "Usuarios", new { id = usuario.Id })" class="btn-action btn-edit">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <form asp-controller="Usuarios"
+                                      asp-action="DeleteUser"
+                                      method="post"
+                                      onsubmit="return confirm('¿Está seguro de querer eliminar este usuario?');">
+                                    <input type="hidden" name="id" value="@usuario.Id" />
+                                    <button type="submit" class="btn-action btn-delete">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Paginación -->
+    @if (Model.TotalPages > 1)
+    {
+        <nav aria-label="User pagination">
+            <ul class="pagination">
+                @if (Model.HasPreviousPage)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="#" onclick="window.goToPage(@(Model.CurrentPage - 1))">Anterior</a>
+                    </li>
+                }
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                        <a class="page-link" href="#" onclick="window.goToPage(@i)">@i</a>
+                    </li>
+                }
+                @if (Model.HasNextPage)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="#" onclick="window.goToPage(@(Model.CurrentPage + 1))">Siguiente</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    }
 </div>
-
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>Nombre</th>
-            <th>Email</th>
-            <th>Rol</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var usuario in Model.Usuarios)
-        {
-            <tr>
-                <td>@usuario.Nombre</td>
-                <td>@usuario.Correo</td>
-                <td>@usuario.Rol?.Nombre</td>
-                <td>
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <a href="@Url.Action("EditUser", "Usuarios", new { id = usuario.Id })"
-                           class="btn"
-                           style="background: none; border: none; padding: 0;">
-                            <i class="fa-solid fa-pen-to-square fa-lg" style="color: #0b5c13;"></i>
-                        </a>
-                        <form asp-controller="Usuarios"
-                              asp-action="DeleteUser"
-                              method="post"
-                              onsubmit="return confirm('¿Está seguro de querer eliminar este usuario?');"
-                              style="margin: 0; padding: 0;">
-                            <input type="hidden" name="id" value="@usuario.Id" />
-                            <button type="submit"
-                                    class="btn"
-                                    style="background: none; border: none; padding: 0;">
-                                <i class="fa-solid fa-trash fa-lg" style="color: #920a0a;"></i>
-                            </button>
-                        </form>
-                    </div>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
-@if (Model.TotalPages > 1)
-{
-    <nav aria-label="User pagination">
-        <ul class="pagination">
-            @if (Model.HasPreviousPage)
-            {
-                <li class="page-item">
-                    <a class="page-link" href="#" onclick="window.goToPage(@(Model.CurrentPage - 1))">Anterior</a>
-                </li>
-            }
-            @for (int i = 1; i <= Model.TotalPages; i++)
-            {
-                <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
-                    <a class="page-link" href="#" onclick="window.goToPage(@i)">@i</a>
-                </li>
-            }
-            @if (Model.HasNextPage)
-            {
-                <li class="page-item">
-                    <a class="page-link" href="#" onclick="window.goToPage(@(Model.CurrentPage + 1))">Siguiente</a>
-                </li>
-            }
-        </ul>
-    </nav>
-}

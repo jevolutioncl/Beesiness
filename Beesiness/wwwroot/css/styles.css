@@ -8,8 +8,7 @@
 }
 
 body {
-    background-color: #feedc6;
-    background: linear-gradient(to right, #e2e2e2, #feedc6);
+    background-color: #111820;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -18,7 +17,7 @@ body {
 }
 
 .container {
-    background-color: #fff;
+    background-color: #111827;
     border-radius: 30px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
     position: relative;
@@ -40,15 +39,15 @@ body {
     }
 
     .container a {
-        color: #333;
+        color: #fcc14d;
         font-size: 13px;
         text-decoration: none;
         margin: 15px 0 10px;
     }
 
     .container button {
-        background-color: #fcc14d;
-        color: #451303;
+        background-color: #020024;
+        color: #fcc14d;
         font-size: 12px;
         padding: 10px 45px;
         border: 1px solid transparent;
@@ -66,14 +65,14 @@ body {
         }
 
     .container form {
-        background-color: #fff;
+        background-color: #111827;
         display: flex;
         align-items: center;
         justify-content: center;
         flex-direction: column;
         padding: 0 40px;
         height: 100%;
-        color: #451303;
+        color: #fcc14d;
     }
 
     .container input {
@@ -150,8 +149,8 @@ body {
 .toggle {
     background-color: #feedc6;
     height: 100%;
-    background: linear-gradient(to right, #fdda8a, #fcc14d);
-    color: #782a0f;
+    background: linear-gradient(to left, #020024, #020024);
+    color: #fcc14d;
     position: relative;
     left: -100%;
     height: 100%;

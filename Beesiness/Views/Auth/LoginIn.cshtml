@@ -82,6 +82,22 @@
     </div>
     <script src="/js/scripts.js"></script>
     <script>
+        const container = document.getElementById('container');
+        const registerBtn = document.getElementById('register');
+        const loginBtn = document.getElementById('login');
+
+        if (registerBtn) {
+            registerBtn.addEventListener('click', () => {
+                container.classList.add("active");
+            });
+        }
+
+        if (loginBtn) {
+            loginBtn.addEventListener('click', () => {
+                container.classList.remove("active");
+            });
+        }
+
         document.addEventListener('DOMContentLoaded', (event) => {
             if (document.getElementById('successModal')) {
                 document.getElementById('successModal').style.display = 'block';
@@ -89,8 +105,10 @@
         });
 
         function closeModal() {
-            document.getElementById('successModal').style.display = 'none';
+            const modal = document.getElementById('successModal');
+            if (modal) modal.style.display = 'none';
         }
     </script>
+
 </body>
 </html>

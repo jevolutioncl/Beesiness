@@ -1,13 +1,21 @@
-﻿.custom-infobox {
-    display: none; /* Ocultar por defecto */
+﻿.map-container {
+    position: relative; /* Para que los elementos hijos con position: absolute estén dentro del contenedor */
+    width: 100%; /* Asegúrate de que el contenedor ocupe todo el ancho */
+    height: 600px; /* Altura del mapa */
+    background-color: #000; /* Color de fondo mientras carga el mapa */
+}
+
+.custom-infobox {
+    display: none;
     position: absolute;
-    background: white; /* Fondo blanco para minimalismo */
-    padding: 10px;
-    border-radius: 8px; /* Bordes redondeados más pronunciados */
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Sombra más marcada */
+    background: #1f1f1f; /* Fondo oscuro para modernidad */
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     z-index: 1000;
-    width: 250px; /* Definir un ancho máximo */
-    font-family: Arial, sans-serif; /* Fuente más moderna */
+    width: 280px;
+    font-family: 'Arial', sans-serif;
+    color: #f5f5f5; /* Texto claro para contraste */
     overflow: hidden;
 }
 
@@ -15,25 +23,30 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #ccc;
-}
-.infobox-title {
-    font-weight: bold;
-    font-size: 1.1em;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #333;
+    padding-bottom: 8px;
 }
 
-.infobox-content .infobox-close-btn {
-    background-color: transparent;
+.infobox-title {
+    font-weight: bold;
+    font-size: 1.2em;
+    color: #ffcc00; /* Color dorado para destacar */
+}
+
+.infobox-close-btn {
+    background: transparent;
     border: none;
     cursor: pointer;
+    color: #ffcc00;
+    font-size: 1.5em;
     line-height: 1;
-    font-size: 20px;
-    padding: 0 10px;
 }
 
 .infobox-body {
-    padding: 5px 0; /* Espaciado vertical para el cuerpo del infobox */
+    padding: 10px 0;
+    line-height: 1.5;
+    font-size: 0.9rem;
 }
 
 .infobox-footer {
@@ -43,149 +56,170 @@
 
 .infobox-detail-link {
     display: inline-block;
-    padding: 5px 15px;
+    padding: 8px 15px;
     text-decoration: none;
     background-color: #0b5c13;
     color: white;
-    border-radius: 4px;
+    border-radius: 6px;
+    font-size: 0.9rem;
     transition: background-color 0.3s ease;
 }
 
     .infobox-detail-link:hover {
-        background-color: #088a0b; /* Cambio de color al pasar el mouse */
+        background-color: #088a0b;
     }
 
-
 .context-menu {
-    background-color: white;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 10px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    background-color: #282828;
+    border: 1px solid #444;
+    border-radius: 8px;
+    padding: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+    color: #fff;
 }
 
 .context-menu-button {
     background-color: #4CAF50;
-    color: white;
-    padding: 10px 20px;
+    color: #fff;
+    padding: 8px 20px;
     text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
+    font-size: 14px;
+    margin: 5px 0;
     cursor: pointer;
     border: none;
     border-radius: 5px;
+    transition: background-color 0.3s ease;
 }
+
+    .context-menu-button:hover {
+        background-color: #45a049;
+    }
 
 .context-menu-close {
-    background-color: red;
-    color: white;
+    background-color: #e53935;
+    color: #fff;
     border: none;
     padding: 5px 10px;
-    margin-top: 10px;
     cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
 }
+
+    .context-menu-close:hover {
+        background-color: #d32f2f;
+    }
 
 .panel-filtros {
-    position: absolute;
-    left: 10px;
+    position: absolute; /* Para que se posicione dentro del contenedor relativo */
+    top: 10px; /* Distancia desde la parte superior del contenedor */
+    left: 10px; /* Distancia desde la parte izquierda del contenedor */
     z-index: 1000;
-    background: white;
-    padding: 10px;
+    background: #2c2c2c; /* Color de fondo */
+    padding: 15px;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    width: 280px; /* Ajusta el tamaño según sea necesario */
+    color: #f5f5f5; /* Texto claro */
+    font-family: Arial, sans-serif;
 }
 
+
 .boton-filtros {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%; 
-    padding: 10px 0; 
-    margin-bottom: 15px; 
+    width: 100%;
+    padding: 10px;
     background-color: #4CAF50;
-    color: white;
-    padding: 10px 20px;
+    color: #fff;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
+    font-size: 1rem;
     cursor: pointer;
     text-align: center;
+    transition: background-color 0.3s ease;
 }
+
+    .boton-filtros:hover {
+        background-color: #45a049;
+    }
 
 .contenido-filtros {
     display: none;
-    padding: 10px; 
     flex-direction: column;
     margin-top: 10px;
 }
 
 .tarjetas-filtros {
     display: flex;
-    justify-content: space-between;
     flex-wrap: wrap;
     gap: 10px;
 }
 
 .filtro-grupo {
     display: flex;
-    flex-direction: column; 
-    margin-bottom: 15px; 
+    flex-direction: column;
+    margin-bottom: 15px;
+    width: 100%;
 }
 
 .filtro-label {
-    font-size: 0.75rem;
+    font-size: 0.85rem;
     margin-bottom: 5px;
-    display: block;
-    color: #666;
+    color: #ccc;
 }
 
 .filtro-select {
     padding: 8px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
+    border-radius: 5px;
+    border: 1px solid #444;
+    background: #1f1f1f;
+    color: #f5f5f5;
     width: 100%;
 }
+
 .filtro-ubicaciones-container {
     display: flex;
     align-items: center;
+    gap: 10px;
 }
+
 .eliminar-btn {
-    background-color: red;
+    background-color: #e53935;
     color: white;
     border: none;
     padding: 5px 10px;
-    margin-top: 10px;
-    margin-left: 10px;
+    border-radius: 5px;
     cursor: pointer;
 }
 
 .lista-colmenas {
-    max-height: 150px; /* Ajusta según la necesidad */
-    overflow-y: auto; /* Permite el desplazamiento vertical */
-    background: #f8f8f8; /* Color de fondo opcional */
+    max-height: 150px;
+    overflow-y: auto;
+    background: #2c2c2c;
     padding: 10px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
+    border-radius: 5px;
+    border: 1px solid #444;
 }
 
     .lista-colmenas .colmena-item {
         padding: 5px;
         cursor: pointer;
-        border-bottom: 1px solid #ddd;
+        border-bottom: 1px solid #333;
+        color: #fff;
     }
 
         .lista-colmenas .colmena-item:hover {
-            background-color: #eee;
+            background-color: #444;
         }
 
-
 @media (max-width: 768px) {
+    .panel-filtros {
+        width: auto;
+    }
+
     .tarjetas-filtros {
         flex-direction: column;
     }
 
     .filtro-grupo {
-        width: 100%; 
+        width: 100%;
     }
 }

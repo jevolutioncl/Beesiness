@@ -1,25 +1,41 @@
 ﻿@model Rol
+
 @{
+    ViewData["Title"] = "Crear Rol";
 }
 
-<div>
-    <h2>Ingresar nuevo Rol</h2>
-</div>
-<div>
-    <form class="row justify-content-evenly" asp-action="RolCrear" method="post">
-        <div class="col-md-6">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group mt-3">
-                <input asp-for="Nombre" class="form-control" placeholder="Nombre del rol" />
-                <span asp-validation-for="Nombre" class="text-danger"></span>
+<!-- Custom Styles -->
+@section CustomStyles {
+    <link href="/css/crud-forms.css" rel="stylesheet" />
+}
+
+<div class="crud-container">
+    <!-- Título -->
+    <h2 class="crud-title">Crear Nuevo Rol</h2>
+
+    <!-- Formulario -->
+    <div class="crud-form">
+        <form asp-action="RolCrear" method="post">
+            <div asp-validation-summary="ModelOnly" class="validation-summary text-danger"></div>
+
+            <!-- Nombre -->
+            <div class="form-group">
+                <label asp-for="Nombre" class="control-label">Nombre del Rol</label>
+                <input asp-for="Nombre" class="form-input" placeholder="Ingrese el nombre del rol" />
+                <span asp-validation-for="Nombre" class="validation-message"></span>
             </div>
-            <div class="form-group mt-3">
-                <input asp-for="Descripcion" class="form-control" placeholder="Descripcion del rol" />
-                <span asp-validation-for="Descripcion" class="text-danger"></span>
+
+            <!-- Descripción -->
+            <div class="form-group">
+                <label asp-for="Descripcion" class="control-label">Descripción</label>
+                <input asp-for="Descripcion" class="form-input" placeholder="Ingrese la descripción del rol" />
+                <span asp-validation-for="Descripcion" class="validation-message"></span>
             </div>
-            <div class="form-group mt-3">
-                <input type="submit" value="Ingresar Rol" class="btn btn-outline-success col-12" />
+
+            <!-- Botón de envío -->
+            <div class="form-group">
+                <input type="submit" value="Crear Rol" class="btn-submit" />
             </div>
-        </div>
-    </form>
+        </form>
+    </div>
 </div>

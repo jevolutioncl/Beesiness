@@ -30,10 +30,10 @@ namespace Beesiness.Models
         public DbSet<EstadoArduino> tblEstadoArduino { get; set; }
 
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        /* protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=Beesync;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False");
-        }
+        } */
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

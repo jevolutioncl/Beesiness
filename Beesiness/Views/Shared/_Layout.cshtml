@@ -1,92 +1,109 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Beesiness</title>
 
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="/css/layout.css" rel="stylesheet" />
+    @RenderSection("CustomStyles", required: false)
     <script src="https://kit.fontawesome.com/7243618278.js" crossorigin="anonymous"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
 </head>
-
 <body>
-    <nav class="navbar navbar-expand-lg fixed-top">
-        <div class="container">
-            <a class="navbar-brand me-auto" asp-controller="Home" asp-action="Index"><img src="/css/BEESYNC.svg" width="160" height="140" /></a>
-            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar"
-                 aria-labelledby="offcanvasNavbarLabel">
-                <div class="offcanvas-header">
-                    <h5 class="offcanvas-title" id="offcanvasNavbarLabel"></h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    <div class="layout-container">
+        <div class="d-flex" id="wrapper">
+            <!-- Sidebar -->
+            <nav id="sidebar">
+                <div class="sidebar-header">
+                    <a asp-controller="Home" asp-action="Index">
+                        <img src="/css/BEESYNC.svg" alt="Logo" class="logo">
+                    </a>
                 </div>
-                <div class="offcanvas-body">
-                    <ul class="navbar-nav justify-content-center flex-grow-1 pe-3">
-                        <li class="nav-item">
-                            <a class="nav-link mx-lg-2 @(IsActive("Index", "Home") ? "active" : "")" asp-controller="Home" asp-action="Index">Inicio</a>
-                        </li>
+                <ul class="list-unstyled components">
+                    <li class="@(IsActive("Index", "Home") ? "active" : "")">
+                        <a asp-controller="Home" asp-action="Index">
+                            <i class="fas fa-home"></i>
+                            Inicio
+                        </a>
+                    </li>
+                    <li>
                         @if (User.IsInRole("Root"))
                         {
-                            <li class="nav-item">
-                                <a class="nav-link mx-lg-2 @(IsActive("IndexST", "Staff") ? "active" : "")" asp-controller="Staff" asp-action="IndexST">Staff</a>
-                            </li>
+                            <a href="#staffSubmenu" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                                <i class="fas fa-users"></i>
+                                Staff
+                            </a>
+                            <ul class="collapse list-unstyled" id="staffSubmenu">
+                                <li><a asp-controller="Usuarios" asp-action="GestionUsuario">Usuarios registrados</a></li>
+                                <li><a asp-controller="Auth" asp-action="RequestRegistrationIndex">Pendientes de registro</a></li>
+                                <li><a asp-controller="Rol" asp-action="RolIndex">Ver roles</a></li>
+                                <li><a asp-controller="Status" asp-action="EstadoSistema">Estado Sistema</a></li>
+                            </ul>
                         }
-                        <li class="nav-item">
-                            <a class="nav-link mx-lg-2 @(IsActive("ColmenaGeneral", "Colmena") ? "active" : "")" asp-controller="Colmena" asp-action="ColmenaGeneral">Colmenas</a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link mx-lg-2 @(IsActive("Index", "ApiAI") ? "active" : "")" asp-controller="ApiAI" asp-action="Index">Beesync</a>
-                        </li>
-             
-                        <li class="nav-item">
-                            <a class="nav-link mx-lg-2 @(IsActive("TareaGeneral", "Tarea") ? "active" : "")" asp-controller="Tarea" asp-action="TareaGeneral">Tareas</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link mx-lg-2 @(IsActive("EnfermedadGeneral", "Enfermedad") ? "active" : "")" asp-controller="Enfermedad" asp-action="EnfermedadGeneral">Enfermedades</a>
-                        </li>
-                        <!-- Continúa con el resto de los elementos del menú -->
-                    </ul>
+                    </li>
+                    <li>
+                        <a href="#colmenasSubmenu" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                            <i class="fas fa-archive"></i>
+                            Colmenas
+                        </a>
+                        <ul class="collapse list-unstyled" id="colmenasSubmenu">
+                            <li><a asp-controller="Colmena" asp-action="ColmenaCrear">Crear colmena</a></li>
+                            <li><a asp-controller="Colmena" asp-action="ColmenaIndex">Ver colmenas</a></li>
+                            <li><a asp-controller="Colmena" asp-action="MapaColmena">Mapa Colmena</a></li>
+                        </ul>
+                    </li>
+                    <li class="@(IsActive("Index", "ApiAI") ? "active" : "")">
+                        <a asp-controller="ApiAI" asp-action="Index">
+                            <i class="fas fa-robot"></i>
+                            Beesync
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-controller="Auth" asp-action="Logout" class="logout-button">
+                            <i class="fas fa-sign-out-alt"></i>
+                            Cerrar Sesión
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <div id="content">
+                <nav class="navbar navbar-light bg-transparent">
+                    <div class="container-fluid">
+                        <button type="button" id="sidebarCollapse" class="btn btn-light">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                    </div>
+                </nav>
+                <div class="container-fluid">
+                    @RenderBody()
                 </div>
             </div>
-            <a asp-controller="Auth" asp-action="Logout" class="login-button">Cerrar Sesión</a>
-            <button class="navbar-toggler pe-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
-                    aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+            <!-- /#content -->
         </div>
-    </nav>
-    @RenderBody()
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-            crossorigin="anonymous"></script>
+    </div>
 
-    <footer class="border-top footer text-muted">
-    </footer>
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <!--Libreria para realizar graficos-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.min.js" 
-            integrity="sha512-7U4rRB8aGAHGVad3u2jiC7GA5/1YhQcQjxKeaVms/bT66i3LVBMRcBI9KwABNWnxOSwulkuSXxZLGuyfvo7V1A==" 
-            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
+    <script>
+        $(document).ready(function () {
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar').toggleClass('active');
+            });
+        });
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
-
 </html>
-@inject Microsoft.AspNetCore.Mvc.ViewFeatures.IHtmlGenerator HtmlGenerator
 
 @functions {
     public bool IsActive(string action, string controller)
     {
-        string currentAction = ViewContext.RouteData.Values["action"].ToString();
-        string currentController = ViewContext.RouteData.Values["controller"].ToString();
+        string currentAction = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
+        string currentController = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
 
         return string.Equals(currentAction, action, StringComparison.OrdinalIgnoreCase) &&
                string.Equals(currentController, controller, StringComparison.OrdinalIgnoreCase);

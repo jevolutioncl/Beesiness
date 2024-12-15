@@ -1,47 +1,63 @@
 ﻿@model CreateUserViewModel
 
 @{
-    ViewData["Title"] = "CreateUser";
+    ViewData["Title"] = "Crear Usuario";
 }
 
-<div class="card text-center">
-    <div class="card-header">
-        Creación de usuario
-    </div>
-    <div class="card-body">
-        <a href="@Url.Action("RequestRegistrationIndex", "Auth")"
-           class="btn btn-outline-primary"><i class="fa-solid fa-users me-2"></i>Volver al listado de usuarios temporales</a>
-    </div>
-</div>
+<!-- Custom Styles -->
+@section CustomStyles {
+    <link href="/css/crud-forms.css" rel="stylesheet" />
+}
 
-<div class="row">
-    <div class="col-md-4">
+<div class="crud-container">
+    <!-- Título -->
+    <h2 class="crud-title">Crear Usuario</h2>
+
+    <!-- Botón para volver -->
+    <div class="crud-navigation">
+        <a href="@Url.Action("RequestRegistrationIndex", "Auth")" class="btn-nav">
+            <i class="fa-solid fa-users"></i> Volver al listado de usuarios temporales
+        </a>
+    </div>
+
+    <!-- Formulario -->
+    <div class="crud-form">
         <form asp-action="CreateUser" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div asp-validation-summary="ModelOnly" class="validation-summary text-danger"></div>
+
+            <!-- Nombre -->
             <div class="form-group">
-                <label asp-for="Nombre" class="control-label"></label>
-                <input asp-for="Nombre" class="form-control" />
-                <span asp-validation-for="Nombre" class="text-danger"></span>
+                <label asp-for="Nombre" class="control-label">Nombre</label>
+                <input asp-for="Nombre" class="form-input" />
+                <span asp-validation-for="Nombre" class="validation-message"></span>
             </div>
+
+            <!-- Email -->
             <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
+                <label asp-for="Email" class="control-label">Correo Electrónico</label>
+                <input asp-for="Email" class="form-input" />
+                <span asp-validation-for="Email" class="validation-message"></span>
             </div>
+
+            <!-- Rol -->
             <div class="form-group">
-                <label asp-for="IdRolSeleccionado">Rol</label>
-                <select asp-for="IdRolSeleccionado" asp-items="Model.RolesDisponibles" class="form-control">
+                <label asp-for="IdRolSeleccionado" class="control-label">Rol</label>
+                <select asp-for="IdRolSeleccionado" asp-items="Model.RolesDisponibles" class="form-select">
                     <option value="">Seleccione un rol</option>
                 </select>
+                <span asp-validation-for="IdRolSeleccionado" class="validation-message"></span>
             </div>
 
+            <!-- Contraseña -->
             <div class="form-group">
-                <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
+                <label asp-for="Password" class="control-label">Contraseña</label>
+                <input asp-for="Password" class="form-input" type="password" />
+                <span asp-validation-for="Password" class="validation-message"></span>
             </div>
+
+            <!-- Botón de envío -->
             <div class="form-group">
-                <input type="submit" value="Crear usuario" class="btn btn-primary" />
+                <input type="submit" value="Crear Usuario" class="btn-submit" />
             </div>
         </form>
     </div>

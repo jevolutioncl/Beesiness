@@ -15,3 +15,18 @@ function togglePasswordFields() {
     var isChecked = document.getElementById('changePasswordCheckbox').checked;
     passwordFields.style.display = isChecked ? 'block' : 'none';
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+    const hamBurger = document.querySelector(".toggle-btn");
+    if (hamBurger) {
+        hamBurger.addEventListener("click", function () {
+            const sidebar = document.querySelector("#sidebar");
+            if (sidebar) {
+                sidebar.classList.toggle("expand");
+            }
+        });
+    } else {
+        console.warn("Elemento .toggle-btn no encontrado en esta página.");
+    }
+});
+

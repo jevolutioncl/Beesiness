@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace Beesiness.Controllers
 {
@@ -443,5 +444,68 @@ namespace Beesiness.Controllers
             return Json(new { ocupado });
         }
 
+        [HttpGet]
+        [Route("api/colmenas/estadisticas")]
+        public async Task<IActionResult> ObtenerEstadisticas()
+        {
+            // Número total de colmenas activas
+            var colmenasActivas = await _context.tblColmenas.CountAsync();
+
+            // Producción total de miel
+            var produccionTotal = await _context.tblProducciones.SumAsync(p => p.CantidadMiel);
+
+            // Alertas totales en el sistema
+            var alertasTotales = await _context.tblAlertas.CountAsync();
+
+            // Producción mensual
+            var produccionMensual = await _context.tblProducciones
+                .GroupBy(p => p.FechaRecoleccion.Month)
+                .Select(g => new
+                {
+                    Mes = g.Key,
+                    Cantidad = g.Sum(p => p.CantidadMiel)
+                })
+                .ToListAsync();
+
+            var datosMensuales = produccionMensual
+                .OrderBy(p => p.Mes)
+                .Select(p => new
+                {
+                    Mes = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(p.Mes),
+                    Cantidad = p.Cantidad
+                })
+                .ToList();
+
+            // Tipos de colmenas
+            var tiposColmenas = await _context.tblColmenas
+                .GroupBy(c => c.TipoColmena)
+                .Select(g => new { Tipo = g.Key, Cantidad = g.Count() })
+                .ToListAsync();
+
+            // Ajustar los datos de tipos de colmenas para evitar problemas de estructura
+            var tiposColmenasLabels = tiposColmenas.Select(t => t.Tipo).ToArray();
+            var tiposColmenasData = tiposColmenas.Select(t => t.Cantidad).ToArray();
+
+            // Alertas recientes (simulación)
+            var alertasRecientes = new[] { 5, 3, 2 };
+
+            return Json(new
+            {
+                colmenasActivas,
+                produccionTotal,
+                alertasTotales,
+                produccionMensual = new
+                {
+                    labels = datosMensuales.Select(d => d.Mes).ToArray(),
+                    data = datosMensuales.Select(d => d.Cantidad).ToArray()
+                },
+                tiposColmenas = new
+                {
+                    labels = tiposColmenasLabels,
+                    data = tiposColmenasData
+                },
+                alertasRecientes
+            });
+        }
     }
 }

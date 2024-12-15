@@ -2,10 +2,9 @@
 
 function setFilterType(filterType) {
     currentFilterType = filterType;
-    document.getElementById('currentFilterType').innerText = filterType;
+    document.getElementById('filterDropdown').innerText = filterType; // Actualiza el texto del botón
     filterUsers(); // Filtrar inmediatamente al cambiar el tipo
 }
-
 
 function filterUsers() {
     const searchString = document.getElementById('searchString').value;
@@ -21,6 +20,7 @@ function filterUsers() {
         })
         .catch(error => console.error('Error al filtrar usuarios:', error));
 }
+
 function goToPage(pageNumber) {
     const searchString = document.getElementById('searchString').value;
     fetch(`/Usuarios/GestionUsuario?searchString=${searchString}&filterType=${currentFilterType}&pageNumber=${pageNumber}`)
@@ -32,5 +32,17 @@ function goToPage(pageNumber) {
         })
         .catch(error => console.error('Error al cambiar de página:', error));
 }
+
+function toggleFilterDropdown() {
+    const dropdown = document.getElementById('filterOptions');
+    dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+}
+
+document.addEventListener('click', (event) => {
+    const dropdown = document.getElementById('filterOptions');
+    if (!event.target.closest('.filter-group')) {
+        dropdown.style.display = 'none';
+    }
+});
 
 window.goToPage = goToPage;

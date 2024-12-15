@@ -29,21 +29,23 @@ namespace Beesiness.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AskApiAI(ChatViewModel model, string prompt)
+        public async Task<IActionResult> AskApiAI([FromBody] ChatViewModel model)
         {
-            if (string.IsNullOrEmpty(prompt))
+            if (model == null || string.IsNullOrEmpty(model.Mensajes.LastOrDefault()?.Content))
             {
-                model.Mensajes.Add(new MensajeAI { Role = "assistant", Content = "Por favor, escribe una pregunta o solicitud." });
-                return View("Index", model);
+                return Json(new { messages = new List<MensajeAI> { new MensajeAI { Role = "assistant", Content = "Por favor, escribe una pregunta o solicitud." } } });
             }
+
+            var prompt = model.Mensajes.LastOrDefault()?.Content;
 
             if (model.Mensajes == null)
             {
-                model.Mensajes = new List<MensajeAI>(); // Asegurarse de que la lista esté inicializada
+                model.Mensajes = new List<MensajeAI>(); // Inicializar la lista si es null
             }
 
             model.Mensajes = await _chatGptService.AskChatGptAsync(model.Mensajes, prompt);
-            return View("Index", model);
+
+            return Json(new { messages = model.Mensajes }); // Devuelve la lista actualizada
         }
     }
 }

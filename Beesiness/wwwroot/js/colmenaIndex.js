@@ -1,75 +1,64 @@
-﻿let currentFilterType = 'tipoColmena'; // Valor predeterminado
+﻿let currentFilterType = 'tipoColmena'; // Filtro predeterminado
+
+function toggleFilterDropdown() {
+    const dropdown = document.getElementById('filterOptions');
+    if (dropdown) {
+        dropdown.classList.toggle('show'); // Alterna la clase 'show'
+    } else {
+        console.error('El elemento del dropdown no se encontró.');
+    }
+}
+
+// Cierra el dropdown si se hace clic fuera
+window.addEventListener('click', function (event) {
+    if (!event.target.matches('.btn-filter') && !event.target.closest('#filterOptions')) {
+        const dropdown = document.getElementById('filterOptions');
+        if (dropdown && dropdown.classList.contains('show')) {
+            dropdown.classList.remove('show');
+        }
+    }
+});
 
 function setFilterType(filterType) {
     currentFilterType = filterType;
-    document.getElementById('currentFilterType').innerText = filterType;
-    document.getElementById('dateSortButtons').style.display = 'none';
-    document.getElementById('numSortButtons').style.display = 'none';
-    document.getElementById('searchString').style.display = 'block';
-    filterUsers(); // Filtrar inmediatamente al cambiar el tipo
+    const dropdownButton = document.getElementById('filterDropdown');
+    if (dropdownButton) {
+        dropdownButton.innerHTML = `<i class="fa-solid fa-filter"></i> Filtrar por: ${filterType}`;
+    }
+    filterUsers(); // Llama al filtro inmediatamente
 }
-
 
 function filterUsers() {
     const searchString = document.getElementById('searchString').value;
-    fetch(`/Colmena/ColmenaIndex?searchString=${searchString}&filterType=${currentFilterType}`)
+
+    fetch(`/Colmena/ColmenaIndex?searchString=${encodeURIComponent(searchString)}&filterType=${encodeURIComponent(currentFilterType)}`)
         .then(response => response.text())
         .then(html => {
-            const doc = new DOMParser().parseFromString(html, "text/html");
-            document.querySelector('.table').innerHTML = doc.querySelector('.table').innerHTML;
-            const pagination = doc.querySelector('.pagination');
-            if (pagination) {
-                document.querySelector('.pagination').innerHTML = pagination.innerHTML;
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const tableBody = doc.querySelector('tbody');
+            if (tableBody) {
+                document.querySelector('.table tbody').innerHTML = tableBody.innerHTML;
+            } else {
+                console.error('No se encontró el tbody en la respuesta del servidor.');
             }
         })
-        .catch(error => console.error('Error al filtrar usuarios:', error));
+        .catch(error => console.error('Error al filtrar:', error));
 }
 
-function showDateSortButtons() {
-    // Actualizar el texto del filtro actual a "Fecha"
-    document.getElementById('currentFilterType').innerText = 'Fecha';
-    // Ocultar campo de búsqueda
-    document.getElementById('searchString').style.display = 'none';
-    // Mostrar botones de ordenamiento de fecha
-    document.getElementById('dateSortButtons').style.display = 'block';
-    document.getElementById('numSortButtons').style.display = 'none';
-}
-function showNumSortButtons() {
-    // Actualizar el texto del filtro actual a "Fecha"
-    document.getElementById('currentFilterType').innerText = 'numIdentificador';
-    // Ocultar campo de búsqueda
-    document.getElementById('searchString').style.display = 'none';
-    // Mostrar botones de ordenamiento de fecha
-    document.getElementById('dateSortButtons').style.display = 'none';
-    document.getElementById('numSortButtons').style.display = 'block';
-
-}
-function sortUsers(sortOrder) {
-    document.getElementById('currentSortOrder').value = sortOrder;
-    const searchString = document.getElementById('searchString').value;
-    fetch(`/Colmena/ColmenaIndex?searchString=${searchString}&sortOrder=${sortOrder}`)
-        .then(response => response.text())
-        .then(html => {
-            const doc = new DOMParser().parseFromString(html, "text/html");
-            document.querySelector('.table').innerHTML = doc.querySelector('.table').innerHTML;
-        })
-        .catch(error => console.error('Error al ordenar usuarios:', error));
-}
 function goToPage(pageNumber) {
     const searchString = document.getElementById('searchString').value;
-    let sortOrder = document.getElementById('currentSortOrder').value;
-    let url = `/Colmena/ColmenaIndex?searchString=${searchString}&filterType=${currentFilterType}&pageNumber=${pageNumber}`;
 
-    if (sortOrder) {
-        url += `&sortOrder=${sortOrder}`;
-    }
-
-    fetch(url)
+    fetch(`/Colmena/ColmenaIndex?searchString=${encodeURIComponent(searchString)}&filterType=${encodeURIComponent(currentFilterType)}&pageNumber=${pageNumber}`)
         .then(response => response.text())
         .then(html => {
-            const doc = new DOMParser().parseFromString(html, "text/html");
-            document.querySelector('.table').innerHTML = doc.querySelector('.table').innerHTML;
-            document.querySelector('.pagination').innerHTML = doc.querySelector('.pagination').innerHTML;
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const tableBody = doc.querySelector('tbody');
+            document.querySelector('.table tbody').innerHTML = tableBody.innerHTML;
+
+            const pagination = doc.querySelector('.pagination');
+            document.querySelector('.pagination').innerHTML = pagination.innerHTML;
         })
         .catch(error => console.error('Error al cambiar de página:', error));
 }

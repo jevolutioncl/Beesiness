@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Dashboard";
     string userName = ViewData["UserName"] as string;
     var netVersion = Environment.Version;
 }
@@ -10,21 +10,77 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Modernize Free</title>
-    <link rel="shortcut icon" type="image/png" href="../assets/images/logos/favicon.png" />
-    <link rel="stylesheet" href="../assets/css/styles.min.css" />
-    <link rel="stylesheet" href="~/css/index.css" />
+    <title>Dashboard - Beesiness</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <!-- Custom Styles -->
+    @section CustomStyles {
+        <link href="/css/index.css" rel="stylesheet" />
+    }
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
-    <header>
-        <div class="content-header">
-            <h2 class="tracking-in-expand">¡Bienvenido a Beesiness@(string.IsNullOrEmpty(userName) ? "" : ", " + userName)!</h2>
-            <p>Bienvenido al panel de Usuario de Beesiness, desde aquí podrás gestionar tus colmenas, estadística de la cosecha de miel como de polinización, entre otras cosas más.</p>
-            <p class="net-version">¡Usando .NET @netVersion.Major!</p>
-        </div>
-        <div class="imagen-header image-fade-in-expand"></div>
-    </header>
+    <div class="dashboard-container">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <h1>¡Bienvenido, @(string.IsNullOrEmpty(userName) ? "Usuario" : userName)!</h1>
+            <p>Panel principal de Beesiness. Gestiona tus colmenas y consulta las estadísticas clave.</p>
+        </header>
+
+        <!-- Main Content -->
+        <main class="dashboard-main">
+            <!-- Dashboard Cards -->
+            <div class="dashboard-cards">
+                <div class="card">
+                    <i class="fas fa-archive"></i>
+                    <div>
+                        <h2>Colmenas</h2>
+                        <p id="colmenas-activas"></p>
+                    </div>
+                </div>
+                <div class="card">
+                    <i class="fas fa-chart-line"></i>
+                    <div>
+                        <h2>Producción</h2>
+                        <p id="produccion-total"></p>
+                    </div>
+                </div>
+                <div class="card">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <div>
+                        <h2>Alertas</h2>
+                        <p id="alertas-total"></p>
+                    </div>
+                </div>
+            </div>
+
+            <section class="dashboard-graphs">
+                <div class="graph-card">
+                    <h3>Producción mensual</h3>
+                    <canvas id="productionChart"></canvas>
+                </div>
+                <div class="graph-card">
+                    <h3>Tipos de Colmenas</h3>
+                    <canvas id="colmenaTypesChart"></canvas>
+                </div>
+                <div class="graph-card">
+                    <h3>Alertas Recientes</h3>
+                    <canvas id="alertsChart"></canvas>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Custom Scripts -->
+    @section Scripts {
+        <script src="/js/dashboard.js"></script>
+    }
 </body>
 
 </html>

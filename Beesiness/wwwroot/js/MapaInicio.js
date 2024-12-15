@@ -1,6 +1,4 @@
 ﻿let map;
-let customInfobox;
-let closeInfoboxTimer;
 let colmenas = [
     { id: 1, latitude: -35.4, longitude: -71.6, tipo: "Langstroth", identificador: "C-001", descripcion: "En revisión" },
     { id: 2, latitude: -35.5, longitude: -71.4, tipo: "Dadant", identificador: "C-002", descripcion: "En buen estado" },
@@ -45,7 +43,9 @@ function renderColmenasOnMap(colmenasToRender) {
         };
 
         Microsoft.Maps.Events.addHandler(pin, 'click', e => {
-            showCustomInfobox(e.target, location);
+            if (e.target && e.target.metadata) {
+                showCustomInfobox(e.target, location);
+            }
         });
 
         map.entities.push(pin);
@@ -66,7 +66,7 @@ function renderColmenaList(colmenasToRender) {
         colmenaItem.onclick = () => {
             const location = new Microsoft.Maps.Location(colmena.latitude, colmena.longitude);
             map.setView({ center: location, zoom: 14 });
-            showCustomInfobox({ metadata: colmenaItem.metadata }, location);
+            showCustomInfobox({ metadata: { title: `Colmena ${colmena.identificador}`, description: colmena.descripcion } }, location);
         };
         colmenaList.appendChild(colmenaItem);
     });
@@ -79,8 +79,13 @@ function applyFilter() {
 }
 
 function showCustomInfobox(pin, location) {
-    const pixelLocation = map.tryLocationToPixel(location, Microsoft.Maps.PixelReference.control);
     const customInfobox = document.getElementById('customInfobox');
+    if (!pin.metadata) {
+        customInfobox.style.display = 'none';
+        return;
+    }
+
+    const pixelLocation = map.tryLocationToPixel(location, Microsoft.Maps.PixelReference.control);
 
     customInfobox.innerHTML = `
         <div class="card text-white bg-dark border-warning" style="max-width: 300px;">
@@ -111,8 +116,6 @@ function showCustomInfobox(pin, location) {
     customInfobox.style.left = `${infoboxX}px`;
     customInfobox.style.top = `${infoboxY}px`;
     customInfobox.style.display = 'block';
-
-    clearTimeout(closeInfoboxTimer);
 }
 
 function closeCustomInfobox() {
