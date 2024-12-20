@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Beesiness.Models
 {
@@ -24,6 +25,13 @@ namespace Beesiness.Models
         public string Status { get; set; }
 
         public DateTime FechaRealizacion { get; set; }
+
+        [Required]
+        [ForeignKey("Usuario")]
+        public int IdUsuario { get; set; }
+
+        //Propiedad de navegacion
+        public Usuario Usuario { get; set; }
 
     }
 }

@@ -32,7 +32,6 @@
 
   <ItemGroup>
     <Folder Include="Microsoft\AspNetCore\Identity\" />
-    <Folder Include="Migrations\" />
   </ItemGroup>
 
   <ItemGroup>

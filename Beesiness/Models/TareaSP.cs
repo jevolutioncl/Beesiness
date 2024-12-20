@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Beesiness;
 using Beesiness.Controllers;
-using Beesiness.Migrations;
+//using Beesiness.Migrations;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.EntityFrameworkCore;

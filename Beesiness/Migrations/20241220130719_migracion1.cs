@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Beesiness.Migrations
 {
     /// <inheritdoc />
-    public partial class _2024 : Migration
+    public partial class migracion1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -37,24 +37,6 @@ namespace Beesiness.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_tblRoles", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "tblTareas",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombre = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Descripcion = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
-                    CorreoAviso = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FechaRegistro = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FechaRealizacion = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_tblTareas", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -186,6 +168,31 @@ namespace Beesiness.Migrations
                     table.PrimaryKey("PK_tblInspecciones", x => x.Id);
                     table.ForeignKey(
                         name: "FK_tblInspecciones_tblUsuarios_IdUsuario",
+                        column: x => x.IdUsuario,
+                        principalTable: "tblUsuarios",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "tblTareas",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nombre = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Descripcion = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
+                    CorreoAviso = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FechaRegistro = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FechaRealizacion = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IdUsuario = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_tblTareas", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_tblTareas_tblUsuarios_IdUsuario",
                         column: x => x.IdUsuario,
                         principalTable: "tblUsuarios",
                         principalColumn: "Id",
@@ -368,32 +375,6 @@ namespace Beesiness.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "tblTareaColmena",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    IdColmena = table.Column<int>(type: "int", nullable: false),
-                    IdTarea = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_tblTareaColmena", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_tblTareaColmena_tblColmenas_IdColmena",
-                        column: x => x.IdColmena,
-                        principalTable: "tblColmenas",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_tblTareaColmena_tblTareas_IdTarea",
-                        column: x => x.IdTarea,
-                        principalTable: "tblTareas",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "tblInformacionColmenas",
                 columns: table => new
                 {
@@ -420,6 +401,32 @@ namespace Beesiness.Migrations
                         name: "FK_tblInformacionColmenas_tblInspecciones_IdInspeccion",
                         column: x => x.IdInspeccion,
                         principalTable: "tblInspecciones",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "tblTareaColmena",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    IdColmena = table.Column<int>(type: "int", nullable: false),
+                    IdTarea = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_tblTareaColmena", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_tblTareaColmena_tblColmenas_IdColmena",
+                        column: x => x.IdColmena,
+                        principalTable: "tblColmenas",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_tblTareaColmena_tblTareas_IdTarea",
+                        column: x => x.IdTarea,
+                        principalTable: "tblTareas",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -540,6 +547,11 @@ namespace Beesiness.Migrations
                 name: "IX_tblTareaColmena_IdTarea",
                 table: "tblTareaColmena",
                 column: "IdTarea");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_tblTareas_IdUsuario",
+                table: "tblTareas",
+                column: "IdUsuario");
 
             migrationBuilder.CreateIndex(
                 name: "IX_tblTratamientos_idEnfermedadColmena",

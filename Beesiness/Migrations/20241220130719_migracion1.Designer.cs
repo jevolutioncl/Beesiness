@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Beesiness.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240904001454_rds-db1")]
-    partial class rdsdb1
+    [Migration("20241220130719_migracion1")]
+    partial class migracion1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -429,6 +429,9 @@ namespace Beesiness.Migrations
                     b.Property<DateTime>("FechaRegistro")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("IdUsuario")
+                        .HasColumnType("int");
+
                     b.Property<string>("Nombre")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -439,6 +442,8 @@ namespace Beesiness.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("IdUsuario");
 
                     b.ToTable("tblTareas");
                 });
@@ -763,6 +768,17 @@ namespace Beesiness.Migrations
                     b.Navigation("Colmena");
 
                     b.Navigation("TipoFlor");
+
+                    b.Navigation("Usuario");
+                });
+
+            modelBuilder.Entity("Beesiness.Models.Tarea", b =>
+                {
+                    b.HasOne("Beesiness.Models.Usuario", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("IdUsuario")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Usuario");
                 });

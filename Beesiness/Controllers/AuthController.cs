@@ -224,7 +224,8 @@ namespace Beesiness.Controllers
         {
             new Claim(ClaimTypes.Email, Lvm.Login.Correo),
             new Claim(ClaimTypes.Name, us.Nombre),
-            new Claim(ClaimTypes.Role, us.Rol.Nombre)  // Añade el nombre del rol como un Claim
+            new Claim(ClaimTypes.Role, us.Rol.Nombre),  // Añade el nombre del rol como un Claim
+            new Claim(ClaimTypes.NameIdentifier, us.Id.ToString()) // Añade el id del usuario como un Claim
         };
 
                     var identity = new ClaimsIdentity(Claims, CookieAuthenticationDefaults.AuthenticationScheme);

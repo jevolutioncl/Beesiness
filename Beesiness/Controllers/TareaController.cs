@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Build.Framework;
 using Microsoft.EntityFrameworkCore;
 using System.Runtime.CompilerServices;
+using System.Security.Claims;
+using System.Text.Json;
 
 namespace Beesiness.Controllers
 {
@@ -132,6 +134,8 @@ namespace Beesiness.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 ModelState.Remove("FechaRegistro");
+                ModelState.Remove("IdUsuario");
+                ModelState.Remove("Usuario");
                 if (ModelState.IsValid)
                 {
                     //string correo = ViewData["Correo"].ToString();
@@ -139,14 +143,24 @@ namespace Beesiness.Controllers
                     //if (tarea.Status == "Realizada") tarea.FechaRealizacion = DateTime.Now;
                     tarea.FechaRegistro = DateTime.Now;
 
-                    _context.Add(tarea);
-                    await _context.SaveChangesAsync();
+                    string idUsuario = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                    if (int.TryParse(idUsuario, out int numero))
+                    {
+                        tarea.IdUsuario = numero;
+                        _context.Add(tarea);
+                        await _context.SaveChangesAsync();
 
-                    //Actualizamos la lista de tareas en Agenda
-                    //await ActualizarAgenda();
-                    await Actualizar2(tarea, "crear");
+                        //Actualizamos la lista de tareas en Agenda
+                        //await ActualizarAgenda();
+                        await Actualizar2(tarea, "crear");
 
-                    return RedirectToAction("TareaIndex");
+                        return RedirectToAction("TareaIndex");
+                    }
+                    else
+                    {
+                        TempData["ErrorMessage"] = "El formulario no se pudo enviar correctamente.";
+                        return View(tarea);
+                    }
                 }
                 else
                 {
@@ -350,6 +364,33 @@ namespace Beesiness.Controllers
                 AgendaController.Agenda.RemoveAll(x => x.Id == tarea.Id); //probar
             }
             return 1;
+        }
+
+        //agregado para ver las tareas en el dashboard
+        [HttpGet]
+        [Route("api/tareas/tareasusuario")]
+        public async Task<IActionResult> ObtenerTareasUsuario()
+        {
+            //var tareas = await _context.tblTareas.ToListAsync();
+            string stringId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            int userId = Convert.ToInt32(stringId);
+
+            var tareas = await _context.tblTareas.Where(x => x.IdUsuario == userId).ToListAsync();
+            if (tareas.Count != 0)
+            {
+                /*
+                string json = JsonConvert.SerializeObject(tareas, Formatting.Indented);
+                Console.WriteLine("JSON serializado:");
+                Console.WriteLine(json);*/
+
+                string jsonPersonas = System.Text.Json.JsonSerializer.Serialize(tareas, new JsonSerializerOptions { WriteIndented = true });
+
+                Console.WriteLine("JSON serializado:");
+                Console.WriteLine(jsonPersonas);
+
+                return Json(jsonPersonas);
+            }
+            return Json(new { }); //tengo que ver que hago con esto
         }
 
         //codigo actualizar la lista de tareas Agenda
