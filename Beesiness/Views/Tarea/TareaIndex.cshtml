@@ -4,6 +4,13 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<head>
+    <link href="/css/usuarios.css" rel="stylesheet" />
+    @section Scripts {
+        <script src="/js/tareas.js"></script>
+    }
+</head>
+
 <h1>Administrar Tareas</h1>
 
 <div>
@@ -11,6 +18,32 @@
 </div>
 <div>
     <a class="button" asp-action="TareaCrear">Nueva Tarea</a>
+</div>
+
+<!-- Botones de navegación y opciones -->
+<div class="options-container">
+    <div class="cards-container">
+        <a class="btn-nav" asp-controller="Home" asp-action="Index">
+            <i class="fa-solid fa-house"></i> Volver al Home
+        </a>
+        <a class="btn-nav" asp-action="TareaCrear">
+            <i class="fa-solid fa-user-plus"></i> Crear nueva tarea
+        </a>        
+    </div>
+
+    <!-- Filtros -->
+    <div class="filter-container">
+        <div class="filter-group">
+            <button class="btn-filter" id="filterDropdown" onclick="toggleFilterDropdown()">
+                <i class="fa-solid fa-filter"></i> Filtrar por
+            </button>
+            <div class="dropdown-content" id="filterOptions">
+                <a href="#" onclick="setFilterType('Nombre')">Nombre</a>
+                <a href="#" onclick="setFilterType('FechaRealizacion')">Fecha</a>                
+            </div>
+        </div>
+        <input type="text" class="filter-input" id="searchString" placeholder="Buscar..." oninput="filterUsers()" />
+    </div>
 </div>
 
 <div>

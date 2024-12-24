@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Build.Framework;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.SqlServer.Management.Smo;
 using System.Runtime.CompilerServices;
 using System.Security.Claims;
 using System.Text.Json;
@@ -16,15 +17,18 @@ namespace Beesiness.Controllers
         {
             _context = context;
         }
-        public async Task<IActionResult> TareaIndex(string filtro)
+        public async Task<IActionResult> TareaIndex(string filtro, bool verHistorial)
         {
             if (User.Identity.IsAuthenticated)
             {
-                var variable1 = await _context.tblTareas.ToListAsync();
+                string stringId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                int userId = Convert.ToInt32(stringId);
+
+                var variable1 = await _context.tblTareas.Where(x => x.IdUsuario == userId).OrderBy(x => x.FechaRealizacion).ToListAsync(); //ordenamos por fecha de realizacion
                 if (filtro != null)
                 {
                     variable1 = await _context.tblTareas
-                        .Where(d => d.Nombre.Contains(filtro))
+                        .Where(d => d.Nombre.Contains(filtro)).OrderBy(x => x.FechaRealizacion)
                         .ToListAsync();
                 }
                 return View(variable1);
@@ -177,6 +181,8 @@ namespace Beesiness.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
+                ModelState.Remove("IdUsuario");
+                ModelState.Remove("Usuario");
                 if (ModelState.IsValid)
                 {
                     //si la tarea fue editada como realizada y no tenia fecha de realizacion
@@ -185,9 +191,14 @@ namespace Beesiness.Controllers
                     {
                         tarea.FechaRealizacion = DateTime.Now;
                     }*/
+                    string stringId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                    int usuarioid = Convert.ToInt32(stringId);                    
 
+                    tarea.IdUsuario = usuarioid;
                     _context.Update(tarea);
                     await _context.SaveChangesAsync();
+
+                    ModelState.AddModelError("", "Tarea editada");
 
                     //Actualizamos la lista de tareas en Agenda                   
                     await Actualizar2(tarea, "editar");
@@ -375,7 +386,8 @@ namespace Beesiness.Controllers
             string stringId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             int userId = Convert.ToInt32(stringId);
 
-            var tareas = await _context.tblTareas.Where(x => x.IdUsuario == userId).ToListAsync();
+            //var tareas = await _context.tblTareas.Where(x => x.IdUsuario == userId).OrderBy(x => x.FechaRealizacion).ToListAsync(); //ordenamos por fecha de realizacion
+            var tareas = await _context.tblTareas.Where(x => (x.IdUsuario == userId && x.Status != "Realizada")).OrderBy(x => x.FechaRealizacion).ToListAsync();
             if (tareas.Count != 0)
             {
                 /*
@@ -391,6 +403,34 @@ namespace Beesiness.Controllers
                 return Json(jsonPersonas);
             }
             return Json(new { }); //tengo que ver que hago con esto
+        }               
+                
+        [HttpPost]
+        [Route("api/tareas/cambiarestado")]
+        public async Task<IActionResult> CambiarEstado([FromBody] Tarea tareajson )
+        {
+            // Parsear el JSON
+            //Tarea tarea = JsonSerializer.Deserialize<Tarea>(tareajson);
+            Console.WriteLine("llegamos al metodo cambiarestado");
+            Console.WriteLine(tareajson.Id);
+
+            // Buscar la tarea en la base de datos
+            var tarea = await _context.tblTareas.FindAsync(tareajson.Id);
+            
+            if (tarea == null)
+            {
+                // Manejar el caso donde la tarea no existe
+                throw new Exception("Tarea no encontrada");                
+            }
+
+            // Actualizar el estado
+            tarea.Status = "Realizada";
+
+            // Guardar los cambios
+            _context.Update(tarea);
+            await _context.SaveChangesAsync();                                  
+            
+            return Ok();
         }
 
         //codigo actualizar la lista de tareas Agenda

@@ -55,6 +55,8 @@
                             <li><a asp-controller="Colmena" asp-action="MapaColmena">Mapa Colmena</a></li>
                         </ul>
                     </li>
+                    <li><a asp-controller="Tarea" asp-action="TareaCrear">Nueva Tarea</a></li>
+                    <li><a asp-controller="Tarea" asp-action="TareaIndex">Ver Tareas</a></li>
                     <li class="@(IsActive("Index", "ApiAI") ? "active" : "")">
                         <a asp-controller="ApiAI" asp-action="Index">
                             <i class="fas fa-robot"></i>

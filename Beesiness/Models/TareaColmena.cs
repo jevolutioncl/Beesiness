@@ -6,12 +6,7 @@ namespace Beesiness.Models
     public class TareaColmena
     {
         [Key]
-        public int Id { get; set; }
-
-        //[Required]
-        //public DateTime FechaRegistro { get; set; }
-
-        //public DateTime FechaRealizacion { get; set; }
+        public int Id { get; set; }        
 
         [Required]
         [ForeignKey("Colmena")]
